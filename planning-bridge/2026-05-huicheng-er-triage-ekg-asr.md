@@ -9,16 +9,25 @@
 - Official website: `https://www.imedtac.com/`
 - Upstream thread: follow-up to the 吳老師 / 余總 project discussion; the earlier 余總 `triage` remark refers to this lane.
 - Internal contact window: 林駿亦 and Jason, pending Prof. Wu / company confirmation
-- Status: standalone execution repo created; company follow-up package analyzed; Friday `2026-05-15` research artifact is the next bounded deliverable; implementation remains gated on integration mode, target device, and clinical-source confirmation
+- Status: standalone execution repo created; company follow-up package analyzed; Friday `2026-05-15` research artifact is the next bounded deliverable; implementation remains gated on integration mode, target device, clinical-source confirmation, and the sales-pressure boundary from the `2026-05-11` LINE update
 - Canonical execution repo: `../ai-triage-kiosk-demo/`
 - Repo operating contract: `../ai-triage-kiosk-demo/AGENTS.md`
 - Repo relationship note: `../ai-triage-kiosk-demo/docs/repo-relationships.md`
 - Repo project brief: `../ai-triage-kiosk-demo/docs/project-brief.md`
 - Core architecture note: `../ai-triage-kiosk-demo/docs/architecture-insertion-and-clinical-grounding.md`
 - Thursday vital-sign research gate: `../ai-triage-kiosk-demo/workstreams/05-thursday-vital-sign-research-gate.md`
+- First-principles must-do gates: `../ai-triage-kiosk-demo/workstreams/06-first-principles-must-do-gates.md`
 - Source index: `../ai-triage-kiosk-demo/docs/source-index.md`
 - Prof. Wu instruction register: `../ai-triage-kiosk-demo/docs/wu-instruction-register.md`
 - Repo organization: `../ai-triage-kiosk-demo/docs/repo-organization.md`
+- Friday source-governance handoff: `../ai-triage-kiosk-demo/handoff/2026-05-15-vital-aware-triage-feasibility-source-governance.md`
+- Source registry and example flows: `../ai-triage-kiosk-demo/handoff/2026-05-15-source-registry-and-example-flows.md`
+- Friday discussion brief: `../ai-triage-kiosk-demo/handoff/2026-05-15-friday-discussion-brief.md`
+- First-principles gap audit: `../ai-triage-kiosk-demo/handoff/2026-05-15-first-principles-gap-audit-and-action-plan.md`
+- Reviewer packet: `../ai-triage-kiosk-demo/handoff/reviewer-packet/`
+- Governance registries: `../ai-triage-kiosk-demo/data/`
+- Synthetic demo fixtures: `../ai-triage-kiosk-demo/demo/fixtures/`
+- Registry validation script: `../ai-triage-kiosk-demo/scripts/check_governance_registries.py`
 - Source bundle: `data/knowledge/personal/sources/2026-05-11-wu-huicheng-er-triage-ekg-asr/source.md`
 - Meeting record: `data/knowledge/personal/sources/2026-05-11-wu-huicheng-er-triage-ekg-asr/meeting-record.md`
 - Company-sync source bundle: `data/knowledge/personal/sources/2026-05-12-huicheng-company-ai-triage-sync/source.md`
@@ -28,9 +37,14 @@
 - Company follow-up materials analysis: `../ai-triage-kiosk-demo/docs/2026-05-12-huicheng-materials-analysis.md`
 - LINE-group context source: `data/knowledge/personal/sources/2026-05-02-12-huicheng-zhidewan-line-thread/source.md`
 - Prof. Wu LINE demo request source: `data/knowledge/personal/sources/2026-05-12-wu-line-lianyi-asr-llm-demo/source.md`
+- Prof. Wu Google Meet 510(k) direction source:
+  `data/knowledge/personal/sources/2026-05-12-wu-google-meet-ai-triage-510k/source.md`
+- Prof. Wu Google Meet 510(k) meeting record:
+  `data/knowledge/personal/sources/2026-05-12-wu-google-meet-ai-triage-510k/meeting-record.md`
 - Execution-repo source copies:
   - `../ai-triage-kiosk-demo/source/2026-05-11-wu-huicheng-er-triage-ekg-asr/`
   - `../ai-triage-kiosk-demo/source/2026-05-12-huicheng-company-ai-triage-sync/`
+  - `../ai-triage-kiosk-demo/source/2026-05-12-wu-google-meet-ai-triage-510k/`
   - `../ai-triage-kiosk-demo/source/upstream-wu-context/2026-04-16-wu-yute-tomi-meeting/`
   - `../ai-triage-kiosk-demo/source/upstream-wu-context/2026-04-20-cde-prof-wu-clinical-medical-device-it-cybersecurity-speech/`
 
@@ -45,6 +59,19 @@
 - Resolved referent: prior planning questions about what 余總 meant by `triage` should now route to this project unless later notes identify another triage effort.
 - Identity lesson: Jason's useful role is not just model building. It is high-risk AI workflow / trust / safety systems thinking: mapping incomplete clinical information, workflow ownership, cybersecurity, evidence trace, accountability, and maintenance into an explicit system boundary.
 
+## 2026-05-11 Evening LINE Update
+
+- Jason Miao reported that a Middle East customer has already asked about adding `AI Triage` to the `Vital Sign Kiosk`.
+- He also noted that US and Malaysia cases are active at the same time.
+- Prof. Wu added JYLin to the LINE group and said 林駿亦博士 and 林家聖 should participate in the AI triage discussion.
+- Jason Miao proposed scheduling a separate discussion the next day with 林博 and 家聖.
+
+Planning interpretation:
+
+- This is now a near-term coordination lane, not only a background idea.
+- The next useful deliverable is still scope clarification: product surface, clinical label, workflow owner, data availability, market/customer context, role split, and safety/regulatory boundary.
+- Do not promise an AI model, LLM workflow, autonomous triage function, or emergency medical advice based only on the LINE sales signal.
+
 ## Working Product Hypothesis
 
 The proposed system may collect:
@@ -55,7 +82,7 @@ The proposed system may collect:
 - heart rate and possibly other vital signs,
 - potentially ASR input or touch/tablet interaction.
 
-The output may be a triage / ED-referral support report, such as whether the patient should be sent to the emergency department. The current safety boundary is triage support, not diagnosis.
+The current company-facing product surface may be the Vital Sign Kiosk. The output may be a triage / ED-referral support report, such as whether the patient should be sent to the emergency department. The current safety boundary is triage support, not diagnosis.
 
 ## Current Architecture Focus
 
@@ -203,6 +230,48 @@ Planning interpretation:
 - Capacity rule: execute most of this on Wednesday `2026-05-13`, final-pass it
   Thursday morning, and do not let it displace the Thursday `13:00` Rao meeting
   or the Pikachu demo capture.
+
+## 2026-05-12 22:20 Prof. Wu Google Meet - 510(k) Direction
+
+Jason met Prof. Wu through Google Meet around `22:20` after the company sync.
+The complete transcript and structured analysis are preserved at:
+
+- `data/knowledge/personal/sources/2026-05-12-wu-google-meet-ai-triage-510k/transcript-full.md`
+- `data/knowledge/personal/sources/2026-05-12-wu-google-meet-ai-triage-510k/meeting-record.md`
+- `data/knowledge/personal/sources/2026-05-12-wu-google-meet-ai-triage-510k/user-provided-summary.md`
+- `data/knowledge/personal/sources/2026-05-12-wu-google-meet-ai-triage-510k/user-provided-extended-analysis.md`
+
+Execution-repo copy:
+
+- `../ai-triage-kiosk-demo/source/2026-05-12-wu-google-meet-ai-triage-510k/`
+
+Main decision:
+
+- Do not start by building full AI triage or inventing vital-sign rules.
+- First find comparable FDA `510(k)` summaries and extract the `indication for
+  use`, predicate/comparable devices, product functions, inputs, outputs,
+  limitations, and related publications.
+- Use the `510(k)` / product-scope scan to decide how to frame the Friday
+  discussion, the June English demo, and the later 聯醫 deep-cultivation plan.
+
+Updated Friday artifact:
+
+- title shape: `AI Triage Kiosk Demo - 510(k) Product-Scope Scan And Friday
+  Discussion Brief`;
+- include English demo scope, no-GPU compute boundary, comparable-product
+  table, intended-use options, what can safely be shown in June, and questions
+  for 慧誠;
+- short-term positioning should be closer to `AI-assisted pre-visit intake and
+  screening support for clinician review`, not `AI determines triage urgency`.
+
+Staffing / help route:
+
+- Ask 苗先生 for the US partner/customer product name or `510(k)` reference.
+- Ask 多寶 for medical interpretation if GPT / documents remain unclear; invite
+  多寶 to the Friday meeting if needed.
+- Ask 冠廷 for medical/signal interpretation.
+- Treat 俊逸 as possible later signal-side owner if signal processing becomes a
+  real implementation lane.
 
 ## 2026-05-12 Prof. Wu LINE - 聯醫 ASR + LLM Demo
 
@@ -412,7 +481,11 @@ Keep this as a question map, not a W20 research sprint:
 ## Next Questions
 
 - What is the exact product / device name inside 慧誠智醫?
+- Is the immediate product surface the Vital Sign Kiosk, a broader vital-sign station, or another device?
+- What exactly did the Middle East customer request under the phrase `AI Triage`?
+- Are the US and Malaysia cases the same workflow, separate deployments, or only sales opportunities?
 - What is the expected first deliverable from 林駿亦 and Jason?
+- What is 林家聖's expected role in the first discussion?
 - What is the expected first deliverable after the `2026-05-12` company sync: English demo, API feasibility note, architecture sketch, or question list?
 - What exact API / data format can the kiosk expose to the demo?
 - Can the first demo use simulated vital signs, or must it read from a real kiosk?
@@ -442,6 +515,7 @@ Allowed this week:
 - frame the deeper unknowns without researching all of them,
 - preserve industry-survival questions for the first real sync,
 - wait for Prof. Wu / company to define the next meeting.
+- if asked, prepare a one-page meeting question list only.
 
 Not allowed this week:
 
@@ -451,6 +525,7 @@ Not allowed this week:
 - regulatory classification memo,
 - cybersecurity architecture,
 - new repo unless Prof. Wu requests an immediate company deliverable.
+- any customer-facing claim that the team can deliver AI triage before product scope, clinical criteria, data path, and regulatory responsibility are defined.
 
 ## Separate Follow-Up: EEG / LORETA
 

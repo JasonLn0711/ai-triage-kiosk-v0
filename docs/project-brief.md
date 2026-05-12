@@ -27,6 +27,21 @@ Detailed architecture note:
 docs/architecture-insertion-and-clinical-grounding.md
 ```
 
+After the `2026-05-12 22:20` Google Meet with Prof. Wu, the first section of
+the Friday artifact must be a FDA `510(k)` / comparable-product scope scan:
+
+```text
+comparable product
+-> 510(k) summary
+-> indication for use
+-> predicate / function list
+-> safe demo wording
+```
+
+The short-term demo should be framed as an English reference demo on the target
+device. Live vital-sign integration remains future scope until the intended
+use, device output format, sample data, and clinical workflow are clear.
+
 Supporting context:
 
 ```text
@@ -110,6 +125,8 @@ validation, privacy, cybersecurity, and company approvals exist.
 
 By Friday `2026-05-15`, prepare a compact feasibility artifact covering:
 
+- `510(k)` competitor / predicate-device table;
+- intended-use options and safest product label;
 - product insertion diagram;
 - modular all-specialty triage method map;
 - vital-to-question impact matrix;

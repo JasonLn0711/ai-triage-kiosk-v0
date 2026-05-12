@@ -15,6 +15,9 @@ the 慧誠 AI triage kiosk demo lane.
 | `2026-05-11` | Case collection is the main bottleneck and may take at least about half a year after opening. | Do not promise trained clinical model immediately. |
 | `2026-05-11` | Treat current boundary as triage support, not diagnosis. | Preserve output wording and safety boundary. |
 | `2026-05-11` | Taiwan / Southeast Asia may come before the US because US cybersecurity expectations may be high. | Keep deployment assumptions market-specific. |
+| `2026-05-12 22:20` | Do not start by inventing full AI triage. Find comparable FDA `510(k)` summaries first and identify `indication for use`, functions, and boundaries. | Friday artifact should start as product-scope / predicate-device research, not a full clinical design. |
+| `2026-05-12 22:20` | For June, keep the demo simple: English demo on the all-in-one device first; do not integrate live vital-sign signals unless the workflow and data interface are clear. | Keep vital-sign integration as future scope or mocked/synthetic placeholder. |
+| `2026-05-12 22:20` | Ask 苗先生 for the US partner/customer product or `510(k)` reference. Ask 多寶 / 冠廷 when clinical or signal interpretation is unclear. | Add concrete collaborator route before Friday. |
 
 ## Company-Side Clarifications From 2026-05-12
 
@@ -48,6 +51,7 @@ The key Prof. Wu-aligned direction is:
 
 ```text
 medical workflow first
+-> intended use / 510(k) product-scope scan
 -> device data and clinical criteria
 -> AI-assisted triage support
 -> clinician review
