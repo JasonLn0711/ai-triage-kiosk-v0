@@ -1,348 +1,281 @@
-# Friday Discussion Brief - Vital-Aware AI Triage
+# Friday Discussion Brief - Company Questions Only
 
-Date: 2026-05-15 discussion draft  
-Related artifacts:
+Date: 2026-05-15 discussion draft
+Primary use: answer 慧誠's Friday action-item questions without opening extra
+scope.
+Status: main meeting talking track; supplemental notes are used only if asked.
+
+Related supplemental artifacts:
 
 - `handoff/2026-05-15-vital-aware-triage-feasibility-source-governance.md`
 - `handoff/2026-05-15-source-registry-and-example-flows.md`
+- `handoff/2026-05-15-first-principles-gap-audit-and-action-plan.md`
+- `handoff/reviewer-packet/`
 
-Status: meeting brief and talking track; safe for internal alignment before any
-external/customer-facing version.
+## Pre-Meeting Completion Checklist
 
-## One-Sentence Position
+Before Friday `2026-05-15 13:00`, finish only the material needed to answer
+慧誠's explicit meeting ask:
 
-慧誠智醫's iMVS kiosk can become more than a generic symptom checker if measured
-vital signs are used to prioritize follow-up questions and produce a
-clinician-review summary, but the first rigorous step is source governance and
-workflow feasibility, not a prototype, not autonomous triage, and not an FDA
-clearance memo.
+- a `60-90` second opening answer;
+- this five-section / five-slide talking track;
+- the vital-sign-to-question priority matrix;
+- 多寶's physician calibration: emergency / internal-medicine-style triage is
+  the strongest vital-sign story; urology is a structured-intake reference with
+  more limited vital-sign impact;
+- six clarifying questions for 慧誠;
+- 多寶 invite/logistics.
+
+Do not prepare a full prototype, broad `510(k)` package, invented clinical
+thresholds, production clinical rules, or complete all-specialty coverage claim
+before the meeting.
+
+## Meeting Rule
+
+Friday should answer the questions 慧誠 explicitly asked in Johnny Fang's
+`2026-05-12 15:10` follow-up email. Do not lead with prototype status,
+`510(k)` predicate discussion, go/no-go governance, data lifecycle, or broad
+regulatory framing unless they ask.
+
+Meeting logistics update from Johnny Fang's `2026-05-13` LINE:
+
+- Discussion window: Friday `2026-05-15 13:00-14:00` Asia/Taipei.
+- Meeting title: `AI triage 可行性討論`.
+- Google Meet: `https://meet.google.com/cjk-iwzq-cmz`.
+- Dial-in: `(US) +1 443-399-3920`, PIN `662 881 369#`.
+- Topic wording from LINE: technical evaluation for adding physiological data
+  and covering all specialties based on the current development baseline.
+- 多寶 should be invited because he is a physician and is interested in the
+  project. Send him the Meet link through a confirmed route, or ask Johnny to
+  include 多寶 if official attendee control matters.
+
+Clinical calibration from 多寶's `2026-05-13` LINE:
+
+- Vital signs make emergency triage the strongest first use case.
+- Triage uses both history taking and vital signs; unstable vital signs can
+  directly raise urgency and may matter more than the questionnaire.
+- Urology is a useful structured-intake reference, but many urology diseases
+  have limited vital-sign impact.
+- Core vital signs to keep explicit: heart rate, respiration, blood pressure,
+  and temperature.
+- Friday should avoid one-size-fits-all specialty claims and should narrow one
+  emergency / internal-medicine-style flow before all-specialty expansion.
+
+The main answer should stay on three questions:
+
+1. How should an all-specialty AI triage system be modularized?
+2. How can physiological data be integrated into triage analysis?
+3. What FDA or medical-society examples show how specific vital data affects
+   analysis?
 
 ## Opening Answer
 
-For Friday, I would open with this:
+Use this as the first 60-90 seconds:
 
-> We should not start by claiming that AI can decide triage level. The feasible
-> and defensible first step is a vital-aware triage-support workflow. iMVS
-> already measures BP, SpO2, HR, temperature, height/weight/BMI, and optionally
-> glucose. Those measurements can change question priority and review wording.
-> FDA helps define the CDS / intended-use / transparency boundary, while the
-> clinical question logic should be governed by ESI, AHA/ACC, CDC, ADA, AUA or
-> other specialty sources, plus local clinician/company sign-off.
+> I focused the initial research on your Friday questions: all-specialty modular
+> triage architecture, how vital-sign data changes analysis, and which FDA or
+> medical-society source families can support the logic. My short answer is:
+> keep one shared intake and routing core, add specialty modules as source-
+> governed question sets, and let measured vitals change question priority and
+> clinician-review summary wording. The v0 should remain triage support, not
+> diagnosis or autonomous acuity decision.
 
-Then show the architecture and the source-governance matrix.
-
-## Recommended Meeting Goal
-
-Do not try to decide the whole product in this meeting.
-
-The goal should be to get agreement on five decisions:
-
-1. v0 is triage support, not diagnosis.
-2. v0 inserts after iMVS measurement completes.
-3. v0 can use synthetic iMVS-shaped payloads for June demo planning.
-4. v0 question logic must use source registry rows and clinical sign-off.
-5. v0 output is a clinician-review summary, not an ESI score or final acuity
-   decision.
+Then move directly into the three answers below.
 
 ## 20-Minute Meeting Structure
 
 | Time | Topic | Desired outcome |
 | --- | --- | --- |
-| 0-3 min | Executive framing | Align that this is feasibility/source governance, not prototype/FDA memo. |
-| 3-6 min | Architecture insertion point | Confirm after-measurement workflow and synthetic payload boundary. |
-| 6-11 min | Vital-to-question matrix | Confirm which measured fields matter for v0. |
-| 11-15 min | Source governance | Confirm FDA vs clinical-source division. |
-| 15-18 min | Example flows | Walk through chest pain/high BP/SpO2 and fever/urinary examples. |
-| 18-20 min | Decisions needed | Confirm target SKU, guaranteed fields, wording, reviewer, and next artifact. |
+| 0-2 min | Restate their Friday questions | Confirm we are answering the requested action item. |
+| 2-7 min | Q1: modular all-specialty method | Align on shared core plus specialty modules. |
+| 7-13 min | Q2: physiological-data impact | Show how BP, SpO2, Temp, HR, BMI, and Glucose affect question priority and review summary. |
+| 13-17 min | Q3: source examples | Separate FDA boundary sources from medical-society / emergency-medicine question sources. |
+| 17-20 min | Clarifications needed | Ask only the minimum questions needed to continue: target device, guaranteed fields, source owner, output wording. |
 
-If time is only 10 minutes, skip the source registry details and show only the
-architecture, vital matrix, and decision requests.
+If time is only 10 minutes: answer Q1/Q2/Q3 in order and skip all
+supplemental notes.
 
 ## Slide Outline
 
-### Slide 1 - Core Answer
+### Slide 1 - Friday Questions And Short Answer
 
 Title:
 
 ```text
-Vital-Aware AI Triage: Feasibility And Source Governance
+AI Triage With Vital Signs: Friday Initial Research Answer
 ```
 
 Main message:
 
 ```text
-Measured vitals can change AI follow-up questions and review summaries.
-They should not create autonomous diagnosis or final triage decisions in v0.
+Use a shared triage core plus specialty modules. Add measured vital signs after
+iMVS measurement. Use authoritative sources for question families and review
+signals. Keep v0 as triage support, not diagnosis.
 ```
 
 Bullets:
 
-- iMVS already has a measurement-centered workflow.
-- AI should enter after measurement.
-- Output should support nurse/clinician review.
-- Clinical logic requires source provenance and sign-off.
+- 慧誠 already has measurement workflow and vital-sign payloads.
+- The AI layer should start after measurement, not replace the kiosk workflow.
+- Full all-specialty coverage should be modular, not one huge prompt/database.
+- Vitals should change question priority and staff/clinician review summaries.
+- The strongest first vital-sign story is emergency / internal-medicine-style
+  triage support; urology is less vital-sign-driven and should be framed as a
+  structured-intake reference.
+- FDA helps define software/intended-use boundaries; clinical question logic
+  needs emergency medicine, medical society, public-health, or local protocol
+  sources.
 
-Speaker note:
+### Slide 2 - Q1: Modular All-Specialty Method
 
-> The value is not "chatbot in a kiosk." The value is a vital-aware intake and
-> review workflow that uses 慧誠's existing hardware advantage.
+Answer:
 
-### Slide 2 - Architecture Insertion Point
+```text
+Build one shared core, then attach specialty/symptom modules.
+```
 
-Diagram:
+Architecture:
 
 ```mermaid
 flowchart LR
-  A[iMVS measurement] --> B[Vital payload]
-  B --> C[Vital adapter]
-  D[Touch / ASR symptom input] --> E[Intake layer]
-  C --> F[Question router]
-  E --> F
-  G[Source registry] --> F
-  F --> H[Follow-up questions]
-  H --> I[Clinician-review summary]
-  I --> J[Nurse / clinician]
+  A[Shared intake layer] --> B[Question router]
+  C[Vital-sign adapter] --> B
+  D[Source registry] --> B
+  B --> E[Cardio / chest module]
+  B --> F[Respiratory / fever module]
+  B --> G[Urinary module]
+  B --> H[Diabetes / glucose module]
+  E --> I[Clinician-review summary]
+  F --> I
+  G --> I
+  H --> I
 ```
 
-Bullets:
+Key points:
 
-- Start after measurement completes.
-- Use synthetic iMVS-shaped payload for v0.
-- Keep output read-only/report-only for first demo.
-- No HIS/EMR writeback claim in v0.
+- Shared core: identity/demo session, chief complaint, answer state, vital
+  adapter, question router, source registry, summary format.
+- Specialty modules: cardiovascular, respiratory/fever, urinary, diabetes /
+  glucose, and future modules.
+- Each module owns question rows, source IDs, vital triggers, clinical purpose,
+  evidence status, and review owner.
+- This is all-specialty-capable architecture, not a claim of complete
+  all-specialty clinical coverage.
 
-Speaker note:
+### Slide 3 - Q2: How Physiological Data Changes Analysis
 
-> The safest insertion point is after vital measurement, before any permanent
-> clinical record writeback or treatment instruction.
+Answer:
 
-### Slide 3 - What Vitals Change
+```text
+Vital signs should change what the system asks next and what the reviewer sees.
+They should not independently diagnose or decide final triage level in v0.
+```
 
-Table:
-
-| Vital | v0 effect | Boundary |
+| Vital data | v0 analysis effect | Safe Friday example |
 | --- | --- | --- |
-| BP | prioritize cardiovascular/neurologic red flags | threshold needs sign-off |
-| SpO2 | prioritize respiratory/cardiopulmonary review | exact rule needs sign-off |
-| Temp | route fever/infection/systemic questions | source mapping needed |
-| HR | instability context with symptoms/other vitals | not standalone rule |
-| BMI/weight | context in summary | not urgent trigger in v0 |
-| Glucose | optional metabolic branch | only if field available |
+| BP | Prioritize cardiovascular / neurologic red-flag questions and review wording. | Very high BP plus chest pain, dyspnea, weakness, numbness, vision/speech change. |
+| SpO2 | Prioritize respiratory / cardiopulmonary questions and clinician-review flag. | Low oxygenation plus dyspnea, chest pain, cough, or distress. |
+| Temperature | Route toward fever, infection, systemic-risk, dehydration, respiratory, or urinary follow-up. | Fever plus urinary symptoms, cough, confusion, weakness, or reduced urination. |
+| HR | Add physiologic-instability context when combined with symptoms and other vitals. | HR plus fever, chest pain, dyspnea, low BP, or low SpO2. |
+| Respiration | Treat respiratory status as a core clinical signal if measured or observed; connect to dyspnea/distress review. | Respiratory distress plus low SpO2, fever, chest pain, or abnormal HR/BP. |
+| BMI / height / weight | Add context in clinician summary; not an urgent trigger by itself. | Chronic/metabolic context or specialty-module context. |
+| Glucose | Optional metabolic branch if available. | Confusion, weakness, sweating, nausea/vomiting, dyspnea, medication/meal timing. |
 
-Speaker note:
-
-> The claim is not that each vital independently decides triage. The claim is
-> that vitals change what the system asks next and what the clinician sees.
-
-### Slide 4 - Source Governance
-
-Table:
-
-| Question | Right source |
-| --- | --- |
-| Is this CDS / software risk / intended use? | FDA |
-| Should vitals affect ED review priority? | ESI / emergency triage framework |
-| Which cardiovascular red flags matter? | AHA / ACC / emergency medicine |
-| Which fever/respiratory warning signs matter? | CDC / ID / local protocol |
-| Which glucose symptoms matter? | ADA / emergency protocol |
-| What exact wording and threshold is allowed? | clinician/company sign-off |
-
-Speaker note:
-
-> FDA is essential for the software boundary, but FDA is not the source of the
-> symptom questionnaire. This separation is the core governance answer.
-
-### Slide 5 - Example Flow: Chest Pain + High BP / Low SpO2
-
-Input:
+Boundary:
 
 ```text
-BP 188/122, SpO2 91%, HR 112
-Chief concern: chest pressure
+Vitals modify question priority, review signals, and summary structure.
+They do not create autonomous diagnosis, treatment advice, final ESI level, or
+automatic emergency order.
 ```
 
-Questions prioritized:
+### Slide 4 - Q3: FDA / Medical-Society Source Strategy
 
-- active chest pressure;
-- radiation to arm/shoulder/back/neck/jaw/stomach;
-- shortness of breath;
-- weakness/numbness/vision/speech/lightheadedness;
-- sudden onset, worsening, or at rest.
-
-Output:
+Answer:
 
 ```text
-Staff review suggested based on measured vitals plus reported symptoms.
-Not diagnosis. Not treatment. Not final ESI level.
+Use FDA for software boundary and intended-use discipline. Use medical society,
+emergency medicine, public-health, or local clinical sources for symptom and
+vital-question logic.
 ```
 
-Speaker note:
+| Need | Source family | Friday use |
+| --- | --- | --- |
+| Software / intended-use boundary | FDA CDS guidance, FDA Digital Health Policy Navigator | Explain why output should be reviewable support, not opaque autonomous triage. |
+| All-specialty / emergency triage framing | ESI / emergency medicine framework | Support the idea that vital signs can affect acuity or review concern. |
+| High BP + warning symptoms | AHA high-blood-pressure emergency guidance | Example for BP plus chest pain, dyspnea, neuro/vision/speech symptoms. |
+| Chest-pain warning signs | AHA heart attack / ACS warning-sign family | Example for radiation, shortness of breath, sweating, nausea, lightheadedness. |
+| Fever / respiratory warning signs | CDC / public-health or ID sources | Example for difficulty breathing, chest pain, confusion, dehydration, worsening symptoms. |
+| Glucose symptoms | ADA hypo/hyperglycemia guidance | Example for confusion, weakness, sweating, nausea/vomiting, dyspnea. |
+| Local threshold and wording | Hospital / company protocol, clinician sign-off | Final authority for exact wording, threshold, and workflow behavior. |
 
-> This demonstrates the product differentiator: measured vitals shape the
-> questioning path and the review summary.
+### Slide 5 - Minimum Questions To Ask 慧誠
 
-### Slide 6 - Example Flow: Fever + Urinary Or Respiratory Symptoms
+Ask only what is needed to continue the requested research path:
 
-Input:
+1. Which iMVS device / SKU is the first target?
+2. Which measured fields are guaranteed: BP, SpO2, HR, Temp, Height, Weight,
+   BMI, Glucose?
+3. Can v0 use synthetic iMVS-shaped values for examples and demo planning?
+4. Which source family should control all-specialty urgent-care wording: ESI,
+   medical societies, customer protocol, or clinician-authored content?
+5. Who signs off on vital thresholds and red-flag wording?
+6. For June, do they need a memo/slide answer only, or a small clickable demo
+   after this research direction is accepted?
 
-```text
-Temp 38.7 C, HR 108
-Chief concern: fever and painful urination
-```
+Do not ask about `510(k)` comparator, data lifecycle, go/no-go packet, or
+prototype implementation unless they raise those topics.
 
-Questions prioritized:
+## Supplemental Notes - Use Only If Asked
 
-- fever/chills duration;
-- dysuria/frequency/urgency;
-- flank/back pain;
-- vomiting, severe weakness, dizziness, confusion;
-- shortness of breath, cough, chest pain;
-- reduced urination or inability to keep fluids down.
+### If They Ask About FDA / 510(k)
 
-Output:
+Say:
 
-```text
-Review wording pending clinician/company sign-off.
-Not diagnosis of UTI, pyelonephritis, sepsis, flu, or pneumonia.
-```
+> FDA is useful for intended-use, CDS boundary, transparency, and comparable
+> product-scope discipline. FDA is not the main source for symptom-question
+> wording. If you have a US partner product, competitor, or `510(k)` reference,
+> we can extract its indications, functions, limitations, and safe wording as a
+> supplement.
 
-Speaker note:
+Do not lead with this unless they ask about FDA product scope.
 
-> Temperature does not diagnose infection. It chooses a safer branch of
-> follow-up questions and flags what staff should review.
+### If They Ask For A Prototype Immediately
 
-### Slide 7 - Decisions Needed From 慧誠
+Say:
 
-Questions:
+> A small demo is possible after we agree on the source-governed flow. For v0 I
+> would keep it synthetic-payload only, deterministic, two flows only, and
+> clinician-review summary only.
 
-1. Which iMVS SKU is the June demo target?
-2. Which fields are guaranteed: BP, SpO2, HR, Temp, Height, Weight, BMI,
-   Glucose?
-3. Is synthetic payload acceptable for v0?
-4. Should AI appear as same app, embedded page, link-out, or standalone demo?
-5. What exact output wording is safe: "staff review suggested" or softer
-   wording?
-6. Who signs off on vital thresholds and question logic?
-7. Does June need clickable mock, architecture memo, slides, or all three?
+Do not make prototype status the main Friday topic.
 
-Speaker note:
+### If They Ask About Safety / Governance
 
-> These are the questions that convert research into an implementation plan.
+Say:
 
-## Talking Points By Audience
+> The safe boundary is triage support: no diagnosis, no treatment advice, no
+> final ESI level, no autonomous emergency order, no real patient data, and no
+> production HIS/EMR writeback.
 
-### For Prof. Wu
+Use the reviewer packet only if the discussion moves toward customer-facing demo
+approval.
 
-Emphasize:
+### If They Ask About Basic Hardware / Cloud Cost
 
-- clinical workflow first;
-- source traceability;
-- triage support, not diagnosis;
-- clinician review;
-- no overclaiming before data/sign-off.
+Say:
 
-Suggested wording:
-
-> This keeps the work aligned with a clinical deployment mindset. We are not
-> inventing triage rules. We are building the governance structure that lets
-> company/device data, source-backed questions, and clinician review fit
-> together.
-
-### For 慧誠 Product / Business Side
-
-Emphasize:
-
-- differentiator versus generic symptom checker;
-- measured vital signs as product advantage;
-- June demo can be capability proof;
-- synthetic payload avoids integration delay;
-- output can be market-safe if wording stays bounded.
-
-Suggested wording:
-
-> The demo story is that 慧誠's kiosk already captures signals that ordinary
-> symptom checkers do not. The AI layer uses those measured signals to ask
-> better follow-up questions and produce a clearer staff-review summary.
-
-### For Clinician Reviewer
-
-Emphasize:
-
-- every question has provenance;
-- exact thresholds are not final;
-- the system shows basis for review;
-- local protocol can override source-family defaults.
-
-Suggested wording:
-
-> We are asking you to review whether these source families and question
-> purposes are appropriate. We are not asking the system to independently make a
-> clinical decision.
-
-### For Engineering / Demo Builder
-
-Emphasize:
-
-- use synthetic payload;
-- parse vitals cleanly;
-- keep question router deterministic for first demo;
-- show source IDs in clinician/debug view;
-- no real patient data or live HIS/EMR writeback.
-
-Suggested wording:
-
-> The first implementation should be a deterministic source-governed workflow,
-> not an open-ended medical chatbot.
-
-## Decision Table For Friday
-
-| Decision | Preferred answer | Why it matters | Owner |
-| --- | --- | --- | --- |
-| v0 intended use | Triage-support summary for clinician/staff review. | Avoid diagnosis/autonomous triage claim. | Prof. Wu / company. |
-| insertion point | After iMVS measurement completes. | Uses measured vitals and avoids disrupting login/measurement. | Company product/engineering. |
-| data mode | Synthetic iMVS-shaped payload for first demo. | Avoids real patient data and integration delay. | Company engineering. |
-| output wording | "Staff review suggested" or softer approved wording. | Controls safety and regulatory boundary. | Clinician/company. |
-| source method | FDA for software boundary; ESI/AHA/CDC/ADA/AUA/local protocol for clinical question families. | Prevents treating FDA as symptom-question source. | Clinical/research lead. |
-| first flows | Chest pain/vital red flags and fever/urinary or respiratory symptoms. | Enough to demonstrate vital-aware value without broad all-specialty overclaim. | Project team. |
-| June artifact | Clickable mock only if requested; otherwise memo + architecture + source matrix. | Keeps work bounded before sign-off. | Company/business. |
-
-## Recommended Next Work After Friday
-
-If Friday confirms the source-governance direction:
-
-1. Build a small `source_registry.csv` or JSON file with source IDs, source
-   names, URLs, dates, and allowed-use notes.
-2. Build `question_registry.csv` with `question_id`, `patient_text`,
-   `trigger_vital`, `trigger_symptom`, `source_id`, `status`, and
-   `review_owner`.
-3. Implement only two deterministic demo flows:
-   - chest pain + BP/SpO2/HR;
-   - fever + urinary/respiratory symptoms.
-4. Generate a static clinician-review summary from synthetic payloads.
-5. Keep ASR optional; touch input is enough for the first governed demo.
-
-If Friday asks for a clickable June demo:
-
-1. Make it a browser-only prototype.
-2. Use no real patient data.
-3. Keep payloads under `demo/fixtures/`.
-4. Add visible "demo only; not diagnosis" boundary in clinician output.
-5. Put source IDs in a reviewer/debug panel.
-
-If Friday asks for more clinical rigor before demo:
-
-1. Stop prototype work.
-2. Expand the source registry.
-3. Ask for named clinician reviewer.
-4. Convert each branch into question-provenance rows.
-5. Do not invent thresholds.
+> The architecture can be low-cost because the first v0 does not require a large
+> generative model to decide clinical routing. The core can be deterministic:
+> vital adapter, symptom state, source-governed question router, and summary
+> template. ASR can remain optional or staged.
 
 ## Follow-Up Email Draft
 
 Subject:
 
 ```text
-Follow-up: vital-aware AI triage feasibility and source-governance direction
+Friday follow-up: modular AI triage and vital-sign integration
 ```
 
 Body:
@@ -350,104 +283,31 @@ Body:
 ```text
 Hi all,
 
-For Friday's discussion, my current recommendation is to frame the first
-deliverable as a vital-aware AI triage feasibility and source-governance
-artifact, not as a prototype or full FDA memo.
+For Friday, I focused the initial research on the questions raised in the
+follow-up note:
 
-The proposed v0 direction is:
+1. How to structure an all-specialty AI triage system as modular components.
+2. How physiological data can be integrated into the analysis.
+3. Which FDA or medical-society source families can support the effect of
+   specific vital data.
 
-1. Use iMVS measurement completion as the AI insertion point.
-2. Consume an iMVS-shaped vital payload, initially synthetic for demo safety.
-3. Use measured vitals to prioritize follow-up questions and produce a
-   clinician-review summary.
-4. Keep the output as triage support, not diagnosis, treatment advice, or final
-   triage level.
-5. Use FDA for CDS / intended-use / software-risk / transparency boundaries.
-6. Use ESI, AHA/ACC, CDC, ADA, AUA or other specialty / hospital protocol
-   sources for question families and vital-trigger interpretation.
-7. Require clinician/company sign-off for exact thresholds and output wording.
+My current recommendation is:
 
-The two suggested example flows for review are:
+- Use one shared intake / routing core, then attach specialty modules.
+- Insert the AI layer after iMVS measurement completes.
+- Let vitals affect question priority, review signals, and clinician-summary
+  wording.
+- Keep v0 as triage support, not diagnosis, treatment advice, or final triage
+  level.
+- Use FDA for software / intended-use boundary, and use emergency medicine,
+  medical society, public-health, or local clinical protocols for question
+  logic.
 
-- chest pain with high BP / low SpO2 context;
-- fever with urinary or respiratory symptoms.
-
-The key decisions needed from 慧誠 are target SKU, guaranteed measured fields,
-demo integration mode, acceptable output wording, and the clinical reviewer /
-sign-off owner.
+The minimum decisions needed from 慧誠 are target device, guaranteed vital
+fields, whether synthetic iMVS-shaped values are acceptable for v0, which source
+family should control urgent-care wording, and who signs off on thresholds /
+red-flag wording.
 
 Best,
 Jason
 ```
-
-## What To Say If They Ask About FDA
-
-Short answer:
-
-> FDA is important, but not as the source of the symptom questionnaire. FDA is
-> where we check intended use, CDS boundary, whether the clinician can
-> independently review the basis, whether the software is directive or
-> time-critical, and whether claims create device-risk concerns.
-
-Longer answer:
-
-> For the clinical content, FDA helps us avoid overclaiming, but the actual
-> question logic should come from clinical and professional sources. For example,
-> ESI supports the general role of vital signs in triage acuity review; AHA
-> supports cardiovascular and high-BP warning-sign families; CDC supports
-> fever/respiratory emergency warning-sign families; ADA supports glucose symptom
-> families; and local protocol/clinician review decides exact wording and
-> thresholds.
-
-## What To Say If They Ask For A Prototype Immediately
-
-Recommended answer:
-
-> A small prototype is possible, but it should be a synthetic-payload,
-> deterministic demo after the source-governance rows are agreed. If we build
-> before agreeing on source status and output wording, the prototype may
-> accidentally imply clinical claims that we do not want to make.
-
-Acceptable prototype scope:
-
-- browser-only;
-- synthetic iMVS payload;
-- two flows only;
-- no diagnosis;
-- no final acuity score;
-- no real patient data;
-- clinician-review summary only;
-- source IDs visible.
-
-## What To Say If They Want All-Specialty Coverage
-
-Recommended answer:
-
-> All-specialty coverage should be a modular architecture goal, not a Friday
-> claim. The shared infrastructure can be all-specialty: vital adapter, intake
-> layer, question router, source registry, and summary format. Each specialty
-> module then needs its own source rows and review owner.
-
-Good near-term phrasing:
-
-```text
-The v0 system is all-specialty-capable in architecture, but only selected
-symptom/vital flows are source-mapped for the first demo.
-```
-
-Avoid:
-
-```text
-The system already performs all-specialty clinical triage.
-```
-
-## Final Meeting Close
-
-Close with:
-
-> If we agree on this source-governed direction, the next concrete deliverable
-> is either a slide/memo package for the June customer conversation or a small
-> synthetic-payload browser demo with two governed flows. I would not recommend
-> expanding to a general chatbot until the source registry and reviewer owner
-> are in place.
-

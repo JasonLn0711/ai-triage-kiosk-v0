@@ -33,7 +33,8 @@ Stay in memo/source-registry mode if any of these occur:
 - live HIS/EMR writeback is required for June;
 - no clinical/company reviewer is named;
 - customer-facing language requires "diagnosis," "clinical-grade triage,"
-  "FDA-approved," or "AI decides acuity";
+  "FDA-approved," "FDA-cleared," "510(k)-cleared demo,"
+  "predicate-equivalent demo," or "AI decides acuity";
 - all-specialty clinical coverage is expected by June;
 - target SKU and guaranteed vital fields remain unknown;
 - output wording cannot be approved before demo.
@@ -61,4 +62,3 @@ Forbidden implementation scope:
 - live hospital authentication;
 - production endpoint URLs;
 - HIS/EMR writeback.
-

@@ -28,6 +28,20 @@ patient symptom questionnaire. Triage/question logic should come from emergency
 medicine frameworks, specialty society guidance, public-health guidance, and
 clinician/company protocols.
 
+Friday meeting constraint:
+
+- Main discussion should answer the company email's requested questions only:
+  modular all-specialty AI triage method, physiological-data integration, and
+  FDA / medical-society examples for vital-data impact.
+- `510(k)` scan, go/no-go checklist, data lifecycle, human handoff, and
+  prototype implementation stay in supplemental notes unless 慧誠 or Prof. Wu
+  raises them.
+- Finish only the meeting-ready package: `60-90` second opening answer,
+  five-section talking track, vital-sign-to-question matrix, 多寶 clinical
+  calibration, six company questions, and 多寶 invite/logistics. Do not expand
+  into full prototype, broad regulatory package, invented thresholds,
+  production clinical rules, or all-specialty completion claims.
+
 ## Sources Checked For This Gate
 
 Company / product sources:
@@ -45,6 +59,8 @@ Company / product sources:
 
 Regulatory / clinical-source starting points:
 
+- FDA Releasable `510(k)` Database.
+- FDA Content of a `510(k)`.
 - FDA Clinical Decision Support Software final guidance, content current as of
   `2026-01-29`.
 - FDA Digital Health Policy Navigator Step 6 on clinical decision support.
@@ -92,6 +108,11 @@ Produce one concise artifact with these sections:
    - guaranteed vital fields;
    - accepted output wording;
    - clinical sign-off owner.
+7. Supplemental notes, only if asked:
+   - `510(k)` / product-scope scan method;
+   - go/no-go checklist for clickable demo;
+   - data lifecycle and human handoff guardrails;
+   - prototype implementation boundary.
 
 ## Vital-To-Question Impact Matrix V0
 
@@ -145,6 +166,9 @@ Avoid:
 - "diagnosis"
 - "AI decides emergency level"
 - "FDA-approved"
+- "FDA-cleared"
+- "`510(k)`-cleared demo"
+- "predicate-equivalent demo"
 - "clinical-grade triage"
 - "automatic ED referral"
 - "production HIS / EMR integration"
@@ -186,6 +210,9 @@ nonessential polish. It does not displace:
 - What output wording is safe for customer demonstration?
 - Who signs off on clinical-source choices and vital-threshold interpretation?
 - Does Friday require slides, memo, architecture diagram, or clickable demo?
+- Supplemental only if FDA product scope comes up: what is the nearest US
+  partner/customer product, competitor, or FDA `510(k)` reference for
+  product-scope comparison?
 
 ## Bottom Line
 
@@ -194,4 +221,5 @@ The strongest Friday answer is:
 > We can make 慧誠's kiosk more than a symptom checker by using measured vital
 > signs to control dynamic questioning and clinician-review summaries. The first
 > rigorous step is a source-governed architecture and vital-impact matrix, not a
-> production clinical model.
+> production clinical model. `510(k)` product-scope work stays supplemental
+> unless they ask about FDA/comparator positioning.

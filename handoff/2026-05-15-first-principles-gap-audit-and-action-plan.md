@@ -193,6 +193,9 @@ Approved:
 Forbidden unless separately cleared:
 
 - "FDA-approved"
+- "FDA-cleared"
+- "510(k)-cleared demo"
+- "predicate-equivalent demo"
 - "clinical-grade triage"
 - "AI decides emergency level"
 - "automated ED referral"

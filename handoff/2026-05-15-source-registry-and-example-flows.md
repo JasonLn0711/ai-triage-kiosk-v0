@@ -18,6 +18,12 @@ The goal is not to lock a final triage rule. The goal is to make the Friday
 discussion concrete enough that 慧誠 and clinical reviewers can approve,
 replace, or reject each branch.
 
+The first registry layer is product scope, not clinical rules. If 慧誠 can name
+the US partner product, competitor, or FDA `510(k)` reference, extract its
+indications for use, device description, functions, limitations, and evidence
+categories before comparing the demo story. If no comparator is available, keep
+the comparator field open instead of inventing a predicate-style claim.
+
 ## Evidence Status Legend
 
 | Status | Meaning | Allowed Friday use |
@@ -31,6 +37,8 @@ replace, or reject each branch.
 
 | Source ID | Source | Use in this project | Source-backed point | Limits |
 | --- | --- | --- | --- | --- |
+| `FDA-510K-DB` | FDA Releasable 510(k) Database | Search comparable products by device name, product code, or 510(k) number. | Database rows expose device classification, regulation number, device name, applicant, product code, decision date, and summary/statement availability. | A database hit does not mean the v0 demo is cleared, equivalent, or clinically validated. |
+| `FDA-510K-CONTENT` | FDA Content of a 510(k) | Defines what to extract from a 510(k) summary or submission-style package. | FDA describes indications for use, device description, technological characteristics, comparison, and performance evidence categories. | This is a structure guide for product-scope extraction, not a clinical questionnaire source. |
 | `FDA-CDS-FAQ-2022` | FDA Clinical Decision Support Software FAQ | Defines CDS boundary and multi-function product framing. | FDA published final CDS guidance to clarify which CDS functions may be excluded from the device definition; FDA also recommends using the Digital Health Policy Navigator for multi-function products. | Does not define symptom questions, ED triage thresholds, or vital-sign logic. |
 | `FDA-DHPN-STEP6` | FDA Digital Health Policy Navigator, Step 6 | Defines CDS question set: patient medical information, recommendations/options, HCP review, and directive/time-critical concerns. | Medical information can include symptoms, test results, clinical practice guidelines, peer-reviewed studies, textbooks, labeling, and government recommendations. | Navigator output is not a formal device determination; not a clinical source for questionnaire content. |
 | `ENA-ESI-V5` | Emergency Nurses Association, Emergency Severity Index Handbook, 5th edition | Supports the claim that vitals can change acuity/review concern in ED triage. | ESI includes a decision point for whether vital signs warrant reassessment of acuity; high-risk vital-sign discussion includes HR/RR and SpO2. | ESI is an ED triage framework and assumes trained clinical users. Do not turn it into autonomous kiosk triage without clinical approval. |
@@ -43,6 +51,26 @@ replace, or reject each branch.
 | `ADA-HYPER-SX` | American Diabetes Association, hyperglycemia | Supports high-glucose branch symptom families. | Hyperglycemia can be serious; ketoacidosis warning symptoms include shortness of breath, fruity breath, nausea/vomiting, and very dry mouth. | Source does not establish iMVS-specific glucose triage rule. |
 | `AUA-RUTI-2025` | American Urological Association recurrent uncomplicated UTI guideline | Supports urinary-symptom source-family routing and exclusion of systemic illness from uncomplicated UTI framing. | Fever and flank pain are relevant systemic/upper-tract concern signals in urinary symptom context. | rUTI guideline is not an all-patient ED triage guideline; exact branch needs urology/emergency review. |
 | `LOCAL-PROTOCOL-TBD` | Hospital / company / clinician protocol | Final authority for demo threshold, output wording, and workflow behavior. | Local reviewer can decide whether a branch says "staff review suggested" or uses softer wording. | Not yet provided. Must not be invented. |
+
+## 510(k) Comparator Scan Template
+
+Use this table only after a real comparator product or `510(k)` number is named.
+Until then, leave the row as `product-reference-needed`.
+
+| Field | Value to record | Evidence source | Allowed Friday use |
+| --- | --- | --- | --- |
+| Comparator product | Product name, applicant, `510(k)` number, product code, decision date. | FDA `510(k)` database or company-provided reference. | Establish nearest product shape; not a predicate claim. |
+| Indications for use | Intended setting, user, patient population, and clinical purpose. | Releasable summary or indications-for-use document. | Compare safe wording and scope boundary. |
+| Functions | Inputs, outputs, display/recommendation behavior, review workflow, and integration claims. | Summary, labeling description, or product materials. | Separate iMVS measurement from AI routing and review-summary functions. |
+| Limitations | Warnings, user responsibility, excluded populations, data limits, and required review. | Summary / labeling / product materials. | Prevent overclaiming in the June demo. |
+| Evidence category | Software, usability, bench, non-clinical, clinical, or other performance evidence. | Summary performance section. | Inform future validation ladder only. |
+| Reusable wording | Exact phrase family such as support, screening, review, or recommendation. | Summary or public product material. | Reuse only after product / clinical review. |
+
+Current placeholder:
+
+| Field | Value | Evidence source | Allowed Friday use |
+| --- | --- | --- | --- |
+| Comparator product | `product-reference-needed` | Ask 苗先生 / 慧誠 for US partner product, customer reference, competitor, or `510(k)` number. | Open request only; do not make predicate-style comparison. |
 
 ## Data Field Registry V0
 
@@ -304,4 +332,3 @@ iMVS measured field
 
 That is the rigorous path between "we have vital signs" and "vital signs change
 AI triage questioning" without overclaiming diagnosis or regulatory clearance.
-

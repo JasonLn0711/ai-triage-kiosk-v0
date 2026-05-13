@@ -10,6 +10,8 @@ Status: internal language guardrail for Friday / June discussion
 - staff-review summary
 - synthetic-data capability demo
 - measured-vital context
+- 510(k) product-scope scan
+- comparable-product scan
 - demo-only workflow feasibility
 - not diagnosis or autonomous triage
 - no real patient data in v0
@@ -25,6 +27,8 @@ Use only with context:
 | all-specialty | Say "all-specialty-capable architecture," not clinically complete all-specialty triage. |
 | ESI | Say source-family or framework reference, not assigned ESI level. |
 | FDA | Say software boundary / CDS / transparency, not clearance or approval. |
+| 510(k) | Say product-scope scan or comparator reference, not clearance for this demo. |
+| predicate | Say potential comparator unless a regulatory owner approves predicate language. |
 | clinical validation | Say future validation ladder, not completed validation. |
 | integration | Say demo/link-out/read-only unless live integration is approved. |
 
@@ -34,6 +38,8 @@ Do not use unless a separate regulatory/clinical decision explicitly clears it:
 
 - FDA-approved;
 - FDA-cleared;
+- 510(k)-cleared demo;
+- predicate-equivalent demo;
 - clinical-grade triage;
 - AI decides acuity;
 - automatic emergency referral;
@@ -53,4 +59,3 @@ This is a synthetic-data capability demo showing how measured vital signs can
 support source-governed follow-up questions and a clinician-review summary; it
 is not diagnosis, treatment advice, or autonomous triage.
 ```
-

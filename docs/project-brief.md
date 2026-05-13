@@ -34,7 +34,7 @@ the Friday artifact must be a FDA `510(k)` / comparable-product scope scan:
 comparable product
 -> 510(k) summary
 -> indication for use
--> predicate / function list
+-> comparator / function list
 -> safe demo wording
 ```
 
@@ -103,6 +103,8 @@ flowchart TD
 - Is v0 integration a link, iframe, same web app, API handoff, or mocked flow?
 - What exact vital-sign payload can the kiosk expose?
 - Can the demo use simulated vital signs?
+- What is the nearest comparable product, competitor, or FDA `510(k)` reference
+  for product-scope comparison?
 - What minimum symptom flow should be shown?
 - Is ASR required for v0, or can typed input stand in for voice?
 - Which vital signs affect question routing, and how is each effect justified?
@@ -123,12 +125,15 @@ validation, privacy, cybersecurity, and company approvals exist.
 
 ## Immediate Friday Artifact
 
-By Friday `2026-05-15`, prepare a compact feasibility artifact covering:
+By Friday `2026-05-15`, keep the main artifact focused on 慧誠's action-item
+questions:
 
-- `510(k)` competitor / predicate-device table;
-- intended-use options and safest product label;
-- product insertion diagram;
 - modular all-specialty triage method map;
+- product insertion diagram;
 - vital-to-question impact matrix;
 - clinical-source governance plan;
 - demo scope and no-diagnosis boundary.
+
+Keep the `510(k)` comparator / product-scope table, detailed intended-use
+options, go/no-go packet, data lifecycle, and prototype details as supplemental
+notes unless 慧誠 asks about them.

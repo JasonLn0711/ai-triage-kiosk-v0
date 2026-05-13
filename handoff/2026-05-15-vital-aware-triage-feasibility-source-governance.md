@@ -2,7 +2,7 @@
 
 Date: 2026-05-15 discussion package draft  
 Prepared for: internal discussion with Prof. Wu / 慧誠智醫 / collaborators  
-Status: feasibility and source-governance artifact, not prototype, not FDA memo
+Status: feasibility and source-governance artifact, not prototype, not FDA clearance memo
 
 ## Executive Answer
 
@@ -14,7 +14,7 @@ The strongest Friday answer is:
 > be a source-governed workflow and vital-impact matrix, not autonomous diagnosis,
 > not treatment advice, and not production triage.
 
-The short-term artifact should prove four things:
+The short-term artifact should prove five things:
 
 1. The AI insertion point is after iMVS measurement completes.
 2. Physiological data should influence follow-up questioning and summary
@@ -24,6 +24,39 @@ The short-term artifact should prove four things:
 4. Question logic and vital-trigger interpretation need ESI, emergency medicine,
    specialty society guidance, public-health guidance, hospital protocol, or
    clinician/company sign-off.
+5. FDA `510(k)` material should be used as a product-scope and comparable-device
+   scan, not as a claim that the demo is cleared, approved, or clinically
+   validated.
+
+## 510(k) Product-Scope Scan
+
+Prof. Wu's `2026-05-12 22:20` direction changes the first research move:
+before promising vital-sign-integrated AI triage, identify the closest
+world-accepted product shape and its boundaries.
+
+Use FDA `510(k)` material to extract product-scope facts:
+
+| Scan field | What to capture | Friday use | Current status |
+| --- | --- | --- | --- |
+| Comparable product | Device name, applicant, product code, decision date, and `510(k)` number. | Shows whether there is an adjacent legally marketed product shape. | Product/reference needed from 苗先生 / 慧誠 or a bounded FDA database search. |
+| Indications for use | Intended setting, target users, patient population, clinical purpose, and conditions addressed. | Shapes v0 intended-use language and what not to claim. | Do not invent; extract only from a releasable summary or supplied comparator. |
+| Predicate / comparison logic | Predicate device, functional comparison, inputs, outputs, and limitations. | Shows which functions are market-familiar versus novel or risky. | Use as product-scope evidence, not equivalence argument. |
+| Functions and workflow | Measurement, symptom input, recommendation, display, reporting, clinician review, and integration functions. | Helps split iMVS measurement, AI question routing, and review-summary generation into separate functions. | Map only at a high level until target SKU and integration mode are confirmed. |
+| Performance evidence | Bench, software, usability, clinical, or non-clinical performance evidence referenced in the summary. | Frames future validation ladder. | Friday artifact should list evidence category, not claim equivalence. |
+| Safe wording | Public wording around support, screening, recommendation, review, and limitations. | Supplies wording examples that avoid diagnosis/autonomous triage overclaim. | Reuse only after the comparator is verified. |
+
+If no exact comparator is available before Friday, the artifact should say:
+
+> We have the scan method and the fields we need, but we still need the US
+> partner/customer product name, `510(k)` number, or nearest product reference
+> before making a predicate-style comparison.
+
+Do not say:
+
+- the v0 demo is `510(k)` cleared;
+- the demo is equivalent to any predicate;
+- FDA has accepted this intended use;
+- the demo can use the same claims as a comparator product without review.
 
 ## Scope Boundary
 
@@ -53,10 +86,27 @@ Avoid wording:
 - "diagnosis"
 - "AI decides acuity"
 - "FDA-approved"
+- "FDA-cleared"
+- "`510(k)`-cleared demo"
+- "predicate-equivalent demo"
 - "clinical-grade triage"
 - "automatic emergency order"
 - "production HIS / EMR writeback"
 - "validated all-specialty triage model"
+
+## Intended-Use Boundary
+
+Draft sentence for Friday alignment:
+
+> This v0 demo is a synthetic-data, vital-aware intake workflow that uses
+> measured vital-sign context and patient-reported symptoms to generate
+> source-governed follow-up questions and a clinician/staff review summary; it
+> is not diagnosis, treatment advice, autonomous triage, emergency ordering, or
+> production HIS/EMR integration.
+
+This sentence should appear in any Friday memo, slide, clickable demo footer,
+or reviewer packet until Prof. Wu / 慧誠 / the named clinical owner approves a
+different intended-use statement.
 
 ## Proposed Architecture
 
@@ -127,11 +177,13 @@ which symptom question to ask.
 | Does the clinician see the basis? | FDA CDS FAQ and guidance emphasize that the HCP should not rely primarily on an opaque recommendation. | Summary should show vitals, patient answers, source family, and why review is suggested. |
 | Is it time-critical or directive? | FDA Step 6 distinguishes recommendations/options from specific outputs or directives for diagnosis/treatment, especially time-critical use. | Avoid "AI says emergency"; use "staff review suggested based on measured vitals plus reported symptoms." |
 | Does the product have multiple functions? | FDA recognizes multi-function products where some functions may be device functions and others may not be the focus. | Separate kiosk measurement, display/upload, AI question routing, and summary generation as distinct functions for analysis. |
+| What can a `510(k)` summary tell us? | FDA releasable summaries can expose indications, device description, function, comparison, and performance evidence categories. | Use comparator summaries to discipline product-scope language; do not treat them as clearance for this demo. |
 
 ## Source-Governance Table
 
 | Source family | Use in this artifact | What it can support | What it cannot support yet |
 | --- | --- | --- | --- |
+| FDA `510(k)` database / summary content | Comparable-product scan, indication-for-use extraction, function comparison, and safe wording examples. | Product-scope discipline and a request list for 苗先生 / 慧誠. | A predicate claim, FDA clearance claim, or symptom-question logic for this demo. |
 | FDA CDS / Digital Health Policy Navigator | Intended-use, CDS, software-risk, transparency, independent-review boundary. | Product boundary and claim discipline. | Exact symptom-question content or vital thresholds for triage. |
 | ENA Emergency Severity Index 5th edition | ED triage logic family, high-risk situation framing, vital-sign reassessment, HR/RR/SpO2 relevance. | Why vitals can change acuity/review priority in emergency triage. | Direct product rules without clinician/company approval and jurisdiction fit. |
 | AHA / ACC / cardiovascular society guidance | BP and cardiovascular red-flag symptom family. | Why very high BP plus chest pain, dyspnea, neurologic/vision/speech symptoms should trigger urgent review questions. | All chest-pain triage logic; EKG interpretation; treatment recommendation. |
@@ -206,38 +258,42 @@ Product and integration:
 4. Can Friday and June use synthetic iMVS-shaped payloads?
 5. Which fields are guaranteed: `NBP`, `SPO2`, `HR`, `Temp`, `Glucose`,
    `Height`, `Weight`, `BMI`?
+6. What is the nearest US partner/customer product name, competitor, or
+   `510(k)` reference that 慧誠 wants us to compare against?
 
 Clinical governance:
 
-6. Who is the review owner for threshold interpretation?
-7. Which market's emergency wording should be used for the first English demo:
+7. Who is the review owner for threshold interpretation?
+8. Which market's emergency wording should be used for the first English demo:
    US, Taiwan English, Singapore, Middle East, or generic non-jurisdictional?
-8. Can we use ESI as the emergency-triage framework family, or should a hospital
+9. Can we use ESI as the emergency-triage framework family, or should a hospital
    local protocol control the demo language?
-9. Are we allowed to show source-family names in the clinician-facing summary?
-10. Is the demo allowed to say "staff review suggested," or should it only say
+10. Are we allowed to show source-family names in the clinician-facing summary?
+11. Is the demo allowed to say "staff review suggested," or should it only say
     "review signal present"?
 
 Business/demo:
 
-11. Does Friday require a memo, slides, architecture diagram, clickable mock, or
+12. Does Friday require a memo, slides, architecture diagram, clickable mock, or
     all of the above?
-12. Is the June customer expected to inspect clinical logic, integration
+13. Is the June customer expected to inspect clinical logic, integration
     feasibility, or market positioning?
-13. Should ASR be shown, hidden, or described as future capability only?
+14. Should ASR be shown, hidden, or described as future capability only?
 
 ## Immediate Workplan
 
 Before Friday discussion:
 
 1. Freeze this artifact as the source-governance baseline.
-2. Build one small source registry table for BP, SpO2, temperature, HR, BMI, and
+2. Request or identify one comparator product / `510(k)` reference; if none is
+   available, keep the product-scope scan as an open request.
+3. Build one small source registry table for BP, SpO2, temperature, HR, BMI, and
    glucose.
-3. Choose two example flows only:
+4. Choose two example flows only:
    - chest pain / high BP / low SpO2;
    - fever / urinary or respiratory symptoms.
-4. Prepare one architecture diagram and one output-summary example.
-5. Keep every clinical branch labeled as `source-backed`,
+5. Prepare one architecture diagram and one output-summary example.
+6. Keep every clinical branch labeled as `source-backed`,
    `source-family hypothesis`, or `requires clinician sign-off`.
 
 After Friday discussion:
@@ -253,8 +309,14 @@ After Friday discussion:
 
 Official sources checked for this draft:
 
+- FDA, Search the Releasable 510(k) Database:
+  https://www.fda.gov/medical-devices/510k-clearances/search-releasable-510k-database
+- FDA, Content of a 510(k):
+  https://www.fda.gov/medical-devices/premarket-notification-510k/content-510k
 - FDA, Clinical Decision Support Software FAQ:
   https://www.fda.gov/medical-devices/software-medical-device-samd/clinical-decision-support-software-frequently-asked-questions-faqs
+- FDA, Clinical Decision Support Software guidance:
+  https://www.fda.gov/regulatory-information/search-fda-guidance-documents/clinical-decision-support-software
 - FDA, Digital Health Policy Navigator Step 6:
   https://www.fda.gov/medical-devices/digital-health-center-excellence/step-6-software-function-intended-provide-clinical-decision-support
 - ENA, Emergency Severity Index Handbook, 5th Edition:
@@ -279,4 +341,3 @@ questionnaire." The stronger and safer framing is:
 > society/public-health sources to govern the clinical question families, and
 > use 慧誠 / clinician sign-off to decide the exact demo wording and threshold
 > behavior.
-

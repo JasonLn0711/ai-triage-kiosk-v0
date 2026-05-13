@@ -10,7 +10,9 @@ The current useful answer is:
 > The first task is not to build a generic chatbot. The first task is to find
 > the insertion point in 慧誠's existing vital-sign measurement workflow and show
 > that measured vital signs can drive dynamic triage-support questioning and a
-> clinician-readable summary.
+> clinician-readable summary. The product-scope layer should start from a
+> `510(k)` / comparable-product scan if 慧誠 can provide the nearest US partner
+> product, customer reference, competitor, or FDA number.
 
 Current detailed discussion artifact:
 
@@ -20,9 +22,22 @@ Current detailed discussion artifact:
 - `handoff/2026-05-15-first-principles-gap-audit-and-action-plan.md`
 - `handoff/reviewer-packet/`
 
+## Friday Mainline Rule
+
+The Friday main brief should answer only the company follow-up questions:
+
+1. modular all-specialty AI triage method;
+2. how physiological data enters analysis;
+3. FDA / medical-society examples for vital-data impact.
+
+Use `510(k)`, go/no-go, data lifecycle, human handoff, and prototype details as
+supplemental notes only if they come up in discussion.
+
 ## Required Before External Handoff
 
 - Confirm product / API materials from 慧誠.
+- Confirm the nearest comparable product / `510(k)` reference, or explicitly
+  mark it unavailable before Friday.
 - Confirm whether v0 uses mocked vital signs or real kiosk data.
 - Confirm which architecture diagram can be shared.
 - Confirm source-governance wording for any clinical question examples.
