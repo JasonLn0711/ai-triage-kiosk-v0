@@ -17,6 +17,8 @@ The current useful answer is:
 Current main meeting packet:
 
 - `handoff/2026-05-15-complete-meeting-packet.md`
+- `handoff/2026-05-15-complete-meeting-packet-zh-TW.md` for Taiwan Traditional
+  Chinese meeting use
 
 Current detailed discussion artifacts:
 
