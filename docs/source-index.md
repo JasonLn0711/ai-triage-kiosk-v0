@@ -12,6 +12,7 @@ demo lane and its direct upstream Prof. Wu context.
 | `2026-05-12 22:20` | `source/2026-05-12-wu-google-meet-ai-triage-510k/` | Prof. Wu reframed the next step after the company sync: first find comparable FDA `510(k)` summaries and `indication for use` boundaries before promising vital-sign-integrated AI triage. |
 | `2026-05-13` | `source/2026-05-13-johnny-line-friday-huicheng-sync/` | Johnny Fang scheduled `AI triage 可行性討論` for Friday `2026-05-15 13:00-14:00` on Google Meet `cjk-iwzq-cmz` for physiological-data integration and all-specialty technical evaluation; invite 多寶 through a confirmed contact route. |
 | `2026-05-13` | `source/2026-05-13-duobao-line-huicheng-vital-sign-triage/` | 多寶 provided clinical calibration: vital signs are strongest for emergency triage / internal-medicine-style review, unstable vitals can raise urgency, urology has more limited vital-sign impact, and a Thursday afternoon follow-up discussion is tentatively useful. |
+| `2026-05-14` | `source/2026-05-14-wu-line-gpt-vital-sign-questionnaire-triage/` | Prof. Wu forwarded a GPT-generated DOCX proposing a vital-sign + questionnaire product design centered on family medicine / general internal medicine, a 10-question intake, rule-engine red flags, and draft adult numeric thresholds; treat as context-only until source-backed and clinically reviewed. |
 
 The `2026-05-12` source folder now also contains Johnny Fang's company-side
 follow-up package:
@@ -29,6 +30,7 @@ Derived analysis:
 - `source/2026-05-12-wu-google-meet-ai-triage-510k/meeting-record.md`
 - `source/2026-05-12-wu-google-meet-ai-triage-510k/user-provided-summary.md`
 - `source/2026-05-12-wu-google-meet-ai-triage-510k/user-provided-extended-analysis.md`
+- `source/2026-05-14-wu-line-gpt-vital-sign-questionnaire-triage/extracted/2026-05-14-wu-gpt-vital-sign-questionnaire-triage-product-design.txt`
 
 ## Upstream Prof. Wu Context
 
