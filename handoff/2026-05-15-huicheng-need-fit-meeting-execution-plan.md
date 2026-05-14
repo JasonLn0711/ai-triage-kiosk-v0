@@ -13,6 +13,32 @@ kiosk-adjacent triage-support workflow, and identify the minimum technical,
 clinical, and source-governance decisions needed to move from research answer
 to demo execution.
 
+## 2026-05-14 Attendee Role Update - 多寶醫師
+
+Jason will invite 多寶醫師 to the Friday `2026-05-15 13:00-14:00` meeting.
+Use his participation for clinical feasibility calibration, not as formal
+clinical sign-off.
+
+多寶醫師's requested role:
+
+1. Explain whether the proposed modular method can plausibly extend across
+   specialties from a physician workflow perspective.
+2. Evaluate whether Prof. Wu's GPT-suggested `家醫科 / 一般內科` entry point is
+   a more feasible first demo frame than claiming broad all-specialty clinical
+   coverage.
+3. Identify which first clinical frame is more defensible for a June demo:
+   `家醫科 / 一般內科`, urgent-care-style internal medicine, emergency-triage
+   support, or another bounded scope.
+4. Name the clinical review gaps that must stay unresolved after Friday:
+   threshold validation, red-flag wording, output label, review owner, and
+   specialty-module roadmap.
+
+Jason's current pre-meeting hypothesis is that the `家醫科 / 一般內科` frame has
+higher feasibility than a direct all-specialty promise, because it matches the
+kiosk's general vital-sign measurements and keeps the demo broad enough for
+慧誠 while still bounded enough for source governance. This is a hypothesis to
+ask 多寶醫師 to confirm, revise, or reject.
+
 ## What 慧誠 Actually Asked For
 
 From the `2026-05-12` company follow-up and later Friday scheduling context,
@@ -52,7 +78,7 @@ The supporting roles are:
 | --- | --- | --- |
 | `510(k)` scan | Product-scope discipline: intended use, function boundary, predicate/comparator language, safe claims. | It does not tell us the full question set or exact vital thresholds. |
 | Prof. Wu GPT DOCX | Product-design hypothesis: family medicine / general internal medicine, 10-question intake, LLM + rule-engine split, four review levels. | GPT output is not clinical authority; thresholds need source mapping and clinician sign-off. |
-| 多寶 clinical calibration | Medical plausibility check: vital signs are strongest for emergency / internal-medicine-style triage; urology is useful as structured-intake reference but not the main vital-driven use case. | Informal clinical input; still needs formal owner for threshold/output wording. |
+| 多寶 clinical calibration | Medical plausibility check: explain all-specialty feasibility and judge whether the `家醫科 / 一般內科` entry point is the more feasible first demo frame. | Informal clinical input; still needs formal owner for threshold/output wording. |
 | 慧誠 iMVS materials | Technical fit: kiosk workflow, measured fields, API-shaped payload, web-service insertion point. | They do not by themselves validate triage logic. |
 
 ## Recommended Friday Position
@@ -88,9 +114,9 @@ Use this if time is tight or if the meeting starts drifting.
 | --- | --- | --- | --- |
 | 0-2 min | Confirm need | "I will answer the three items from your follow-up: modular method, vital integration, source examples." | Confirm scope. |
 | 2-6 min | Architecture | "The AI layer should start after iMVS measurement, using an API-shaped vital payload." | Agree insertion point: after measurement. |
-| 6-10 min | Modular method | "All specialties share intake, vital adapter, router, source registry, and summary; modules add scoped question rows." | Agree modular architecture. |
+| 6-10 min | Modular method | "All specialties share intake, vital adapter, router, source registry, and summary; modules add scoped question rows." Ask 多寶醫師 to comment on clinical feasibility. | Agree modular architecture and clinical caveat. |
 | 10-15 min | Vital impact | "Vitals change question priority and summary emphasis, not final diagnosis." | Agree vital-aware behavior. |
-| 15-18 min | Source strategy | "FDA is boundary; ESI/AHA/CDC/etc. are question-source families; local protocol signs off thresholds." | Agree source ownership. |
+| 15-18 min | First demo frame | "My current hypothesis is that `家醫科 / 一般內科` is a safer first frame than claiming all-specialty coverage. 多寶醫師, does that match clinical workflow reality?" | Decide whether to use family medicine / general internal medicine as first June frame. |
 | 18-20 min | Minimum asks | Ask target SKU, guaranteed fields, synthetic payload permission, output wording owner, and whether June needs a clickable demo next. | Decide next work package. |
 
 ## 60-Minute Full Flow
@@ -102,9 +128,10 @@ Use this if the meeting runs the full hour.
 | 0-5 min | Restate 慧誠 need and June business goal. | Everyone agrees this is a June market demo / capability demo, not production clinical triage. |
 | 5-12 min | Current iMVS insertion point. | AI starts after measurement; live HIS / EMR writeback is out of v0. |
 | 12-22 min | All-specialty modular architecture. | Shared core plus specialty modules; no one huge prompt. |
-| 22-35 min | Vital-to-question matrix. | BP, SpO2, Temp, HR, respiration, BMI, optional glucose each get a demo-safe role. |
-| 35-43 min | Source-governance strategy. | FDA boundary vs medical-society / ESI / local protocol question logic. |
-| 43-50 min | June demo options. | Choose memo only, clickable mock, or kiosk-adjacent embedded/link-out demo. |
+| 22-30 min | 多寶醫師 clinical feasibility check. | Clarify whether all-specialty should stay a roadmap and whether `家醫科 / 一般內科` is the first credible demo frame. |
+| 30-40 min | Vital-to-question matrix. | BP, SpO2, Temp, HR, respiration, BMI, optional glucose each get a demo-safe role. |
+| 40-47 min | Source-governance strategy. | FDA boundary vs medical-society / ESI / local protocol question logic. |
+| 47-50 min | June demo options. | Choose memo only, clickable mock, or kiosk-adjacent embedded/link-out demo. |
 | 50-57 min | Decision questions. | Target device, fields, synthetic payload, output wording, sign-off owner. |
 | 57-60 min | Close. | Confirm next artifact and owner list. |
 
@@ -125,6 +152,12 @@ Avoid:
 ```text
 We already have all-specialty triage.
 ```
+
+Ask 多寶醫師 directly:
+
+> From a physician workflow perspective, is `家醫科 / 一般內科` the more feasible
+> first demo frame, with all-specialty coverage presented as a modular roadmap?
+> Or should the first frame be emergency / urgent-care triage support instead?
 
 ### 2. If 慧誠 asks: "How do vital signs change AI triage?"
 

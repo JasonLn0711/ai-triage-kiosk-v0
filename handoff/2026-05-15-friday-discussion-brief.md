@@ -24,6 +24,9 @@ Before Friday `2026-05-15 13:00`, finish only the material needed to answer
 - 多寶's physician calibration: emergency / internal-medicine-style triage is
   the strongest vital-sign story; urology is a structured-intake reference with
   more limited vital-sign impact;
+- 多寶醫師's meeting role: explain all-specialty clinical feasibility and
+  evaluate whether Prof. Wu's `家醫科 / 一般內科` proposal is the most feasible
+  first demo frame;
 - six clarifying questions for 慧誠;
 - 多寶 invite/logistics.
 - the need-fit execution plan that keeps `510(k)` and Prof. Wu's GPT DOCX
@@ -67,6 +70,13 @@ Meeting logistics update from Johnny Fang's `2026-05-13` LINE:
 - 多寶 should be invited because he is a physician and is interested in the
   project. Send him the Meet link through a confirmed route, or ask Johnny to
   include 多寶 if official attendee control matters.
+- Updated Jason request on `2026-05-14`: 多寶醫師 should be invited to the
+  Friday afternoon meeting and should be asked to cover two points: whether the
+  all-specialty direction is clinically feasible, and whether the `家醫科 /
+  一般內科` proposal from Prof. Wu's GPT DOCX is the better first scope.
+  Jason's pre-meeting view is that `家醫科 / 一般內科` is likely more feasible
+  than a direct all-specialty promise; treat this as a hypothesis for 多寶醫師
+  to validate, revise, or reject.
 
 Clinical calibration from 多寶's `2026-05-13` LINE:
 
@@ -86,6 +96,14 @@ The main answer should stay on three questions:
 2. How can physiological data be integrated into triage analysis?
 3. What FDA or medical-society examples show how specific vital data affects
    analysis?
+
+Add one clinical-calibration question for 多寶醫師 before closing:
+
+```text
+From a physician workflow perspective, should the first June demo be framed as
+family medicine / general internal medicine triage support, urgent-care /
+emergency-triage support, or a broader all-specialty modular roadmap?
+```
 
 ## Opening Answer
 
@@ -107,12 +125,14 @@ Then move directly into the three answers below.
 | --- | --- | --- |
 | 0-2 min | Restate their Friday questions | Confirm we are answering the requested action item. |
 | 2-7 min | Q1: modular all-specialty method | Align on shared core plus specialty modules. |
-| 7-13 min | Q2: physiological-data impact | Show how BP, SpO2, Temp, HR, BMI, and Glucose affect question priority and review summary. |
-| 13-17 min | Q3: source examples | Separate FDA boundary sources from medical-society / emergency-medicine question sources. |
-| 17-20 min | Clarifications needed | Ask only the minimum questions needed to continue: target device, guaranteed fields, source owner, output wording. |
+| 7-11 min | 多寶 clinical feasibility check | Ask whether `家醫科 / 一般內科` is the more feasible first frame and how to explain all-specialty as a roadmap. |
+| 11-15 min | Q2: physiological-data impact | Show how BP, SpO2, Temp, HR, BMI, and Glucose affect question priority and review summary. |
+| 15-18 min | Q3: source examples | Separate FDA boundary sources from medical-society / emergency-medicine question sources. |
+| 18-20 min | Clarifications needed | Ask only the minimum questions needed to continue: target device, guaranteed fields, source owner, output wording. |
 
-If time is only 10 minutes: answer Q1/Q2/Q3 in order and skip all
-supplemental notes.
+If time is only 10 minutes: answer Q1, ask 多寶醫師 for the first-scope
+clinical calibration, then compress Q2/Q3 into one vital-impact/source-boundary
+answer and skip all supplemental notes.
 
 ## Slide Outline
 
