@@ -14,7 +14,11 @@ The current useful answer is:
 > `510(k)` / comparable-product scan if 慧誠 can provide the nearest US partner
 > product, customer reference, competitor, or FDA number.
 
-Current detailed discussion artifact:
+Current main meeting packet:
+
+- `handoff/2026-05-15-complete-meeting-packet.md`
+
+Current detailed discussion artifacts:
 
 - `handoff/2026-05-15-hallucination-and-source-grounding-audit.md`
 - `handoff/2026-05-15-huicheng-need-fit-meeting-execution-plan.md`
