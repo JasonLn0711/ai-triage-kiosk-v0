@@ -7,6 +7,7 @@ Status: main meeting talking track; supplemental notes are used only if asked.
 
 Related supplemental artifacts:
 
+- `handoff/2026-05-15-huicheng-need-fit-meeting-execution-plan.md`
 - `handoff/2026-05-15-vital-aware-triage-feasibility-source-governance.md`
 - `handoff/2026-05-15-source-registry-and-example-flows.md`
 - `handoff/2026-05-15-first-principles-gap-audit-and-action-plan.md`
@@ -25,6 +26,8 @@ Before Friday `2026-05-15 13:00`, finish only the material needed to answer
   more limited vital-sign impact;
 - six clarifying questions for 慧誠;
 - 多寶 invite/logistics.
+- the need-fit execution plan that keeps `510(k)` and Prof. Wu's GPT DOCX
+  subordinate to 慧誠's Friday ask.
 
 Do not prepare a full prototype, broad `510(k)` package, invented clinical
 thresholds, production clinical rules, or complete all-specialty coverage claim
@@ -36,6 +39,22 @@ Friday should answer the questions 慧誠 explicitly asked in Johnny Fang's
 `2026-05-12 15:10` follow-up email. Do not lead with prototype status,
 `510(k)` predicate discussion, go/no-go governance, data lifecycle, or broad
 regulatory framing unless they ask.
+
+Need-fit check after adding Prof. Wu's `2026-05-14` GPT product-design DOCX:
+
+- The main Friday deliverable must still be 慧誠-facing: all-specialty modular
+  method, physiological-data integration, AI model/workflow integration, and
+  FDA / medical-society examples for how vital data affects analysis.
+- The `510(k)` scan is useful as product-scope discipline and intended-use
+  boundary, but it should stay supplemental unless 慧誠 asks about comparator
+  products, US customer positioning, or FDA pathway.
+- Prof. Wu's GPT DOCX is useful as a design hypothesis: family medicine /
+  general internal medicine, 10-question intake, LLM plus rule-engine split,
+  four-level routing, and draft adult threshold candidates. It should not be
+  presented as clinical authority.
+- The combined use is: `510(k)` constrains what the demo may claim; the GPT
+  DOCX suggests what the demo could look like; 慧誠's meeting ask determines
+  what we actually present on Friday.
 
 Meeting logistics update from Johnny Fang's `2026-05-13` LINE:
 
