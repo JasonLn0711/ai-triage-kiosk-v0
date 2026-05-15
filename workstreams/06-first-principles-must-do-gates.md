@@ -237,7 +237,7 @@ python3 scripts/check_governance_registries.py
 Current result:
 
 ```text
-OK sources=14 questions=13 flows=2
+OK sources=19 questions=13 flows=2
 ```
 
 Do not create prototype code before the Friday decision unless the user or

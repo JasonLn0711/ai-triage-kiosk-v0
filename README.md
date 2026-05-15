@@ -38,6 +38,7 @@ go-to-market 與美國客戶展示，還不是正式醫療決策產品。
 | `source/2026-05-11-wu-huicheng-er-triage-ekg-asr/` | Prof. Wu kickoff source bundle copied from planning |
 | `source/2026-05-12-huicheng-company-ai-triage-sync/` | Company sync source bundle, meeting record, cleaned transcript, and demo brief |
 | `source/2026-05-12-wu-google-meet-ai-triage-510k/` | Prof. Wu 22:20 Google Meet transcript and analysis that reframed the Friday artifact around FDA 510(k), intended use, and conservative demo scope |
+| `source/2026-05-15-huicheng-second-sync-and-duobao-followup/` | Second 慧誠 sync, raw transcripts, LINE context, company-provided minutes, and 多寶 follow-up that narrowed the work to a June urgent-care intake demo |
 | `source/upstream-wu-context/` | Earlier Prof. Wu context copied from planning, including the 2026-04-16 Wu/Tomi meeting and 2026-04-20 CDE speech source |
 | `docs/project-brief.md` | Working project brief and execution boundary |
 | `docs/2026-05-12-huicheng-materials-analysis.md` | Detailed comparison of company follow-up minutes, iMVS product spec, and iMVS API attachment implications |
@@ -113,15 +114,14 @@ docs/repo-organization.md
 
 ## Immediate Next Actions
 
-1. Prepare the Friday `2026-05-15` feasibility artifact requested in the
-   company follow-up, starting with a FDA `510(k)` competitor / predicate-device
-   scan and intended-use options, then modular method, vital-data impact,
-   clinical-source strategy, and demo boundary.
-2. Decide whether v0 is iframe/link integration, mocked kiosk handoff, or API
-   handoff.
-3. Clarify target device / OS and whether synthetic API-shaped vital signs are
-   acceptable for the first demo.
-4. Define the minimum English symptom flow and vital-sign fields for demo use.
-5. Produce a safe architecture diagram that can be shared without exposing
-   patent-sensitive internals.
-6. Keep planning updated with status, blockers, and capacity impact only.
+1. Turn the `2026-05-15` second-sync decision into a June demo case pack:
+   `3-5` synthetic urgent-care intake cases with vital signs, short question
+   paths, and clinician-review summaries.
+2. Implement the first case as a narrow demo path: vital payload -> guided
+   questions -> staff-facing summary.
+3. Ask 慧誠 for the smallest technical packet needed to wire the demo:
+   kiosk UI insertion point, vital payload field names, demo room network,
+   output display format, and software-team contact.
+4. Keep the runtime pragmatic for June: networked / external compute is allowed
+   for demo if local CPU-only ASR / LLM behavior is too slow or hot.
+5. Keep planning updated with status, blockers, and capacity impact only.
