@@ -15,7 +15,7 @@ the 慧誠 AI triage kiosk demo lane.
 | `2026-05-11` | Case collection is the main bottleneck and may take at least about half a year after opening. | Do not promise trained clinical model immediately. |
 | `2026-05-11` | Treat current boundary as triage support, not diagnosis. | Preserve output wording and safety boundary. |
 | `2026-05-11` | Taiwan / Southeast Asia may come before the US because US cybersecurity expectations may be high. | Keep deployment assumptions market-specific. |
-| `2026-05-12 22:20` | Do not start by inventing full AI triage. Find comparable FDA `510(k)` summaries first and identify `indication for use`, functions, and boundaries. | Friday artifact should start as product-scope / predicate-device research, not a full clinical design. |
+| `2026-05-12 22:20` | Do not start by inventing full AI triage. Find `3-5` comparable FDA `510(k)` cleared products first and extract intended use, indications for use, predicate/comparable device, input/output, patient-facing versus clinician-facing role, whether the product only collects/organizes information, whether it truly performs triage/recommendation, and how it avoids overclaiming. | Friday artifact should start as product-scope / predicate-device research, not a full clinical design. The direction has narrowed from "build AI triage" to "build a safe, explainable English intake demo for clinician review; vital signs stay contextual, not direct triage decisions." |
 | `2026-05-12 22:20` | For June, keep the demo simple: English demo on the all-in-one device first; do not integrate live vital-sign signals unless the workflow and data interface are clear. | Keep vital-sign integration as future scope or mocked/synthetic placeholder. |
 | `2026-05-12 22:20` | Ask 苗先生 for the US partner/customer product or `510(k)` reference. Ask 多寶 / 冠廷 when clinical or signal interpretation is unclear. | Add concrete collaborator route before Friday. |
 | `2026-05-14 23:42` | Prof. Wu forwarded a GPT-generated DOCX titled `量測生命徵象＋問診與分流的產品設計.docx`. | Preserve as Prof. Wu context for product framing, especially the family medicine / general internal medicine direction, 10-question intake, rule-engine boundary, and draft threshold list; do not treat the GPT answer as validated clinical logic. |
@@ -52,12 +52,15 @@ The key Prof. Wu-aligned direction is:
 
 ```text
 medical workflow first
--> intended use / 510(k) product-scope scan
+-> 3-5 comparable FDA 510(k) product-scope scan
+-> intended use / indications / claim-boundary extraction
 -> device data and clinical criteria
--> AI-assisted triage support
+-> English intake demo for clinician review
 -> clinician review
 -> evidence traceability
 -> cautious productization
 ```
 
 Do not reduce the project to a chatbot, a prompt, or an ML model.
+Do not start with "AI determines triage level"; start with comparable
+product-scope evidence and safe intake / review language.

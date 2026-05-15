@@ -34,14 +34,30 @@ Prof. Wu's `2026-05-12 22:20` direction changes the first research move:
 before promising vital-sign-integrated AI triage, identify the closest
 world-accepted product shape and its boundaries.
 
+Correct interpretation:
+
+> The next step is to find `3-5` nearby FDA `510(k)` cleared products and
+> extract their intended use, indications for use, predicate/comparable device,
+> inputs/outputs, patient-facing versus clinician-facing role, whether they
+> only collect/organize information, whether they truly perform triage or
+> recommendation, and how they avoid overclaiming.
+
+One-line synthesis:
+
+> The direction has narrowed from "build AI triage" to "first build a safe,
+> explainable English intake demo for clinician review; vital signs stay as
+> context and do not directly decide triage."
+
 Use FDA `510(k)` material to extract product-scope facts:
 
 | Scan field | What to capture | Friday use | Current status |
 | --- | --- | --- | --- |
 | Comparable product | Device name, applicant, product code, decision date, and `510(k)` number. | Shows whether there is an adjacent legally marketed product shape. | Product/reference needed from 苗先生 / 慧誠 or a bounded FDA database search. |
-| Indications for use | Intended setting, target users, patient population, clinical purpose, and conditions addressed. | Shapes v0 intended-use language and what not to claim. | Do not invent; extract only from a releasable summary or supplied comparator. |
+| Intended use / indications for use | Intended setting, target users, patient population, clinical purpose, and conditions addressed. | Shapes v0 intended-use language and what not to claim. | Do not invent; extract only from a releasable summary or supplied comparator. |
 | Predicate / comparison logic | Predicate device, functional comparison, inputs, outputs, and limitations. | Shows which functions are market-familiar versus novel or risky. | Use as product-scope evidence, not equivalence argument. |
-| Functions and workflow | Measurement, symptom input, recommendation, display, reporting, clinician review, and integration functions. | Helps split iMVS measurement, AI question routing, and review-summary generation into separate functions. | Map only at a high level until target SKU and integration mode are confirmed. |
+| Input / output and workflow | Measurement, symptom input, recommendation, display, reporting, clinician review, and integration functions. | Helps split iMVS measurement, AI question routing, and review-summary generation into separate functions. | Map only at a high level until target SKU and integration mode are confirmed. |
+| User-facing role | Whether output is patient-facing, clinician-facing, or staff-facing. | Keeps patient-facing text neutral and actionable interpretation under clinician/staff review. | Must be extracted from the comparator's intended use and device description. |
+| Information-only versus recommendation | Whether the product only collects/organizes information, or whether it performs triage, risk scoring, recommendation, or routing. | Prevents overclaiming the June demo as clinical triage. | Treat collection/organization as lower-risk v0; treat recommendation/triage as later validated scope. |
 | Performance evidence | Bench, software, usability, clinical, or non-clinical performance evidence referenced in the summary. | Frames future validation ladder. | Friday artifact should list evidence category, not claim equivalence. |
 | Safe wording | Public wording around support, screening, recommendation, review, and limitations. | Supplies wording examples that avoid diagnosis/autonomous triage overclaim. | Reuse only after the comparator is verified. |
 
