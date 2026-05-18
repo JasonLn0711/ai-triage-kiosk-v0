@@ -38,11 +38,12 @@ go-to-market 與美國客戶展示，還不是正式醫療決策產品。
 | `source/2026-05-11-wu-huicheng-er-triage-ekg-asr/` | Prof. Wu kickoff source bundle copied from planning |
 | `source/2026-05-12-huicheng-company-ai-triage-sync/` | Company sync source bundle, meeting record, cleaned transcript, and demo brief |
 | `source/2026-05-12-wu-google-meet-ai-triage-510k/` | Prof. Wu 22:20 Google Meet transcript and analysis that reframed the Friday artifact around FDA 510(k), intended use, and conservative demo scope |
-| `source/2026-05-15-huicheng-second-sync-and-duobao-followup/` | Second 慧誠 sync, raw transcripts, LINE context, company-provided minutes, and 多寶 follow-up that narrowed the work to a June urgent-care intake demo |
+| `source/2026-05-15-huicheng-second-sync-and-duobao-followup/` | Second 慧誠 sync, raw transcripts, LINE context, company-provided minutes, 多寶 follow-up, and 多寶's first demo-case draft for the June urgent-care intake demo |
 | `source/upstream-wu-context/` | Earlier Prof. Wu context copied from planning, including the 2026-04-16 Wu/Tomi meeting and 2026-04-20 CDE speech source |
 | `docs/project-brief.md` | Working project brief and execution boundary |
 | `docs/2026-05-12-huicheng-materials-analysis.md` | Detailed comparison of company follow-up minutes, iMVS product spec, and iMVS API attachment implications |
 | `docs/architecture-insertion-and-clinical-grounding.md` | Core note on workflow insertion point, vital-aware dynamic triage, and clinical evidence mapping |
+| `docs/literature-matrix-workflow.md` | Question-first literature matrix workflow for AI-triage papers, guidelines, source families, and reviewer-style synthesis |
 | `docs/source-index.md` | Complete index of copied source bundles and upstream context |
 | `docs/wu-instruction-register.md` | Consolidated Prof. Wu instructions and company-side clarifications |
 | `docs/repo-organization.md` | Directory map and folder ownership |
@@ -124,4 +125,7 @@ docs/repo-organization.md
    output display format, and software-team contact.
 4. Keep the runtime pragmatic for June: networked / external compute is allowed
    for demo if local CPU-only ASR / LLM behavior is too slow or hot.
-5. Keep planning updated with status, blockers, and capacity impact only.
+5. Use `docs/literature-matrix-workflow.md` for the next AI-triage paper /
+   guideline sprint so literature work produces source-backed decisions and
+   gaps, not isolated summaries.
+6. Keep planning updated with status, blockers, and capacity impact only.
