@@ -23,8 +23,11 @@ raw_files:
   - transcript-duobao-followup-1358.txt
   - assets/2026-05-15-huicheng-company-meeting-minutes-email.pdf
   - extracted/2026-05-15-huicheng-company-meeting-minutes-email.txt
+  - assets/2026-05-15-duobao-demo-case-draft.pdf
+  - extracted/2026-05-15-duobao-demo-case-draft.txt
 derived_analysis:
   - company-provided-meeting-minutes.md
+  - duobao-demo-case-draft.md
   - ../../workstreams/08-june-demo-case-and-integration-plan.md
   - ../../handoff/2026-05-15-june-demo-case-pack-v0.md
 ---
@@ -46,8 +49,11 @@ renamed for durable routing:
 | `line-thread-2026-05-15.md` | User-provided LINE export pasted in chat | Full same-day LINE context around the meeting, Notion note, and 多寶's case-design commitment. |
 | `assets/2026-05-15-huicheng-company-meeting-minutes-email.pdf` | `Gmail - [20260515] AI-Triage 可行性 Meeting Minutes.pdf` | 慧誠智醫 / Johnny Fang's company-side meeting minutes email. |
 | `extracted/2026-05-15-huicheng-company-meeting-minutes-email.txt` | Extracted from the company-side PDF | Searchable text for the company-side minutes. |
+| `assets/2026-05-15-duobao-demo-case-draft.pdf` | `Demo Case.pdf` exported from 多寶's `Demo Case.docx` | 多寶's first clinical case draft with four candidate demo cases. |
+| `extracted/2026-05-15-duobao-demo-case-draft.txt` | Extracted from the demo-case PDF | Searchable text for 多寶's draft cases. |
 | `meeting-record.md` | Derived from all files above | Structured source-backed record and next-step interpretation. |
 | `company-provided-meeting-minutes.md` | Derived from Johnny Fang's PDF/email | Company viewpoint plus comparison against our internal record. |
+| `duobao-demo-case-draft.md` | Derived from 多寶's LINE handoff and case PDF | Clinical draft source, case table, and safe demo interpretation. |
 
 ## Why This Source Is Kept
 
@@ -74,6 +80,9 @@ June demo execution problem:
   touch/partial voice input, and `8-10` questions, but add confirmation needs
   around `AI 資料訓練 study`, example case categories, output wording, and next
   week's technical sync.
+- 多寶 provided the first concrete case draft: acute cholecystitis, AfRVR,
+  pneumonia, and URI scenario labels. Treat these as private design anchors and
+  clinician-readable target summaries, not as system diagnosis outputs.
 
 ## Repo Links
 
@@ -83,6 +92,9 @@ June demo execution problem:
 - Company-provided minutes: `source/2026-05-15-huicheng-second-sync-and-duobao-followup/company-provided-meeting-minutes.md`
 - Company PDF: `source/2026-05-15-huicheng-second-sync-and-duobao-followup/assets/2026-05-15-huicheng-company-meeting-minutes-email.pdf`
 - Company PDF extracted text: `source/2026-05-15-huicheng-second-sync-and-duobao-followup/extracted/2026-05-15-huicheng-company-meeting-minutes-email.txt`
+- 多寶 demo-case draft: `source/2026-05-15-huicheng-second-sync-and-duobao-followup/duobao-demo-case-draft.md`
+- 多寶 demo-case PDF: `source/2026-05-15-huicheng-second-sync-and-duobao-followup/assets/2026-05-15-duobao-demo-case-draft.pdf`
+- 多寶 demo-case extracted text: `source/2026-05-15-huicheng-second-sync-and-duobao-followup/extracted/2026-05-15-duobao-demo-case-draft.txt`
 - Company meeting transcript: `source/2026-05-15-huicheng-second-sync-and-duobao-followup/transcript-huicheng-meeting-1259.txt`
 - 多寶 follow-up transcript: `source/2026-05-15-huicheng-second-sync-and-duobao-followup/transcript-duobao-followup-1358.txt`
 - Next-step workstream: `workstreams/08-june-demo-case-and-integration-plan.md`

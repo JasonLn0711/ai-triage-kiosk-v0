@@ -1,0 +1,35 @@
+Case 1 (acute cholecystitis):
+40 y/o M
+Vital sign: T/P/R: 38.5/98/16, SpO2: 99% BP 123/81 mmHg
+C.C.: Fever with RUQ abdominal pain for 1 day
+Past history: nil
+Allergy: nil
+Level: 3
+
+
+Case 2 (AfRVR)
+76 y/o F
+C.C. : Palpitation and chest tightness for half day
+Vital sign: T/P/R: 36.5/150/16, SpO2: 98% BP 102/68 mmHg
+Past history: arrhythmia, hyperlipidemia
+Allergy: peanut
+Level: 2
+
+
+Case 3: (pneumonia)
+80 y/o M
+C.C.: Dyspnea for 2 days
+Vital sign: T/P/R: 38.5/102/23, SpO2: 92% BP 123/81 mmHg
+Past history: DM, HTN
+Allergy: penicillin
+Level: 2
+
+
+Case 4: URI
+26 y/o F
+C.C: Fever for 2 days, cough and runny nose
+Vital sign: T/P/R: 37.5/98/21 SpO2:98% BP 124/76 mmHg
+Past history: nil
+Allergy: nil
+Level 5
+

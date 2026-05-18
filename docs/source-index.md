@@ -15,6 +15,7 @@ demo lane and its direct upstream Prof. Wu context.
 | `2026-05-14` | `source/2026-05-14-wu-line-gpt-vital-sign-questionnaire-triage/` | Prof. Wu forwarded a GPT-generated DOCX proposing a vital-sign + questionnaire product design centered on family medicine / general internal medicine, a 10-question intake, rule-engine red flags, and draft adult numeric thresholds; treat as context-only until source-backed and clinically reviewed. |
 | `2026-05-15` | `source/2026-05-15-huicheng-second-sync-and-duobao-followup/` | Second 慧誠智醫 sync plus 多寶 follow-up. This converted the Friday feasibility discussion into a June demo plan: US-style urgent care, `3-5` synthetic vital-sign-aligned cases, guided intake plus optional ASR, networked/external compute acceptable for demo, and clinician-review summary only. |
 | `2026-05-15 15:25` | `source/2026-05-15-huicheng-second-sync-and-duobao-followup/company-provided-meeting-minutes.md` | Johnny Fang's company-side meeting minutes. Confirms urgent-care / June-demo / `3-5` cases / `8-10` questions / touch plus partial voice input, and creates confirmation needs around `AI 資料訓練 study`, output wording, case categories, external compute, and adding 許醫師 to the email loop. |
+| `2026-05-15 16:42` | `source/2026-05-15-huicheng-second-sync-and-duobao-followup/duobao-demo-case-draft.md` | 多寶's first clinical case draft and LINE handoff. Provides four diagnosis-shaped design anchors: acute cholecystitis, AfRVR, pneumonia, and URI, to be converted into demo-safe clinician-review summaries rather than diagnosis outputs. |
 
 The `2026-05-12` source folder now also contains Johnny Fang's company-side
 follow-up package:
@@ -35,8 +36,10 @@ Derived analysis:
 - `source/2026-05-14-wu-line-gpt-vital-sign-questionnaire-triage/extracted/2026-05-14-wu-gpt-vital-sign-questionnaire-triage-product-design.txt`
 - `source/2026-05-15-huicheng-second-sync-and-duobao-followup/meeting-record.md`
 - `source/2026-05-15-huicheng-second-sync-and-duobao-followup/company-provided-meeting-minutes.md`
+- `source/2026-05-15-huicheng-second-sync-and-duobao-followup/duobao-demo-case-draft.md`
 - `workstreams/08-june-demo-case-and-integration-plan.md`
 - `handoff/2026-05-15-june-demo-case-pack-v0.md`
+- `docs/literature-matrix-workflow.md`
 
 ## Upstream Prof. Wu Context
 

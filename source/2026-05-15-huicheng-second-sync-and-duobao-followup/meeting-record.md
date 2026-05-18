@@ -21,6 +21,7 @@ status: active
 - 多寶會後討論逐字稿: `transcript-duobao-followup-1358.txt`
 - LINE context: `line-thread-2026-05-15.md`
 - 慧誠 company-side minutes: `company-provided-meeting-minutes.md`
+- 多寶 demo-case draft: `duobao-demo-case-draft.md`
 
 This record is for local execution planning. It is not a clinical validation
 document, regulatory submission, or customer-facing claim.
@@ -272,7 +273,15 @@ Do these before touching broad all-specialty logic:
    - Draw the shortest working demo path:
      `kiosk vital payload -> AI triage API -> next question -> summary`.
 
-5. **Prof. Wu / Company Update**
+5. **Literature Matrix**
+   - Use `docs/literature-matrix-workflow.md` for the next paper / guideline
+     sprint.
+   - Do not summarize papers one by one; make each paper answer the same core
+     questions about clinician workload, ASR fit, vital-sign routing,
+     hallucination/source control, human review, evidence level, and intended
+     use.
+
+6. **Prof. Wu / Company Update**
    - Report the narrowed plan: June demo, urgent-care intake, synthetic cases,
      external compute allowed for demo, no diagnosis / no autonomous triage.
 
@@ -288,6 +297,9 @@ Do these before touching broad all-specialty logic:
   with 慧誠's technical team.
 - **Ownership / resource risk:** this is now product work, not only a research
   brainstorm; scope and staffing should be kept explicit.
+- **Literature-synthesis risk:** paper reading can become isolated summaries.
+  Use a question-first matrix so literature work updates source governance,
+  case-pack choices, reviewer concerns, or product-boundary gaps.
 
 ## Next Decision
 
@@ -320,3 +332,33 @@ The main confirmation items are:
 - whether `8-10` questions is the hard upper bound;
 - whether June demo may use external compute / API calls;
 - whether 多寶 / 許醫師 should be added to the email loop.
+
+## 多寶 Demo Case Draft
+
+多寶 sent `Demo Case.docx` at `16:42` and described it as a few simple cases
+that may be "too medical" but represent the kind of output a doctor can read
+quickly. The PDF export and derived note are preserved in:
+
+- `duobao-demo-case-draft.md`
+- `assets/2026-05-15-duobao-demo-case-draft.pdf`
+- `extracted/2026-05-15-duobao-demo-case-draft.txt`
+
+The first case set is:
+
+- acute cholecystitis-labeled scenario: fever with RUQ abdominal pain, draft
+  level `3`;
+- AfRVR-labeled scenario: palpitation and chest tightness with HR `150`, draft
+  level `2`;
+- pneumonia-labeled scenario: dyspnea, fever, SpO2 `92%`, draft level `2`;
+- URI-labeled scenario: fever, cough, runny nose, draft level `5`.
+
+Interpretation:
+
+- These are strong design anchors because they give the demo a spread from
+  low-acuity URI to higher-review cardiopulmonary cases.
+- The diagnosis labels and levels should remain internal clinical design
+  references unless a clinician/company-approved output wording decision is
+  made.
+- The patient-facing flow should ask simple intake questions and produce a
+  clinician-review summary, not announce `acute cholecystitis`, `AfRVR`,
+  `pneumonia`, `URI`, or final triage level as system conclusions.
