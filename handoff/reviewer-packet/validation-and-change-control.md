@@ -40,7 +40,20 @@ For v0:
 
 ## Versioning Convention
 
-Use simple versions:
+Use two levels of versioning:
+
+1. Project/runtime SemVer, controlled by
+   `data/version_manifest.json`, `package.json`, runtime `VERSION.versionLabel`,
+   and `scripts/check_version_control.py`.
+2. Per-flow clinical/governance versions in `data/flow_registry.csv`.
+
+Project/runtime versions use:
+
+```text
+vMAJOR.MINOR.PATCH
+```
+
+Per-flow registry versions stay simple:
 
 ```text
 FLOW-CHEST-PAIN-VITALS v0.1
@@ -50,3 +63,11 @@ FLOW-FEVER-URINARY v0.1
 Increment the minor version when wording or fixture values change. Move to
 `v1.0` only after reviewer approval.
 
+Automation:
+
+```bash
+npm run version:check
+python3 scripts/bump_version.py --set 1.2.5
+```
+
+Detailed policy: `docs/version-control-policy.md`.
