@@ -1,0 +1,374 @@
+Delivered-To: cre062400@gmail.com
+Received: by 2002:a05:7208:4001:b0:100:ad16:48d4 with SMTP id e1csp2378352rbb;
+        Tue, 19 May 2026 01:52:18 -0700 (PDT)
+X-Received: by 2002:a17:90b:58cf:b0:364:8f64:49ea with SMTP id 98e67ed59e1d1-36951dc8fe8mr18540802a91.27.1779180737985;
+        Tue, 19 May 2026 01:52:17 -0700 (PDT)
+ARC-Seal: i=2; a=rsa-sha256; t=1779180737; cv=pass;
+        d=google.com; s=arc-20240605;
+        b=kyXU30GvAlaSGFZdKBEh5WBbZ2nrwe9dPjc/kme5oxvWaBMz0AsnnhHt4tAUlI1Fup
+         EnTxyIzWfa0ZiAb74FBUxgAcorMz5sLkVJdV0TbJ3PYNIBlLS7uxbCAPdVDCOC1Scw/m
+         nX2q3HjcTYzgSs/C2jAa5k7D6wuMCCsveYD6dbxX0fJqpNhrfR5Xr1i0C0gi0Q3W7Bkx
+         Iws/tp0LrUJtIobZ3qJ+3qLVnf137OYkfFGpjiNKJm0noCD+UQDM9RwlccY2FVsupeDX
+         QDmLqcftd5aG0796+BgBtR4LiEpk8G4TlIURNP+P7ltUzP6PC/qOFMKoc8Vxunkbb9Rj
+         2a8Q==
+ARC-Message-Signature: i=2; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=mime-version:msip_labels:content-language:accept-language
+         :message-id:date:thread-index:thread-topic:subject:cc:to:from
+         :dkim-signature;
+        bh=8Oz8cURN2B+TMUFXodD/3WmVEcou2VorzUfSDBAxCGk=;
+        fh=ElrcTdHzZxEJHeHNHzgiWFGk7/P1tMUajUln4eFvKK8=;
+        b=g5wMbXyRGVY1N+9dmTyIXh1Ybt31J5nn7w9Bj029nIL7shmueGSl3gV4eQHbSOBvMx
+         cW0BDfibLYwxCD/p9o2KCEji3krgt6UP54Prcc7PfwhrXH6Oi6/mSRMxAkfhwONDWRmx
+         kNqA3B95IRir22kuLA04VdOu0fROGKBGdqoDBCv12+oqvtwFR4VdOA3mtxb8dUdGbPf7
+         9Nm6009vJ6MfzFHXT8kKoyssZzuWikcDQfCJZsLdStx+oW8CaxQVL5Usgrq5wxSC3OBn
+         X1/oGHYuoQurCRWEw2MJs/bR7ECEWumzlpQFoHp7by1xGLgdQ4UpdGOGsDo6TtwOF+2e
+         c3zg==;
+        dara=google.com
+ARC-Authentication-Results: i=2; mx.google.com;
+       dkim=pass header.i=@imedtac.onmicrosoft.com header.s=selector2-imedtac-onmicrosoft-com header.b=ou6AteZ+;
+       arc=pass (i=1 spf=pass spfdomain=imedtac.com dkim=pass dkdomain=imedtac.com dmarc=pass fromdomain=imedtac.com);
+       spf=pass (google.com: domain of johnny.fang@imedtac.com designates 2a01:111:f403:c405::7 as permitted sender) smtp.mailfrom=Johnny.Fang@imedtac.com;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=imedtac.com
+Return-Path: <Johnny.Fang@imedtac.com>
+Received: from TYDPR03CU002.outbound.protection.outlook.com (mail-japaneastazlp170130007.outbound.protection.outlook.com. [2a01:111:f403:c405::7])
+        by mx.google.com with ESMTPS id d9443c01a7336-2bd5d118c21si382279035ad.98.2026.05.19.01.52.17
+        for <cre062400@gmail.com>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 19 May 2026 01:52:17 -0700 (PDT)
+Received-SPF: pass (google.com: domain of johnny.fang@imedtac.com designates 2a01:111:f403:c405::7 as permitted sender) client-ip=2a01:111:f403:c405::7;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@imedtac.onmicrosoft.com header.s=selector2-imedtac-onmicrosoft-com header.b=ou6AteZ+;
+       arc=pass (i=1 spf=pass spfdomain=imedtac.com dkim=pass dkdomain=imedtac.com dmarc=pass fromdomain=imedtac.com);
+       spf=pass (google.com: domain of johnny.fang@imedtac.com designates 2a01:111:f403:c405::7 as permitted sender) smtp.mailfrom=Johnny.Fang@imedtac.com;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=imedtac.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=TJ6U+NmhqcrHQaaEY3XJRgNc5ApisbdRPoX66qXgfb2DQfmF/VbgAPtN3+4VhGe0uQSroRaTIODbp2VUJ4by98su59hLeqR57iOEy0ulJhIvJnkgYkmAccpHS8jNxxHgYh/t4AkW1k/QY4TyUYkMOHv1mYtYNa4TOgirLFXalg7HFm4oARtBWLFbaQHQPbojh1J/J7hODpuwSKsf7Bsm4PXrTcK+WydWD80zngyjA09BSSatAUZZXBbyszbo5ykFWuiV0GJgAvhb4U0+3FGO8ivTAlQ1XHkXWrmdq1mvV4/7LGAK+cDPMDyaRXDW9vgR3hxHsd4BoiB47zJjTxi09A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=8Oz8cURN2B+TMUFXodD/3WmVEcou2VorzUfSDBAxCGk=;
+ b=mYodYsEIImXnKo0FjMCRvzGVtSOi3DEieCBiaepiWhGp1WTocGUwR+6uKLCnOVlRT2t/52xpqBtMTPB8NKSC+rBz/fMxMaDgcr2k1eD/C2xhooYNusU0E5WYntv6RfD2IPTefJJXVLzQzp5lmbXqEL35CpauBHwWhuamfwu15fruupdQYaZ6lTL3IQb5bkMli8WkxX/4WEoPQxs3r5QuFhaviYOXBnxBnv1Cpc/uoEDJIFiDLegEwm8SC18CYOClc7GWt6f4bU8KootNfgTeNIF18Fp53dpTXjhBpsbWwO0abX3ZsNGl5K8RzC1HqIAcfdiPUPR6fdW5dmhV2yWahw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=imedtac.com; dmarc=pass action=none header.from=imedtac.com;
+ dkim=pass header.d=imedtac.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=imedtac.onmicrosoft.com; s=selector2-imedtac-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=8Oz8cURN2B+TMUFXodD/3WmVEcou2VorzUfSDBAxCGk=;
+ b=ou6AteZ+btCs5fSohKV9iNdHbAVwK5TEVCagdeMnW7rgBH5vyuh2bjiwTar0P71hzBjiamF864D76hAy6tT2HRymCvdU6C+9B69eYCJcZybrZDm9S/s3MK5ACYbnJF46tQVi/oEA1qE0uC0tkDfms2pIbEUI7t6dwTgBK0oIL8k=
+Received: from TY0PR06MB6839.apcprd06.prod.outlook.com (2603:1096:405:10::5)
+ by SG2PR06MB5334.apcprd06.prod.outlook.com (2603:1096:4:1d5::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.25.21; Tue, 19 May
+ 2026 08:52:13 +0000
+Received: from TY0PR06MB6839.apcprd06.prod.outlook.com
+ ([fe80::fee8:d7cb:27e6:92f5]) by TY0PR06MB6839.apcprd06.prod.outlook.com
+ ([fe80::fee8:d7cb:27e6:92f5%3]) with mapi id 15.21.0025.020; Tue, 19 May 2026
+ 08:52:13 +0000
+From: =?big5?B?Sm9obm55IEZhbmcgpOiwtr+rLCBpbWVkdGFjIENvcnAu?=
+	<Johnny.Fang@imedtac.com>
+To: "cre062400@gmail.com" <cre062400@gmail.com>,
+	=?big5?B?SmFzb24gTWlhbyCtXaSkuHQsIGltZWR0YWMgQ29ycC4=?=
+	<Jason.Miao@imedtac.com>
+CC: =?big5?B?S2VuIFl1IKdFqve+8CwgaW1lZHRhYyBDb3JwLg==?= <Ken.Yu@imedtac.com>
+Subject: AI Triage Product Spec
+Thread-Topic: AI Triage Product Spec
+Thread-Index: AQHc52bmk3fQf3xNP0O1HqDK7Aw8sA==
+Date: Tue, 19 May 2026 08:52:13 +0000
+Message-ID:
+ <TY0PR06MB68391F8988CEECC826248882F2002@TY0PR06MB6839.apcprd06.prod.outlook.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+msip_labels:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=imedtac.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TY0PR06MB6839:EE_|SG2PR06MB5334:EE_
+x-ms-office365-filtering-correlation-id: a3751056-441e-4eca-ca88-08deb583ebea
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|1800799024|376014|366016|13003099007|38070700021|1580799027|18002099003|56012099003|8096899003;
+x-microsoft-antispam-message-info:
+ zzURrHJWYwCGutk2hv8ryAmxAjwHe/kHld1p63AaB8lQ+GC1TDrZl0fiXbKITm+6jyrPpBuNrpt9b8Sw7DRjZJeK/tMz6k2/lQB3yrwCWL3yqVfVlHFbo6/i4WUaloQ/aqu+JJO0iMu9ElPy8AMNfOPrHvAqOxAEL0DR2+ImF+svpq9SpDCErOqTlAFIdsimXkVz8G5bUZ84lsUorgUWMzkIUUQfE9pnyUGds6p0tSQ4zm7mhXJf+9dkGzJqmEtr6e9NPRdgDNyEuJFneUnVRp9UZhNx7dMprxjfVKULq77Y7ARNsNLGvNqi1teU44zC6rvm0XenJns3YmJWwEKHZWiLSy62ifSLV6FGmzaMjkcwLUCP1Qv0KwAMPGguyLaV0eg8NbFUwdKASPgdTOMsv3Slc1Wf3YOztTRJToLOousuNNE9+L1s1u5O8s0V6zyWxcjaF9OxGKEVUWlHLAmIwqIc8sCtvzMfa5LClpngDG8nhx1sRXLl+1ZHAb4HPYGKX9b/j0pmEQSMtfXIimLLTU4gkXXzoopr//TfEZ4EyJ8JbegRDLAouBiy9aTnvYHl5Gfg+MfG4vmALmxZk17rVQj1HdnTmbti+Xmu1osgCQ3rOljkWWOl9CSlAWjY8nDkmj+OB1vyVcy3YisE57dg1/T4Gh4xwQ2iG6w4riv2mQKkmp+xsvMIqE0ZjYT7LoZ12MOb4wlacLm7bdf+Jn5CuWrMQhSvlgksoE01/Gmv51M=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-tw;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY0PR06MB6839.apcprd06.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(13003099007)(38070700021)(1580799027)(18002099003)(56012099003)(8096899003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?big5?B?c2hOc2Q0ZC83WklLQ21OQTlnb014ZFJWZDBRSXhGVG5kK3Qrc3pvbkc4NVYvcXRP?=
+ =?big5?B?QmgwNEJyYVJlenVrd295VlhzazVLMXpScVM1c3VQdUZQTzBqeUJqa0NkMnJBaGNF?=
+ =?big5?B?elVJVEVVS3JiUGRYeWNmQUFTVzBsSzFtSkVlTDZ4SzU0SVkrbmhGdmpSdXJtbkRi?=
+ =?big5?B?eGxYSS91WWtMeTVRS3dJNHc4b2tZU3JQalNkQ3N2MDFMWWZMTVRQblNwR0tYcFM1?=
+ =?big5?B?aFZ2VTJPMnUxN2RWRDZLN0N3ZTZzbklBSVgxMlFsY3VJN3psQXJrZFU5VnBzUmVx?=
+ =?big5?B?eE02cHdWbmxLRm5MUEd3dVgvN3graEpQdFhnZmlEMVFaUEs4YkE4b3Z6VFBXWldp?=
+ =?big5?B?Vi9VQU01Ym1BVXkrOTM1Ky9OUnFjK3lBdEhiRTdmZTJFNU0xR3JvZzhNRGdvWkpy?=
+ =?big5?B?ekxncWl6Y0l5ay9DRHNkSHk0Q3BnWHQrcDJyWFoxWVl5UGxTcXp2VmVMQVJOc2dI?=
+ =?big5?B?OCttKzlpeTNYNHZIZ3NrN1hYZXl2RzlmRDhVZFhnSGw4bm14SUVlcUtIUkpadEdH?=
+ =?big5?B?OXJUMmZ0R0JLRFNrK3duT3FkdFg4Z3IzVFJEQkN5bHpSMGpEN0Jad09NblVGY0dq?=
+ =?big5?B?ck1JMEZ4MThjT1p3UTlPaW54VkE1Q05uV2xITkh2Q3VZYUVjcVZaOFVWemU4NWF5?=
+ =?big5?B?aG45dlc2T1QrS09OYi9zR3E1L0E0VGwzMGtQaENTeVBlYldOTGc3R1FDSU5Fcmx0?=
+ =?big5?B?aksrYU93aXR4V1hEZVZ6ZElpNVBQaEJsQmhOMGd3V083VDV1Ty9JZi9xbFJwM0t6?=
+ =?big5?B?N0k1d2NNd3lJUnZhdWt6Ui9nU2lKelEwUTI3UXBDSGt1N3o2bkVMaUxCUXYxZ0xB?=
+ =?big5?B?bDduSUJBVXpvSjN6aE5tL3U2OXdEVzR0T29kSEtvSHdXZUdJMXBZNS8vMzBNNUZh?=
+ =?big5?B?M3VneFlaaEU0U2hIV1FPbFhoNzFKOFdTbkF3dW5YaFdLRzBVa0VhTmJpTmlvUlZt?=
+ =?big5?B?YmRKZUdnUVpsQ05NMzRPSVNVcC93VWFDZVlzaGJySnRVZk1PODBSVlFad3phdkl2?=
+ =?big5?B?L2l6aVBzTGltWFNtczdsYlJESCt3cStkQWZNYzRyWnErV0FMcGhUNmZHM1NmaTR2?=
+ =?big5?B?ZiticVBRQks3RWExMm9UdVBTR3l5VHpPUXZuOE1NQWJCZzFDWU9UU212eWZGWWtP?=
+ =?big5?B?bzdtV2lwbW1LL2ZZQ0N0UEwwb2ZBUWxvSTA1enc3TVlHRlArd1VIMitiMGwxTEJP?=
+ =?big5?B?YzJwQUs0WXFFTGFpd3UyM1FHMUttWElTZXBLOUxOOFRpdlVLUXEwRWQwZWNhdERu?=
+ =?big5?B?WnBKYy9LZ3k1RHFEZWdHbWJEeDN1dmNWaVBRVmJXUHdocFo5VmgyZGJ1M1k4bUly?=
+ =?big5?B?U3NkQ0dacUVKaklNL1lFMlRvMEpaWVRqNWRKanZpL2o4UmxEenFiWXB1OG5Wd3E4?=
+ =?big5?B?b3d4cWpwblQwVllNYUZ2VnNoUW9wSFdvNjhJcStwT2tRMDZ1K2ZHQVZtQ0lPeTVS?=
+ =?big5?B?T2FxT3J1blk2U1lScVFPYzZWRStzNTZnOWxYbkQ0RGhDQU5zYjljYVNSR2kvVThE?=
+ =?big5?B?Z0VOWFdVL0l0N1hGa2tyQjhyNWJmVHBnaDA2c0NuV01OMW8wa0llenRvaXlJb3hV?=
+ =?big5?B?SGRHTHlPeDAxcW4vZXUyS2Z6SGFGQjlKdmlaMzVnYlRTRE5lK3lqQ2Y0Q1ppcFlp?=
+ =?big5?B?MDdsRlBQeXAwMEVWSmN2NjlWUHU2S0lWVzd1S0YwdjZTSFcrdEF0Ryt3dEJ3Y1RZ?=
+ =?big5?B?NmpJcE9zRjFRU3ZBN3czTUM1OExHQVFRU0NpSDRtNHRJcmFvMVZDVWtod3BMa25S?=
+ =?big5?B?dkhrMVpCUnFrVmJpMHJkV3NVT1NkMzhxc0NCNmF1ZERTZ3l0Y2dYR2FNTWVvZmQz?=
+ =?big5?B?K0RYcUszYWJFYlB6UngzNlpJaE9jRmVQTmR5WHQ3OGZ6bERLSFlBRmN6RUViRy9i?=
+ =?big5?B?Q0grOFg2d0V6TllBNEZsZk5uenZOMGJHS2pETU83cHgxS2RPeWtWMXJiOFdHNUcx?=
+ =?big5?B?Y3J6a2Z1UnZuWTQzWVRZUXppMnc5ZGkzcTgyNmV4N0RDOFVxSGI0b2VxSmZpNU42?=
+ =?big5?B?ZzBXbGUwY2NVbDdtSUNqN2c2NG9yZVZPcHZldXdWMmI5NFJJaWpKVjFPVFJxcGlY?=
+ =?big5?B?NC95MFp1N2k5OUxVcEJXcUd1YWx4ZUZPNG15dXJ3N2hWelovK0NVbi92SHFPeFo0?=
+ =?big5?Q?OWN3Mt0NUHmwvvMEZOgWyEMFVNCnGLYX1kF7K9sXHOiIIz8y?=
+Content-Type: multipart/alternative;
+	boundary="_000_TY0PR06MB68391F8988CEECC826248882F2002TY0PR06MB6839apcp_"
+MIME-Version: 1.0
+X-OriginatorOrg: imedtac.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY0PR06MB6839.apcprd06.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a3751056-441e-4eca-ca88-08deb583ebea
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 May 2026 08:52:13.5479
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 764fc470-1a6f-4029-9690-8fcce983056d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +IkSQ7aZu4b/30gWg4F1/6eu6qNyRrQJRndRo3v6+jb8vGf29bhR0bZ83bDtIByAo2PzsUQGtaSySl/UU7ifJg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2PR06MB5334
+
+--_000_TY0PR06MB68391F8988CEECC826248882F2002TY0PR06MB6839apcp_
+Content-Type: text/plain; charset="big5"
+Content-Transfer-Encoding: base64
+
+SGkgQWxsLA0KprPD9qRXpriwUb3XqrogQUkgVHJpYWdlIKq6s1e5uqS6s6Gkd7BRvde5TKFBDQpV
+SSCkXal8pmKzV7m6pKShQae5pqir4bd8pXS0o6jRDQql/bSjqNGzV7m6pOWl87NztbI8aHR0cHM6
+Ly9kb2NzLmdvb2dsZS5jb20vZG9jdW1lbnQvZC8xbmVPTFdqN1gtUG80TjdDSGFVS1RSWWs1Tnhu
+STRvN2I3ZXlNeTJla3U0by9lZGl0P3VzcD1zaGFyaW5nPrDRptKhQaazpfSm87Ddw0SlaaVIqr2x
+tbX5uNENCg0KsNGm0qTlpfOuyaaztFi8y7Sjv/Q6DQoNCiAgKg0KtXW0waS7pOukpKq6pdi80Kyw
+q8ik4SBEZW1voUGp0qVIs6GkwKVcr+CmcDogQUkgukutbqS6rmWm6qZeIEhJUyCsebV7vMiuyaSj
+t3y56qdAKKbHpuKmcqq6s6GkwCkNCiAgKg0Ku3mttb/ppEqquqVcr+CkXbvdrW61+LZRuc62pKq6
+tmmr16jTsFG916xPp1+tbqZis2+muCBEZW1vIKdlsnsNCg0KLS0tLQ0KpXSlfqfarcylv7XbpOKz
+Xa1wp96zTqxbumOhQaZiQVBJt76zcaRXprOlSKRVu92oRKFBpkGzwrfQtKOo0ToNCg0KICAxLg0K
+aU1WUyCkV7bHIHZpdGFsIHNpZ24gZGF0YSCo7Lanpeakaqq6ruamoaxPp1+73a1usFG91z8NCiAg
+Mi4NCranpeakaqZetsew3cNEruamoToNCiAgICAgKg0Kv+++3MP+q6wos+a/76FCpmi/76FCtnGk
+2CkNCiAgICAgKg0Kv++2tQ0KICAgICAqDQq5d61wsN3DRLzGtnEgKEFDMDcpDQogICAgICoNCnNl
+c3Npb24ga2V5ILWlDQogIDMuDQppTVZTIKRXtseoz6XOqsyquqZetaogKyBzdGVwIDEgqPqxb6q6
+IHNlc3Npb24ga2V5LCC2p6XmpGqmXrbHpFWkQMNEpLquZanOtkXCX7WlruamoQ0KDQpUaGFua3Ms
+DQpKb2hubnkNCg0KLS0tLS0tLS0tLS0tLS0tDQoNCkpvaG5ueSBGYW5nIC8gpOiwtr+rDQoNCmlN
+ZWR0YWMgQ28uLCBMdGQuIHd3dy5pbWVkdGFjLmNvbTxodHRwOi8vd3d3LmltZWR0YWMuY29tLz4N
+Cg0KUm0uIDQsIDEwRi4sIE5vLjMzNSwgUnVpZ3VhbmcgUmQuIE5laWh1IERpc3QuLCBUYWlwZWkg
+Q2l0eSAxMTQ5MiwgVGFpd2FuIChSLk8uQykNCg0KpbuzcbBUpM6o5KnSprOq/qXzqdKndKSnuOqw
+VKehxN2+97FLoUG2yKjRq/ypd6Snpqyl86RIqM+lzqFBpby4Z7FIpfOkSLNcpWmko7FvtKbFU6FC
+vca7c6nOtLKlrKW7s3GwVKFDrVmxeqtEq/ypd6Snpqyl86RIoUHEWbhUqM+lzqFCq0+mc6nOtKbF
+U6W7s3GwVKSnpfSm87OhpMChQb3Qs3GqvrFIpfOkSKjDp7ml/qdSsKOlu7NxsFShQ7r0uPSzcbBU
+pWmv4Kd0prOvZqxyoUGmrKXzpEjAs6bbpua9VLt7pbu2bKXzrE+nX6Z3pf6hQ6a5pX6hQbjTuXGk
+bLBUrqekuq5lpWmv4LNRxdyn86FBpUK69LvauvS49KjDpKOrT8PSuNO5caRssFSup6S6rmWkp6e5
+vuOpyqFBpl2muaFBvHq427S8wuWq0aX3prOtraS9pXGkzqjkw/arWaX4t36576nzpUykSMXcp/Oh
+Qq3Xp++hQsKrp++pzrCws3mkp7lxpGywVK6npLquZaFBrqSko610pfSm87NkpfShQyBUaGUgaW5m
+b3JtYXRpb24gY29udGFpbmVkIGluIHRoaXMgY29tbXVuaWNhdGlvbiBhbmQgYXR0YWNobWVudCBp
+cyBjb25maWRlbnRpYWwgYW5kIGlzIGZvciB0aGUgdXNlIG9mIHRoZSBpbnRlbmRlZCByZWNpcGll
+bnQgb25seS4gQW55IGRpc2Nsb3N1cmUsIGNvcHlpbmcgb3IgZGlzdHJpYnV0aW9uIG9mIHRoaXMg
+Y29tbXVuaWNhdGlvbiB3aXRob3V0IHRoZSBzZW5kZXKhpnMgY29uc2VudCBpcyBzdHJpY3RseSBw
+cm9oaWJpdGVkLiBJZiB5b3UgYXJlIG5vdCB0aGUgaW50ZW5kZWQgcmVjaXBpZW50LCBwbGVhc2Ug
+bm90aWZ5IHRoZSBzZW5kZXIgYW5kIGRlbGV0ZSB0aGlzIGNvbW11bmljYXRpb24gZW50aXJlbHkg
+d2l0aG91dCB1c2luZywgcmV0YWluaW5nLCBvciBkaXNjbG9zaW5nIGFueSBvZiBpdHMgY29udGVu
+dHMuIEludGVybmV0IG1lc3NhZ2UgY2Fubm90IGJlIGd1YXJhbnRlZWQgdG8gYmUgdmlydXMtZnJl
+ZS4gVGhlIHJlY2lwaWVudCBpcyByZXNwb25zaWJsZSBmb3IgZW5zdXJpbmcgdGhhdCB0aGlzIG1l
+c3NhZ2UgaXMgdmlydXMgZnJlZS4gQmVzaWRlcywgdGhlIE1lc3NhZ2UgaXMgc3VzY2VwdGlibGUg
+dG8gYWx0ZXJhdGlvbiBhbmQgY2Fubm90IGd1YXJhbnRlZSB0aGUgaW50ZWdyaXR5IG9mIHRoZSBN
+ZXNzYWdlLiBUaGVyZWZvcmUsIGltZWR0YWMgQ28uLCBMdGQuIGFuZCBpdHMgYWZmaWxpYXRlcyBz
+aGFsbCBub3QgYmUgbGlhYmxlIGZvciB0aGUgTWVzc2FnZSBpZiBhbHRlcmVkLCBtb2RpZmllZCwg
+Y2hhbmdlZCBvciBmYWxzaWZpZWQgYnkgYW55IHRoaXJkIHBhcnR5Lg0K
+
+--_000_TY0PR06MB68391F8988CEECC826248882F2002TY0PR06MB6839apcp_
+Content-Type: text/html; charset="big5"
+Content-Transfer-Encoding: quoted-printable
+
+<html>
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dbig5">
+<style type=3D"text/css" style=3D"display:none;"> P {margin-top:0;margin-bo=
+ttom:0;} </style>
+</head>
+<body dir=3D"ltr">
+<div class=3D"elementToProof" style=3D"font-family: &quot;Microsoft JhengHe=
+i&quot;, =B7L=B3n=A5=BF=B6=C2=C5=E9, &quot;Apple LiGothic&quot;, sans-serif=
+; font-size: 12pt; color: rgb(0, 0, 0);">
+Hi All,</div>
+<div class=3D"elementToProof" style=3D"font-family: &quot;Microsoft JhengHe=
+i&quot;, =B7L=B3n=A5=BF=B6=C2=C5=E9, &quot;Apple LiGothic&quot;, sans-serif=
+; font-size: 12pt; color: rgb(0, 0, 0);">
+=A6=B3=C3=F6=A4W=A6=B8=B0Q=BD=D7=AA=BA AI Triage =AA=BA=B3W=B9=BA=A4=BA=B3=
+=A1=A4w=B0Q=BD=D7=B9L=A1A</div>
+<div class=3D"elementToProof" style=3D"font-family: &quot;Microsoft JhengHe=
+i&quot;, =B7L=B3n=A5=BF=B6=C2=C5=E9, &quot;Apple LiGothic&quot;, sans-serif=
+; font-size: 12pt; color: rgb(0, 0, 0);">
+UI =A4]=A9|=A6b=B3W=B9=BA=A4=A4=A1A=A7=B9=A6=A8=AB=E1=B7|=A5t=B4=A3=A8=D1</=
+div>
+<div class=3D"elementToProof" style=3D"font-family: &quot;Microsoft JhengHe=
+i&quot;, =B7L=B3n=A5=BF=B6=C2=C5=E9, &quot;Apple LiGothic&quot;, sans-serif=
+; font-size: 12pt; color: rgb(0, 0, 0);">
+=A5=FD=B4=A3=A8=D1=B3W=B9=BA=A4=E5=A5=F3<a href=3D"https://docs.google.com/=
+document/d/1neOLWj7X-Po4N7CHaUKTRYk5NxnI4o7b7eyMy2eku4o/edit?usp=3Dsharing"=
+ id=3D"OWAb72c548d-1cb8-402a-6613-481456559d11" class=3D"OWAAutoLink" title=
+=3D"https://docs.google.com/document/d/1neOLWj7X-Po4N7CHaUKTRYk5NxnI4o7b7ey=
+My2eku4o/edit?usp=3Dsharing">=B3s=B5=B2</a>=B0=D1=A6=D2=A1A=A6=B3=A5=F4=A6=
+=F3=B0=DD=C3D=A5i=A5H=AA=BD=B1=B5=B5=F9=B8=D1</div>
+<div class=3D"elementToProof" style=3D"font-family: &quot;Microsoft JhengHe=
+i&quot;, =B7L=B3n=A5=BF=B6=C2=C5=E9, &quot;Apple LiGothic&quot;, sans-serif=
+; font-size: 12pt; color: rgb(0, 0, 0);">
+<br>
+</div>
+<div class=3D"elementToProof" style=3D"font-family: &quot;Microsoft JhengHe=
+i&quot;, =B7L=B3n=A5=BF=B6=C2=C5=E9, &quot;Apple LiGothic&quot;, sans-serif=
+; font-size: 12pt; color: rgb(0, 0, 0);">
+=B0=D1=A6=D2=A4=E5=A5=F3=AE=C9=A6=B3=B4X=BC=CB=B4=A3=BF=F4:</div>
+<ul data-editing-info=3D"{&quot;applyListStyleFromLevel&quot;:false,&quot;u=
+norderedStyleType&quot;:2}" style=3D"margin-top: 0px; margin-bottom: 0px;">
+<li style=3D"font-family: &quot;Microsoft JhengHei&quot;, =B7L=B3n=A5=BF=B6=
+=C2=C5=E9, &quot;Apple LiGothic&quot;, sans-serif; font-size: 12pt; color: =
+rgb(0, 0, 0); margin-top: 0px; margin-bottom: 0px; list-style-type: &quot;-=
+ &quot;;">
+<div class=3D"elementToProof" role=3D"presentation">=B5u=B4=C1=A4=BB=A4=EB=
+=A4=A4=AA=BA=A5=D8=BC=D0=AC=B0=AB=C8=A4=E1 Demo=A1A=A9=D2=A5H=B3=A1=A4=C0=
+=A5\=AF=E0=A6p: AI =BAK=ADn=A4=BA=AEe=A6=EA=A6^ HIS =ACy=B5{=BC=C8=AE=C9=A4=
+=A3=B7|=B9=EA=A7@(=A6=C7=A6=E2=A6r=AA=BA=B3=A1=A4=C0)</div>
+</li><li style=3D"font-family: &quot;Microsoft JhengHei&quot;, =B7L=B3n=A5=
+=BF=B6=C2=C5=E9, &quot;Apple LiGothic&quot;, sans-serif; font-size: 12pt; c=
+olor: rgb(0, 0, 0); margin-top: 0px; margin-bottom: 0px; list-style-type: &=
+quot;- &quot;;">
+<div role=3D"presentation">=BBy=AD=B5=BF=E9=A4J=AA=BA=A5\=AF=E0=A4]=BB=DD=
+=ADn=B5=F8=B6Q=B9=CE=B6=A4=AA=BA=B6i=AB=D7=A8=D3=B0Q=BD=D7=ACO=A7_=ADn=A6b=
+=B3o=A6=B8 Demo =A7e=B2{</div>
+</li></ul>
+<div class=3D"elementToProof" style=3D"margin-top: 0px; margin-bottom: 0px;=
+ font-family: &quot;Microsoft JhengHei&quot;, =B7L=B3n=A5=BF=B6=C2=C5=E9, &=
+quot;Apple LiGothic&quot;, sans-serif; font-size: 12pt; color: rgb(0, 0, 0)=
+;">
+<br>
+</div>
+<div class=3D"elementToProof" style=3D"margin-top: 0px; margin-bottom: 0px;=
+ font-family: &quot;Microsoft JhengHei&quot;, =B7L=B3n=A5=BF=B6=C2=C5=E9, &=
+quot;Apple LiGothic&quot;, sans-serif; font-size: 12pt; color: rgb(0, 0, 0)=
+;">
+----</div>
+<div class=3D"elementToProof" style=3D"margin-top: 1em; margin-bottom: 1em;=
+ font-family: &quot;Microsoft JhengHei&quot;, =B7L=B3n=A5=BF=B6=C2=C5=E9, &=
+quot;Apple LiGothic&quot;, sans-serif; font-size: 12pt; color: rgb(0, 0, 0)=
+;">
+=A5t=A5~=A7=DA=AD=CC=A5=BF=B5=DB=A4=E2=B3]=ADp=A7=DE=B3N=AC[=BAc=A1A=A6bAPI=
+=B7=BE=B3q=A4W=A6=B3=A5H=A4U=BB=DD=A8D=A1A=A6A=B3=C2=B7=D0=B4=A3=A8=D1:</di=
+v>
+<ol start=3D"1">
+<li style=3D"font-family: &quot;Microsoft JhengHei&quot;, =B7L=B3n=A5=BF=B6=
+=C2=C5=E9, &quot;Apple LiGothic&quot;, sans-serif; font-size: 12pt; color: =
+rgb(0, 0, 0);">
+<div role=3D"presentation">iMVS =A4W=B6=C7 vital sign data =A8=EC=B6=A7=A5=
+=E6=A4j=AA=BA=AE=E6=A6=A1=ACO=A7_=BB=DD=ADn=B0Q=BD=D7?</div>
+</li><li style=3D"font-family: &quot;Microsoft JhengHei&quot;, =B7L=B3n=A5=
+=BF=B6=C2=C5=E9, &quot;Apple LiGothic&quot;, sans-serif; font-size: 12pt; c=
+olor: rgb(0, 0, 0);">
+<div role=3D"presentation">=B6=A7=A5=E6=A4j=A6^=B6=C7=B0=DD=C3D=AE=E6=A6=A1=
+:</div>
+</li><ol start=3D"1" data-editing-info=3D"{&quot;applyListStyleFromLevel&qu=
+ot;:true}" style=3D"list-style-type: lower-alpha;">
+<li style=3D"font-family: &quot;Microsoft JhengHei&quot;, =B7L=B3n=A5=BF=B6=
+=C2=C5=E9, &quot;Apple LiGothic&quot;, sans-serif; font-size: 12pt; color: =
+rgb(0, 0, 0);">
+<div role=3D"presentation">=BF=EF=BE=DC=C3=FE=AB=AC(=B3=E6=BF=EF=A1B=A6h=BF=
+=EF=A1B=B6q=A4=D8)</div>
+</li><li style=3D"font-family: &quot;Microsoft JhengHei&quot;, =B7L=B3n=A5=
+=BF=B6=C2=C5=E9, &quot;Apple LiGothic&quot;, sans-serif; font-size: 12pt; c=
+olor: rgb(0, 0, 0);">
+<div role=3D"presentation">=BF=EF=B6=B5</div>
+</li><li style=3D"font-family: &quot;Microsoft JhengHei&quot;, =B7L=B3n=A5=
+=BF=B6=C2=C5=E9, &quot;Apple LiGothic&quot;, sans-serif; font-size: 12pt; c=
+olor: rgb(0, 0, 0);">
+<div role=3D"presentation">=B9w=ADp=B0=DD=C3D=BC=C6=B6q (AC07)</div>
+</li><li style=3D"font-family: &quot;Microsoft JhengHei&quot;, =B7L=B3n=A5=
+=BF=B6=C2=C5=E9, &quot;Apple LiGothic&quot;, sans-serif; font-size: 12pt; c=
+olor: rgb(0, 0, 0);">
+<div role=3D"presentation">session key =B5=A5</div>
+</li></ol>
+<li style=3D"font-family: &quot;Microsoft JhengHei&quot;, =B7L=B3n=A5=BF=B6=
+=C2=C5=E9, &quot;Apple LiGothic&quot;, sans-serif; font-size: 12pt; color: =
+rgb(0, 0, 0);">
+<div role=3D"presentation">iMVS =A4W=B6=C7=A8=CF=A5=CE=AA=CC=AA=BA=A6^=B5=
+=AA + step 1 =A8=FA=B1o=AA=BA session key, =B6=A7=A5=E6=A4j=A6^=B6=C7=A4U=
+=A4@=C3D=A4=BA=AEe=A9=CE=B6E=C2_=B5=A5=AE=E6=A6=A1</div>
+</li></ol>
+<div style=3D"font-family: &quot;Microsoft JhengHei&quot;, =B7L=B3n=A5=BF=
+=B6=C2=C5=E9, &quot;Apple LiGothic&quot;, sans-serif; font-size: 12pt; colo=
+r: rgb(0, 0, 0);">
+<br>
+</div>
+<div class=3D"elementToProof" style=3D"font-family: &quot;Microsoft JhengHe=
+i&quot;, =B7L=B3n=A5=BF=B6=C2=C5=E9, &quot;Apple LiGothic&quot;, sans-serif=
+; font-size: 12pt; color: rgb(0, 0, 0);">
+Thanks,</div>
+<div class=3D"elementToProof" style=3D"font-family: &quot;Microsoft JhengHe=
+i&quot;, =B7L=B3n=A5=BF=B6=C2=C5=E9, &quot;Apple LiGothic&quot;, sans-serif=
+; font-size: 12pt; color: rgb(0, 0, 0);">
+Johnny</div>
+<div id=3D"Signature" class=3D"elementToProof">
+<p class=3D"elementToProof" style=3D"background-color: white; margin: 0cm;"=
+><span style=3D"color: rgb(0, 0, 0);">---------------</span></p>
+<div class=3D"elementToProof" style=3D"background-color: white; margin: 0cm=
+; font-family: =B7L=B3n=A5=BF=B6=C2=C5=E9, sans-serif; font-size: 12pt; col=
+or: black;">
+Johnny Fang / =A4=E8=B0=B6=BF=AB</div>
+<p class=3D"elementToProof" style=3D"background-color: white; margin: 0cm;"=
+><span style=3D"font-family: =B7L=B3n=A5=BF=B6=C2=C5=E9, sans-serif; font-s=
+ize: 12pt; color: rgb(36, 36, 36);">iMedtac Co., Ltd.
+</span><span style=3D"font-family: =B7L=B3n=A5=BF=B6=C2=C5=E9, sans-serif; =
+font-size: 12pt; color: blue;"><a href=3D"http://www.imedtac.com/" id=3D"OW=
+Af44a412a-99e6-120f-0f63-4aff38f3bdc1" class=3D"OWAAutoLink" title=3D"http:=
+//www.imedtac.com/" data-auth=3D"NotApplicable" style=3D"color: blue; margi=
+n-top: 0px; margin-bottom: 0px;"><u>www.imedtac.com</u></a></span></p>
+<p class=3D"elementToProof" style=3D"background-color: white; margin: 0cm;"=
+><span style=3D"font-family: =B7L=B3n=A5=BF=B6=C2=C5=E9, sans-serif; font-s=
+ize: 12pt; color: rgb(36, 36, 36);">Rm. 4, 10F., No.335, Ruiguang Rd. Neihu=
+ Dist., Taipei City 11492, Taiwan (R.O.C)</span></p>
+</div>
+=A5=BB=B3q=B0T=A4=CE=A8=E4=A9=D2=A6=B3=AA=FE=A5=F3=A9=D2=A7t=A4=A7=B8=EA=B0=
+T=A7=A1=C4=DD=BE=F7=B1K=A1A=B6=C8=A8=D1=AB=FC=A9w=A4=A7=A6=AC=A5=F3=A4H=A8=
+=CF=A5=CE=A1A=A5=BC=B8g=B1H=A5=F3=A4H=B3\=A5i=A4=A3=B1o=B4=A6=C5S=A1B=BD=C6=
+=BBs=A9=CE=B4=B2=A5=AC=A5=BB=B3q=B0T=A1C=ADY=B1z=ABD=AB=FC=A9w=A4=A7=A6=AC=
+=A5=F3=A4H=A1A=C4Y=B8T=A8=CF=A5=CE=A1B=ABO=A6s=A9=CE=B4=A6=C5S=A5=BB=B3q=B0=
+T=A4=A7=A5=F4=A6=F3=B3=A1=A4=C0=A1A=BD=D0=B3q=AA=BE=B1H=A5=F3=A4H=A8=C3=A7=
+=B9=A5=FE=A7R=B0=A3=A5=BB=B3q=B0T=A1C=BA=F4=B8=F4=B3q=B0T=A5i=AF=E0=A7t=A6=
+=B3=AFf=ACr=A1A=A6=AC=A5=F3=A4H=C0=B3=A6=DB=A6=E6=BDT=BB{=A5=BB=B6l=A5=F3=
+=ACO=A7_=A6w=A5=FE=A1C=A6=B9=A5~=A1A=B8=D3=B9q=A4l=B0T=AE=A7=A4=BA=AEe=A5i=
+=AF=E0=B3Q=C5=DC=A7=F3=A1A=A5B=BA=F4=BB=DA=BA=F4=B8=F4=A8=C3=A4=A3=ABO=C3=
+=D2=B8=D3=B9q=A4l=B0T=AE=A7=A4=BA=AEe=A4=A7=A7=B9=BE=E3=A9=CA=A1A=A6]=A6=B9=
+=A1A=BCz=B8=DB=B4=BC=C2=E5=AA=D1=A5=F7=A6=B3=AD=AD=A4=BD=A5q=A4=CE=A8=E4=C3=
+=F6=ABY=A5=F8=B7~=B9=EF=A9=F3=A5L=A4H=C5=DC=A7=F3=A1B=AD=D7=A7=EF=A1B=C2=AB=
+=A7=EF=A9=CE=B0=B0=B3y=A4=A7=B9q=A4l=B0T=AE=A7=A4=BA=AEe=A1A=AE=A4=A4=A3=AD=
+t=A5=F4=A6=F3=B3d=A5=F4=A1C The information contained in this communication
+ and attachment is confidential and is for the use of the intended recipien=
+t only. Any disclosure, copying or distribution of this communication witho=
+ut the sender=A1=A6s consent is strictly prohibited. If you are not the int=
+ended recipient, please notify the sender
+ and delete this communication entirely without using, retaining, or disclo=
+sing any of its contents. Internet message cannot be guaranteed to be virus=
+-free. The recipient is responsible for ensuring that this message is virus=
+ free. Besides, the Message is susceptible
+ to alteration and cannot guarantee the integrity of the Message. Therefore=
+, imedtac Co., Ltd. and its affiliates shall not be liable for the Message =
+if altered, modified, changed or falsified by any third party.
+</body>
+</html>
+
+--_000_TY0PR06MB68391F8988CEECC826248882F2002TY0PR06MB6839apcp_--

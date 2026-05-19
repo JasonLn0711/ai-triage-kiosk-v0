@@ -1,0 +1,34 @@
+{
+  "api_version": "2026-05-22-demo-v0.2-draft",
+  "schema_version": "imvs-nycu-triage-demo-schema-v0.2-draft",
+  "flow_version": "respiratory-early-handoff-flow-v0.2-draft",
+  "case_id": "demo-respiratory-low-spo2-001",
+  "session_key": "demo-session-resp-001",
+  "session_expires_at": "2026-05-21T10:20:00+08:00",
+  "session_state": "active",
+  "last_question_id": "chief-concern",
+  "status": "question",
+  "workflow_mode": "parallel_measurement_intake",
+  "measurement_state": "in_progress",
+  "vitals_ready": false,
+  "question_phase": "pre_vital_intake",
+  "phase_reason": "Patient-reported dyspnea timing can be collected while vital signs are still being measured.",
+  "progress": {
+    "current": 2,
+    "expected_total": 4
+  },
+  "question": {
+    "id": "breathing-duration",
+    "type": "single_choice",
+    "text": "How long have you felt short of breath?",
+    "options": [
+      {"id": "today", "label": "Started today"},
+      {"id": "few_days", "label": "A few days"},
+      {"id": "week_plus", "label": "More than a week"}
+    ],
+    "none_option_id": null,
+    "evidence_refs": ["LOCAL-PROTOCOL-TBD"],
+    "demo_boundary": "Staff should review this answer with the measured vitals."
+  },
+  "demo_boundary": "Synthetic-data capability demo only; not diagnosis, treatment advice, final triage, or production integration."
+}

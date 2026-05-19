@@ -1,0 +1,52 @@
+Subject: AI Triage Product Spec
+From: "Johnny Fang 方偉翰, imedtac Corp." <Johnny.Fang@imedtac.com>
+To: "cre062400@gmail.com" <cre062400@gmail.com>, "Jason Miao 苗中聖, imedtac Corp." <Jason.Miao@imedtac.com>
+Cc: "Ken Yu 余金樹, imedtac Corp." <Ken.Yu@imedtac.com>
+Date: Tue, 19 May 2026 08:52:13 +0000
+
+Attachments:
+- none
+
+Text body:
+Hi All,
+有關上次討論的 AI Triage 的規劃內部已討論過，
+UI 也尚在規劃中，完成後會另提供
+先提供規劃文件連結<https://docs.google.com/document/d/1neOLWj7X-Po4N7CHaUKTRYk5NxnI4o7b7eyMy2eku4o/edit?usp=sharing>參考，有任何問題可以直接註解
+
+參考文件時有幾樣提醒:
+
+  *
+短期六月中的目標為客戶 Demo，所以部分功能如: AI 摘要內容串回 HIS 流程暫時不會實作(灰色字的部分)
+  *
+語音輸入的功能也需要視貴團隊的進度來討論是否要在這次 Demo 呈現
+
+----
+另外我們正著手設計技術架構，在API溝通上有以下需求，再麻煩提供:
+
+  1.
+iMVS 上傳 vital sign data 到陽交大的格式是否需要討論?
+  2.
+陽交大回傳問題格式:
+     *
+選擇類型(單選、多選、量尺)
+     *
+選項
+     *
+預計問題數量 (AC07)
+     *
+session key 等
+  3.
+iMVS 上傳使用者的回答 + step 1 取得的 session key, 陽交大回傳下一題內容或診斷等格式
+
+Thanks,
+Johnny
+
+---------------
+
+Johnny Fang / 方偉翰
+
+iMedtac Co., Ltd. www.imedtac.com<http://www.imedtac.com/>
+
+Rm. 4, 10F., No.335, Ruiguang Rd. Neihu Dist., Taipei City 11492, Taiwan (R.O.C)
+
+本通訊及其所有附件所含之資訊均屬機密，僅供指定之收件人使用，未經寄件人許可不得揭露、複製或散布本通訊。若您非指定之收件人，嚴禁使用、保存或揭露本通訊之任何部分，請通知寄件人並完全刪除本通訊。網路通訊可能含有病毒，收件人應自行確認本郵件是否安全。此外，該電子訊息內容可能被變更，且網際網路並不保證該電子訊息內容之完整性，因此，慧誠智醫股份有限公司及其關係企業對於他人變更、修改、竄改或偽造之電子訊息內容，恕不負任何責任。 The information contained in this communication and attachment is confidential and is for the use of the intended recipient only. Any disclosure, copying or distribution of this communication without the sender’s consent is strictly prohibited. If you are not the intended recipient, please notify the sender and delete this communication entirely without using, retaining, or disclosing any of its contents. Internet message cannot be guaranteed to be virus-free. The recipient is responsible for ensuring that this message is virus free. Besides, the Message is susceptible to alteration and cannot guarantee the integrity of the Message. Therefore, imedtac Co., Ltd. and its affiliates shall not be liable for the Message if altered, modified, changed or falsified by any third party.

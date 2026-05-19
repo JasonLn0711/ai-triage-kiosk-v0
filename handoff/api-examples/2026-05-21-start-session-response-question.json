@@ -1,0 +1,35 @@
+{
+  "api_version": "2026-05-22-demo-v0.2-draft",
+  "schema_version": "imvs-nycu-triage-demo-schema-v0.2-draft",
+  "flow_version": "respiratory-early-handoff-flow-v0.2-draft",
+  "case_id": "demo-respiratory-low-spo2-001",
+  "session_key": "demo-session-resp-001",
+  "session_expires_at": "2026-05-21T10:20:00+08:00",
+  "session_state": "active",
+  "last_question_id": null,
+  "status": "question",
+  "workflow_mode": "parallel_measurement_intake",
+  "measurement_state": "in_progress",
+  "vitals_ready": false,
+  "question_phase": "pre_vital_intake",
+  "phase_reason": "This intake question does not depend on measured vital values.",
+  "progress": {
+    "current": 1,
+    "expected_total": 4
+  },
+  "question": {
+    "id": "chief-concern",
+    "type": "single_choice",
+    "text": "What is the main reason you are using the kiosk today?",
+    "options": [
+      {"id": "breathing", "label": "Shortness of breath"},
+      {"id": "chest", "label": "Chest discomfort"},
+      {"id": "fever", "label": "Fever or infection concern"},
+      {"id": "other", "label": "Something else"}
+    ],
+    "none_option_id": null,
+    "evidence_refs": ["LOCAL-PROTOCOL-TBD"],
+    "demo_boundary": "Synthetic-data demo question for staff-review intake support."
+  },
+  "demo_boundary": "Synthetic-data capability demo only; not diagnosis, treatment advice, final triage, or production integration."
+}

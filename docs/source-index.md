@@ -16,6 +16,12 @@ demo lane and its direct upstream Prof. Wu context.
 | `2026-05-15` | `source/2026-05-15-huicheng-second-sync-and-duobao-followup/` | Second 慧誠智醫 sync plus 多寶 follow-up. This converted the Friday feasibility discussion into a June demo plan: US-style urgent care, `3-5` synthetic vital-sign-aligned cases, guided intake plus optional ASR, networked/external compute acceptable for demo, and clinician-review summary only. |
 | `2026-05-15 15:25` | `source/2026-05-15-huicheng-second-sync-and-duobao-followup/company-provided-meeting-minutes.md` | Johnny Fang's company-side meeting minutes. Confirms urgent-care / June-demo / `3-5` cases / `8-10` questions / touch plus partial voice input, and creates confirmation needs around `AI 資料訓練 study`, output wording, case categories, external compute, and adding 許醫師 to the email loop. |
 | `2026-05-15 16:42` | `source/2026-05-15-huicheng-second-sync-and-duobao-followup/duobao-demo-case-draft.md` | 多寶's first clinical case draft and LINE handoff. Provides four diagnosis-shaped design anchors: acute cholecystitis, AfRVR, pneumonia, and URI, to be converted into demo-safe clinician-review summaries rather than diagnosis outputs. |
+| `2026-05-19 16:52` | `source/2026-05-19-johnny-ai-triage-product-spec/` | Johnny Fang's email plus the linked `iMVS AI Triage 智慧檢傷分流系統_20260515` product spec. A later standalone Downloads PDF with the same title was verified as byte-identical to the archived product-spec PDF. Confirms mid-June customer-demo priority, HIS summary writeback as out-of-scope for this demo, voice input as conditional, and the immediate API contract need: iMVS vital payload -> NYCU typed question/session response -> iMVS answer/session loop -> next question or demo staff-summary output. |
+| `2026-05-19 16:56-18:06` | `source/2026-05-19-johnny-line-thursday-engineering-sync/` | Johnny's LINE group follow-up after sending the product spec. User clarified the LINE times are afternoon / PM. Johnny says engineers need an API design document, asks when it can be provided, and asks to discuss progress on Thursday with the engineering design team. Jason added 許桓瑜（多寶） to the group. Johnny later confirmed Thursday `2026-05-21 10:00` on Microsoft Teams and provided meeting access details, preserved local-only in the source. |
+| `2026-05-19 17:19-17:50` | `source/2026-05-19-duobao-line-thursday-engineering-sync/` | Jason coordinated with 多寶 for the Thursday engineering sync. 多寶 was available, provided email, received the forwarded materials, and the meeting was confirmed for Thursday `2026-05-21 10:00` pending the 慧誠 meeting link. |
+| `2026-05-19 17:24-17:49` | `source/2026-05-19-johnny-direct-line-thursday-engineering-sync/` | Johnny clarified the spec's triage standards and presentation logic are AI-discussed drafts and adjustable in practice. Jason coordinated 許醫師 / 多寶 inclusion, forwarded the email, shared the email address, and finalized Thursday `10:00` as the sync time. |
+| `2026-05-19` | `source/2026-05-19-expert-review-scope-api-boundary/` | Expert reply after reviewing the project packet. Confirms the scope cut is appropriate if framed as `synthetic-data vital-aware intake + staff-review summary`, not clinical triage product. Adds required v0.2 deltas: runtime enforcement, clinical stop rule, field dictionary, failure fallback, UI wording lock, `review_action` replacing `plan_support`, staff-only summary, handoff flags, and privacy/security owner/date closeout. |
+| `2026-05-19` | `source/2026-05-19-duobao-two-phase-vital-questioning/` | User-provided clarification of 多寶's two-phase question-flow insight: ask non-vital-dependent questions while vital signs are being measured, then use measured vital values to choose the second-stage follow-up. This becomes the preferred API/UI design if 慧誠 can support it without disrupting measurement quality. |
 
 The `2026-05-12` source folder now also contains Johnny Fang's company-side
 follow-up package:
@@ -40,6 +46,23 @@ Derived analysis:
 - `workstreams/08-june-demo-case-and-integration-plan.md`
 - `handoff/2026-05-15-june-demo-case-pack-v0.md`
 - `docs/literature-matrix-workflow.md`
+- `source/2026-05-19-johnny-ai-triage-product-spec/source.md`
+- `docs/2026-05-19-ai-triage-product-spec-api-analysis.md`
+- `source/2026-05-19-johnny-line-thursday-engineering-sync/source.md`
+- `source/2026-05-19-duobao-line-thursday-engineering-sync/source.md`
+- `source/2026-05-19-johnny-direct-line-thursday-engineering-sync/source.md`
+- `source/2026-05-19-expert-review-scope-api-boundary/source.md`
+- `source/2026-05-19-duobao-two-phase-vital-questioning/source.md`
+- `docs/2026-05-19-expert-review-action-plan.md`
+- `docs/2026-05-19-two-phase-question-flow-design.md`
+- `docs/2026-05-19-api-session-design-plain-explanation.md`
+- `docs/version-control-policy.md`
+- `data/version_manifest.json`
+- `handoff/2026-05-21-huicheng-engineering-sync-prep.md`
+- `handoff/2026-05-21-imvs-nycu-api-design-v0.1.md`
+- `handoff/2026-05-21-decision-defaults-and-owner-matrix.md`
+- `handoff/2026-05-22-api-v0.2-requirements-from-expert-review.md`
+- `handoff/api-examples/`
 
 ## Upstream Prof. Wu Context
 

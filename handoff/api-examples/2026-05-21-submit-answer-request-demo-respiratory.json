@@ -1,0 +1,22 @@
+{
+  "api_version": "2026-05-22-demo-v0.2-draft",
+  "schema_version": "imvs-nycu-triage-demo-schema-v0.2-draft",
+  "flow_version": "respiratory-early-handoff-flow-v0.2-draft",
+  "case_id": "demo-respiratory-low-spo2-001",
+  "request_id": "req-demo-resp-answer-001",
+  "idempotency_key": "idem-demo-resp-answer-001",
+  "session_key": "demo-session-resp-001",
+  "workflow_mode": "parallel_measurement_intake",
+  "measurement_state": "in_progress",
+  "vitals_ready": false,
+  "question_phase": "pre_vital_intake",
+  "question_id": "chief-concern",
+  "answer": {
+    "selected_option_ids": ["breathing"],
+    "scale_value": null
+  },
+  "client_event": {
+    "answered_at": "2026-05-21T14:00:00+08:00",
+    "input_mode": "touch"
+  }
+}

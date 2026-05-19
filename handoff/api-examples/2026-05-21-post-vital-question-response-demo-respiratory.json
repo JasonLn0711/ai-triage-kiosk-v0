@@ -1,0 +1,35 @@
+{
+  "api_version": "2026-05-22-demo-v0.2-draft",
+  "schema_version": "imvs-nycu-triage-demo-schema-v0.2-draft",
+  "flow_version": "respiratory-early-handoff-flow-v0.2-draft",
+  "case_id": "demo-respiratory-low-spo2-001",
+  "session_key": "demo-session-resp-001",
+  "session_expires_at": "2026-05-21T10:20:00+08:00",
+  "session_state": "active",
+  "last_question_id": "breathing-duration",
+  "status": "question",
+  "workflow_mode": "parallel_measurement_intake",
+  "measurement_state": "complete",
+  "vitals_ready": true,
+  "question_phase": "post_vital_followup",
+  "phase_reason": "Measured vitals are available, so the system can ask a targeted respiratory staff-review follow-up.",
+  "progress": {
+    "current": 3,
+    "expected_total": 4
+  },
+  "question": {
+    "id": "chest-pain-pressure",
+    "type": "single_choice",
+    "text": "Do you have chest pain or chest pressure right now?",
+    "options": [
+      {"id": "no", "label": "No"},
+      {"id": "mild", "label": "Mild discomfort"},
+      {"id": "yes_pressure", "label": "Yes, pressure or tightness"},
+      {"id": "not_sure", "label": "Not sure"}
+    ],
+    "none_option_id": "no",
+    "evidence_refs": ["LOCAL-PROTOCOL-TBD"],
+    "demo_boundary": "Post-vital follow-up for staff-review context only."
+  },
+  "demo_boundary": "Synthetic-data capability demo only; not diagnosis, treatment advice, final triage, or production integration."
+}

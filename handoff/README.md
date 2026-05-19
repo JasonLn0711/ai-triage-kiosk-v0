@@ -24,6 +24,15 @@ Current main meeting packet:
 
 Current detailed discussion artifacts:
 
+- `handoff/2026-05-21-huicheng-engineering-sync-prep.md`
+- `handoff/2026-05-21-imvs-nycu-api-design-v0.1.md`
+- `handoff/2026-05-21-decision-defaults-and-owner-matrix.md`
+- `handoff/2026-05-22-api-v0.2-requirements-from-expert-review.md`
+- `docs/2026-05-19-two-phase-question-flow-design.md`
+- `docs/version-control-policy.md`
+- `docs/2026-05-19-api-session-design-plain-explanation.md`
+- `handoff/api-examples/` for the first iMVS / NYCU JSON request and response
+  examples
 - `handoff/2026-05-15-hallucination-and-source-grounding-audit.md`
 - `handoff/2026-05-15-huicheng-need-fit-meeting-execution-plan.md`
 - `handoff/2026-05-15-510k-comparable-product-scan.md`
@@ -47,6 +56,18 @@ supplemental notes only if they come up in discussion.
 ## Required Before External Handoff
 
 - Confirm product / API materials from 慧誠.
+- Confirm whether `handoff/2026-05-21-imvs-nycu-api-design-v0.1.md` is enough
+  for the engineering team or whether they need OpenAPI, a mock endpoint, or a
+  sequence diagram.
+- Apply the expert-review v0.2 deltas before sharing the next API version:
+  `review_action` instead of `plan_support`, `summary_visibility:
+  "staff_only"`, `handoff_required`, `handoff_reason_codes`, session expiry /
+  state fields, retry / idempotency fields, measurement-quality fields, stable
+  error behavior, and no fake summary on failure.
+- Confirm whether 慧誠 can support the two-phase question flow: Phase 1
+  pre-vital intake during measurement, vitals-ready update, then Phase 2
+  vital-aware follow-up. If this disrupts measurement quality, use the
+  post-measurement fallback.
 - Confirm the nearest comparable product / `510(k)` reference, or explicitly
   mark it unavailable before Friday.
 - Confirm whether v0 uses mocked vital signs or real kiosk data.

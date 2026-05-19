@@ -1,0 +1,47 @@
+{
+  "api_version": "2026-05-22-demo-v0.2-draft",
+  "schema_version": "imvs-nycu-triage-demo-schema-v0.2-draft",
+  "flow_version": "respiratory-early-handoff-flow-v0.2-draft",
+  "case_id": "demo-respiratory-low-spo2-001",
+  "session_key": "demo-session-resp-001",
+  "session_expires_at": "2026-05-21T10:20:00+08:00",
+  "session_state": "summary_ready",
+  "last_question_id": "lung-history-context",
+  "status": "summary",
+  "workflow_mode": "parallel_measurement_intake",
+  "measurement_state": "complete",
+  "vitals_ready": true,
+  "question_phase": "summary",
+  "summary_visibility": "staff_only",
+  "handoff_required": true,
+  "handoff_reason_codes": [
+    "reported_shortness_of_breath",
+    "measured_fever_demo",
+    "measured_increased_respiratory_rate_demo",
+    "measured_lower_oxygen_saturation_demo"
+  ],
+  "staff_review_summary": {
+    "format": "review_summary_demo",
+    "subjective": [
+      "Patient reports shortness of breath."
+    ],
+    "objective": [
+      "Synthetic measured vitals include fever, increased respiratory rate, and lower oxygen saturation than expected for this demo scenario."
+    ],
+    "assessment_support": [
+      "Staff should review the respiratory complaint and measured vitals."
+    ],
+    "review_action": [
+      "Staff or clinician review required."
+    ],
+    "staff_handoff_note": "Please review measured vitals and reported symptoms.",
+    "not_claimed": [
+      "This demo does not diagnose.",
+      "This demo does not recommend treatment.",
+      "This demo does not assign a final triage level.",
+      "This demo does not write to HIS/EMR/FHIR."
+    ]
+  },
+  "evidence_refs": ["LOCAL-PROTOCOL-TBD"],
+  "demo_boundary": "Synthetic-data capability demo only."
+}

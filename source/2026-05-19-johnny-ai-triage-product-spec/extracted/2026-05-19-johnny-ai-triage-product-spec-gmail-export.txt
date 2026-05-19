@@ -1,0 +1,71 @@
+Gmail - AI Triage Product Spec                                            https://mail.google.com/mail/u/0/?ik=69124dd482&view=p...
+
+
+
+
+                                                                                            Jason Lin <cre062400@gmail.com>
+
+
+
+         AI Triage Product Spec
+         1 message
+
+         Johnny Fang ⽅偉翰, imedtac Corp. <Johnny.Fang@imedtac.com>                    Tue, May 19, 2026 at 4:52 PM
+         To: "cre062400@gmail.com" <cre062400@gmail.com>, "Jason Miao 苗中聖, imedtac Corp."
+         <Jason.Miao@imedtac.com>
+         Cc: "Ken Yu 余⾦樹, imedtac Corp." <Ken.Yu@imedtac.com>
+
+          Hi All,
+          有關上次討論的 AI Triage 的規劃內部已討論過，
+          UI 也尚在規劃中，完成後會另提供
+          先提供規劃⽂件連結參考，有任何問題可以直接註解
+
+          參考⽂件時有幾樣提醒:
+            - 短期六⽉中的⽬標為客戶 Demo，所以部分功能如: AI 摘要內容串回 HIS 流程暫時不會
+              實作(灰⾊字的部分)
+            - 語⾳輸⼊的功能也需要視貴團隊的進度來討論是否要在這次 Demo 呈現
+
+          ----
+
+          另外我們正著⼿設計技術架構，在API溝通上有以下需求，再⿇煩提供:
+
+                 �. iMVS 上傳 vital sign data 到陽交⼤的格式是否需要討論?
+                 �. 陽交⼤回傳問題格式:
+                       a. 選擇類型(單選、多選、量尺)
+                       b. 選項
+                       c. 預計問題數量 (AC07)
+                      d. session key 等
+                 �. iMVS 上傳使⽤者的回答 + step 1 取得的 session key, 陽交⼤回傳下⼀題內容或診斷等
+                    格式
+
+
+          Thanks,
+          Johnny
+          ---------------
+          Johnny Fang / ⽅偉翰
+          iMedtac Co., Ltd. www.imedtac.com
+          Rm. �, ��F., No.335, Ruiguang Rd. Neihu Dist., Taipei City �����, Taiwan (R.O.C)
+          本通訊及其所有附件所含之資訊均屬機密，僅供指定之收件⼈使⽤，未經寄件⼈許可不得揭露、複製或散布本通
+          訊。若您⾮指定之收件⼈，嚴禁使⽤、保存或揭露本通訊之任何部分，請通知寄件⼈並完全刪除本通訊。網路通訊
+          可能含有病毒，收件⼈應⾃⾏確認本郵件是否安全。此外，該電⼦訊息內容可能被變更，且網際網路並不保證該電
+          ⼦訊息內容之完整性，因此，慧誠智醫股份有限公司及其關係企業對於他⼈變更、修改、竄改或偽造之電⼦訊息內
+          容，恕不負任何責任。 The information contained in this communication and attachment is confidential and is for
+          the use of the intended recipient only. Any disclosure, copying or distribution of this communication without the
+          sender’s consent is strictly prohibited. If you are not the intended recipient, please notify the sender and delete this
+
+
+
+1 of 2                                                                                                                         5/19/26, 17:15
+Gmail - AI Triage Product Spec                                             https://mail.google.com/mail/u/0/?ik=69124dd482&view=p...
+
+
+          communication entirely without using, retaining, or disclosing any of its contents. Internet message cannot be
+          guaranteed to be virus-free. The recipient is responsible for ensuring that this message is virus free. Besides, the
+          Message is susceptible to alteration and cannot guarantee the integrity of the Message. Therefore, imedtac Co.,
+          Ltd. and its affiliates shall not be liable for the Message if altered, modified, changed or falsified by any third party.
+
+
+
+
+2 of 2                                                                                                                            5/19/26, 17:15
+
