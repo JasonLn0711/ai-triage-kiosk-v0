@@ -11,6 +11,7 @@ review scaffolds that keep any future demo source-governed and deterministic.
 | --- | --- |
 | `source_registry.csv` | Source IDs, URLs, intended project use, allowed-use status, limits, and review owners. |
 | `question_registry.csv` | Patient-facing question rows mapped to triggers, source IDs, clinical purpose, output effect, evidence status, and review owner. |
+| `api_question_mapping.csv` | Runtime API question IDs mapped back to registry question IDs, source refs, evidence status, and review owners. |
 | `flow_registry.csv` | Demo flow versions mapped to fixture files, question IDs, allowed outputs, forbidden outputs, and review owner. |
 
 ## Validation
@@ -21,8 +22,8 @@ Run:
 python3 scripts/check_governance_registries.py
 ```
 
-The check verifies source/question/flow references and confirms fixture files
-are synthetic-demo-only.
+The check verifies source/question/API-mapping/flow references and confirms
+fixture files are synthetic-demo-only.
 
 ## Rules
 

@@ -1,0 +1,5 @@
+api_question_id,registry_refs,source_refs,evidence_status,review_owner,notes
+chief-concern,RESP-001,LOCAL-PROTOCOL-TBD,clinician-signoff-needed,company_clinical_owner_tbd,Runtime Phase 1 chief-concern question maps to the respiratory demo registry row until company clinical owner approves final wording.
+breathing-duration,RESP-002,CDC-FLU-WARN;LOCAL-PROTOCOL-TBD,source-family,clinical_reviewer_tbd,Runtime Phase 1 dyspnea-duration question remains source-family pending exact clinical wording review.
+chest-pain-pressure,CP-001,AHA-HEART-ATTACK;AHA-HBP-911-2025,source-backed,clinical_reviewer_tbd,Runtime Phase 2 chest pain or pressure follow-up maps to existing chest-pain registry question.
+lung-history-context,RESP-003,LOCAL-PROTOCOL-TBD,clinician-signoff-needed,clinical_reviewer_tbd,Runtime Phase 2 baseline lung disease or oxygen context needs clinical owner approval before patient-facing freeze.

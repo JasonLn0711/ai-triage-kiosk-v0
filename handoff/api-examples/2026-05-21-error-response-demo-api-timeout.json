@@ -7,20 +7,21 @@
   "fixture_version": "v0.2.0",
   "question_set_version": "respiratory-question-set-v0.2-draft",
   "wording_version": "staff-summary-wording-v0.2-clinical-draft",
-  "request_id": "req-demo-resp-answer-001",
-  "idempotency_key": "idem-demo-resp-answer-001",
+  "request_id": "req-demo-resp-error-timeout-001",
+  "response_id": "resp-demo-resp-error-timeout-001",
   "session_key": "demo-session-resp-001",
+  "session_state": "error",
   "workflow_mode": "parallel_measurement_intake",
   "measurement_state": "in_progress",
   "vitals_ready": false,
-  "question_phase": "pre_vital_intake",
-  "question_id": "chief-concern",
-  "answer": {
-    "selected_option_ids": ["breathing"],
-    "scale_value": null
+  "status": "error",
+  "http_status": 504,
+  "fallback_to_standard_staff_workflow": true,
+  "error": {
+    "code": "api_timeout",
+    "message": "The demo API timed out. Retry once if allowed by the kiosk workflow, then continue with the standard staff workflow.",
+    "retry_allowed": true,
+    "no_summary_generated": true
   },
-  "client_event": {
-    "answered_at": "2026-05-21T10:02:00+08:00",
-    "input_mode": "touch"
-  }
+  "demo_boundary": "Synthetic-data capability demo only; not diagnosis, treatment advice, final triage, or production integration."
 }
