@@ -8,7 +8,7 @@
 })(typeof globalThis !== "undefined" ? globalThis : this, function triageEngineFactory() {
   const VERSION = {
     product: "AI Triage Kiosk Demo",
-    versionLabel: "v0.1.0",
+    versionLabel: "v0.2.0",
     boundary: "Demo-only workflow support; not diagnosis, treatment advice, final triage level, or HIS/EMR writeback."
   };
 
@@ -18,6 +18,17 @@
     "Vital-sign cues are displayed for review and must be validated against local clinical policy.",
     "No HIS, EMR, FHIR writeback, emergency order, or treatment recommendation is performed."
   ];
+
+  const QUESTION_PHASES = {
+    PRE_VITAL_INTAKE: "pre_vital_intake",
+    POST_VITAL_FOLLOWUP: "post_vital_followup"
+  };
+
+  const MEASUREMENT_STATES = {
+    IN_PROGRESS: "in_progress",
+    COMPLETE: "complete",
+    FAILED: "failed"
+  };
 
   const CASES = [
     {
@@ -48,7 +59,7 @@
       ],
       sourceFamilies: ["AHA public education", "ENA ESI reference family", "local protocol placeholder"],
       allowedOutput: "Staff-review summary and source-family display only.",
-      forbiddenOutput: "No final ESI level, diagnosis, automatic emergency order, treatment advice, or HIS/EMR writeback."
+      forbiddenOutput: "No final acuity assignment, condition identification, automatic emergency order, treatment advice, or HIS/EMR writeback."
     },
     {
       id: "fever-urinary",
@@ -77,7 +88,7 @@
       ],
       sourceFamilies: ["CDC fever warning reference family", "urology guideline reference family", "local protocol placeholder"],
       allowedOutput: "Staff-review summary and source-family display only.",
-      forbiddenOutput: "No antibiotic recommendation, diagnosis, final triage level, emergency order, or HIS/EMR writeback."
+      forbiddenOutput: "No antibiotic recommendation, condition identification, final acuity assignment, emergency order, or HIS/EMR writeback."
     }
   ];
 
@@ -85,6 +96,7 @@
     {
       id: "chief-concern",
       field: "chiefConcern",
+      phase: QUESTION_PHASES.PRE_VITAL_INTAKE,
       text: "What is the main reason you are using the kiosk today?",
       type: "single",
       value: "Starts with the patient's own concern before symptom-specific follow-up.",
@@ -93,6 +105,7 @@
     {
       id: "onset",
       field: "onset",
+      phase: QUESTION_PHASES.PRE_VITAL_INTAKE,
       text: "When did this problem start?",
       type: "single",
       value: "Adds timing for staff review.",
@@ -101,6 +114,7 @@
     {
       id: "severity",
       field: "severity",
+      phase: QUESTION_PHASES.PRE_VITAL_INTAKE,
       text: "How severe does it feel right now?",
       type: "single",
       value: "Captures patient-reported severity without assigning a triage level.",
@@ -109,6 +123,7 @@
     {
       id: "breathing",
       field: "breathing",
+      phase: QUESTION_PHASES.PRE_VITAL_INTAKE,
       text: "Are you having trouble breathing right now?",
       type: "single",
       value: "Makes a patient-reported breathing concern visible to staff.",
@@ -117,6 +132,7 @@
     {
       id: "chest-details",
       field: "chestDetails",
+      phase: QUESTION_PHASES.POST_VITAL_FOLLOWUP,
       text: "For chest discomfort, which descriptions fit?",
       type: "multi",
       value: "Collects structured chest-symptom descriptors for review.",
@@ -125,6 +141,7 @@
     {
       id: "neurologic-symptoms",
       field: "neuroSymptoms",
+      phase: QUESTION_PHASES.POST_VITAL_FOLLOWUP,
       text: "Do you have any new neurologic symptoms?",
       type: "multi",
       value: "Surfaces patient-reported neurologic symptoms without diagnosis.",
@@ -133,6 +150,7 @@
     {
       id: "fever-details",
       field: "feverDetails",
+      phase: QUESTION_PHASES.POST_VITAL_FOLLOWUP,
       text: "For fever or infection concern, which descriptions fit?",
       type: "multi",
       value: "Collects fever context and visible review cues.",
@@ -141,6 +159,7 @@
     {
       id: "urinary-details",
       field: "urinaryDetails",
+      phase: QUESTION_PHASES.POST_VITAL_FOLLOWUP,
       text: "For urinary symptoms, which descriptions fit?",
       type: "multi",
       value: "Collects urinary symptom context without diagnosing infection.",
@@ -149,6 +168,7 @@
     {
       id: "pregnancy-context",
       field: "pregnancyContext",
+      phase: QUESTION_PHASES.POST_VITAL_FOLLOWUP,
       text: "Is pregnancy possible or currently known?",
       type: "single",
       value: "Keeps a key context field visible for staff review.",
@@ -157,6 +177,7 @@
     {
       id: "medication-allergy",
       field: "medicationAllergy",
+      phase: QUESTION_PHASES.PRE_VITAL_INTAKE,
       text: "Can you provide current medications or allergies?",
       type: "multi",
       value: "Routes medication and allergy details to staff confirmation.",
@@ -165,6 +186,7 @@
     {
       id: "support-needed",
       field: "supportNeeded",
+      phase: QUESTION_PHASES.PRE_VITAL_INTAKE,
       text: "Do you need staff help before continuing?",
       type: "multi",
       value: "Supports kiosk usability and handoff safety.",
@@ -174,11 +196,12 @@
 
   const FIELD_LABELS = Object.fromEntries(QUESTION_BANK.map((question) => [question.field, question.text]));
 
-  function createInitialState(caseId = CASES[0].id) {
+  function createInitialState(caseId = CASES[0].id, options = {}) {
     const selectedCase = findCase(caseId);
     return {
       caseId: selectedCase.id,
       turn: 0,
+      measurementState: options.measurementState || MEASUREMENT_STATES.COMPLETE,
       answers: {},
       answeredQuestionIds: [],
       transcript: selectedCase.opening
@@ -204,6 +227,17 @@
     return value !== undefined && value !== null && String(value).trim() !== "";
   }
 
+  function measurementComplete(state) {
+    return (state.measurementState || MEASUREMENT_STATES.COMPLETE) === MEASUREMENT_STATES.COMPLETE;
+  }
+
+  function markVitalsReady(state) {
+    return {
+      ...state,
+      measurementState: MEASUREMENT_STATES.COMPLETE
+    };
+  }
+
   function inferConcernKeywords(state) {
     const selectedCase = findCase(state.caseId);
     const combined = normalizeText(`${selectedCase.opening} ${state.transcript} ${Object.values(state.answers).map(answerText).join(" ")}`);
@@ -220,11 +254,23 @@
     if (state.answeredQuestionIds.includes(question.id) || fieldAnswered(state, question.field)) {
       return null;
     }
+    if (!measurementComplete(state) && question.phase === QUESTION_PHASES.POST_VITAL_FOLLOWUP) {
+      return null;
+    }
 
     const concern = inferConcernKeywords(state);
     const selectedCase = findCase(state.caseId);
     let score = 40;
     const reasons = [];
+
+    if (!measurementComplete(state) && question.phase === QUESTION_PHASES.PRE_VITAL_INTAKE) {
+      score += 22;
+      reasons.push("safe during vital-sign measurement");
+    }
+    if (measurementComplete(state) && question.phase === QUESTION_PHASES.POST_VITAL_FOLLOWUP) {
+      score += 10;
+      reasons.push("post-vital follow-up");
+    }
 
     if (question.id === "chief-concern") {
       score += state.turn === 0 ? 30 : 0;
@@ -346,6 +392,17 @@
       allowedOutput: selectedCase.allowedOutput,
       forbiddenOutput: selectedCase.forbiddenOutput,
       requiresStaffReview: true,
+      measurementState: state.measurementState || MEASUREMENT_STATES.COMPLETE,
+      questionPhases: {
+        preVitalIntakeAnswered: answered.filter((item) => {
+          const question = QUESTION_BANK.find((candidate) => candidate.field === item.field);
+          return question && question.phase === QUESTION_PHASES.PRE_VITAL_INTAKE;
+        }).length,
+        postVitalFollowupAnswered: answered.filter((item) => {
+          const question = QUESTION_BANK.find((candidate) => candidate.field === item.field);
+          return question && question.phase === QUESTION_PHASES.POST_VITAL_FOLLOWUP;
+        }).length
+      },
       safetyStatements: SAFETY_STATEMENTS
     };
   }
@@ -353,12 +410,16 @@
   return {
     VERSION,
     SAFETY_STATEMENTS,
+    QUESTION_PHASES,
+    MEASUREMENT_STATES,
     CASES,
     QUESTION_BANK,
     FIELD_LABELS,
     createInitialState,
     findCase,
     inferConcernKeywords,
+    measurementComplete,
+    markVitalsReady,
     rankQuestions,
     selectNextQuestion,
     recordAnswer,

@@ -71,7 +71,7 @@
     "forbidden": [
       "diagnosis",
       "treatment advice",
-      "final ESI level",
+      "final acuity assignment",
       "automatic emergency order",
       "HIS/EMR writeback"
     ]

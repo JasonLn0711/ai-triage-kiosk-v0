@@ -59,10 +59,10 @@
       "demo-only boundary"
     ],
     "forbidden": [
-      "diagnosis",
+      "condition identification",
       "antibiotic recommendation",
       "sepsis claim",
-      "final triage level",
+      "final acuity assignment",
       "HIS/EMR writeback"
     ]
   }

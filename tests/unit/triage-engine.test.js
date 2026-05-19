@@ -23,5 +23,18 @@ test("staff summary preserves demo-only safety boundary", () => {
   const summary = engine.buildStaffSummary(state);
   assert.equal(summary.requiresStaffReview, true);
   assert.match(summary.boundary, /not diagnosis/);
-  assert.match(summary.forbiddenOutput, /No final ESI level/);
+  assert.match(summary.forbiddenOutput, /No final acuity assignment/);
+});
+
+test("pre-vital intake excludes post-vital follow-up until measurement completes", () => {
+  let state = engine.createInitialState("chest-pain-high-bp-low-spo2", {
+    measurementState: engine.MEASUREMENT_STATES.IN_PROGRESS
+  });
+  let ranked = engine.rankQuestions(state);
+  assert.ok(ranked.length > 0);
+  assert.ok(ranked.every((item) => item.question.phase === engine.QUESTION_PHASES.PRE_VITAL_INTAKE));
+
+  state = engine.markVitalsReady(state);
+  ranked = engine.rankQuestions(state);
+  assert.ok(ranked.some((item) => item.question.phase === engine.QUESTION_PHASES.POST_VITAL_FOLLOWUP));
 });

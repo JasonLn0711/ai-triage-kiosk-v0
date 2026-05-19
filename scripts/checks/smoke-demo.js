@@ -61,4 +61,26 @@ for (const term of forbiddenTerms) {
   assert(!serializedDemo.includes(term), `Demo runtime still contains urology/source-language term: ${term}`);
 }
 
+const expertForbiddenPhrases = [
+  "plan_support",
+  "AI diagnosis",
+  "ESI level",
+  "emergency severity",
+  "likely pneumonia",
+  "likely sepsis",
+  "needs emergency treatment",
+  "safe to go home",
+  "FDA-cleared",
+  "510(k)-cleared",
+  "clinical-grade triage"
+];
+const runtimeAndApiExamples = [
+  serializedDemo,
+  ...fs.readdirSync(path.join(ROOT, "demo/fixtures")).filter((file) => file.endsWith(".json")).map((file) => read(path.join("demo/fixtures", file))),
+  ...fs.readdirSync(path.join(ROOT, "handoff/api-examples")).filter((file) => file.endsWith(".json")).map((file) => read(path.join("handoff/api-examples", file)))
+].join("\n");
+for (const phrase of expertForbiddenPhrases) {
+  assert(!runtimeAndApiExamples.includes(phrase), `Runtime/API examples contain expert-forbidden phrase: ${phrase}`);
+}
+
 console.log("AI triage kiosk demo smoke check passed.");
