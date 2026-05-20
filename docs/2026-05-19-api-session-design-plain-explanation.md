@@ -6,7 +6,7 @@ topic: ai-triage
 type: explanation
 status: draft
 source:
-  - ../handoff/2026-05-21-imvs-nycu-api-design-v0.1.md
+  - ../handoff/2026-05-21-imvs-nycu-api-design-v0.2-draft.md
   - ../handoff/2026-05-21-decision-defaults-and-owner-matrix.md
 ---
 
@@ -153,4 +153,3 @@ Acceptance conditions:
 - no diagnosis / treatment / final triage wording;
 - fallback response if the session is invalid;
 - summary is staff-review-only.
-

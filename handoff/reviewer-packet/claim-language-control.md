@@ -36,9 +36,18 @@ Use only with context:
 
 Do not use unless a separate regulatory/clinical decision explicitly clears it:
 
+- diagnosis;
+- AI diagnosis;
+- ESI level;
+- emergency severity;
+- likely pneumonia;
+- likely sepsis;
+- needs emergency treatment;
+- safe to go home;
 - FDA-approved;
 - FDA-cleared;
 - 510(k)-cleared demo;
+- 510(k)-ready;
 - predicate-equivalent demo;
 - clinical-grade triage;
 - AI decides acuity;
@@ -51,6 +60,11 @@ Do not use unless a separate regulatory/clinical decision explicitly clears it:
 - real-time hospital triage;
 - replaces nurse review;
 - replaces physician judgment.
+
+For respiratory or fever cases, diagnosis-shaped labels such as pneumonia,
+COVID, sepsis, or ESI levels may be private design anchors only. They must not
+appear as system conclusions, patient-facing copy, API output fields, or
+customer-demo claims.
 
 ## One-Line Customer-Safe Position
 

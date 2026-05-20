@@ -18,6 +18,14 @@ handoff refinement. The regulatory links are expert-cited references; they are
 recorded here as citation targets, not as independently revalidated claims in
 this note.
 
+Full user-provided record:
+
+- `full-record.md`
+
+Completeness update on `2026-05-20`: the full prompt, expert reply, attachment
+references, and expert-cited official URLs are now archived in `full-record.md`.
+The extracted action plan below remains the working summary.
+
 ## Expert Judgment
 
 The expert's core judgment:
@@ -185,4 +193,3 @@ The expert reinforced owner/date closeout:
 
 - `../../docs/2026-05-19-expert-review-action-plan.md`
 - `../../handoff/2026-05-22-api-v0.2-requirements-from-expert-review.md`
-

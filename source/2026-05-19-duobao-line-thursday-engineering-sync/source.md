@@ -83,7 +83,7 @@ May 19, 2026 Tuesday
 - 多寶 should be asked to focus on clinical plausibility, stop rules, and safe
   staff-summary wording.
 - Jason should not carry open-ended clinical-detail responsibility alone.
-- The meeting should use the prepared API design v0.1 and decision checklist to
+- The meeting should use the prepared API v0.2 draft and decision checklist to
   keep discussion bounded.
 
 Related:
@@ -91,5 +91,4 @@ Related:
 - `../2026-05-19-johnny-line-thursday-engineering-sync/source.md`
 - `../2026-05-19-johnny-direct-line-thursday-engineering-sync/source.md`
 - `../../handoff/2026-05-21-huicheng-engineering-sync-prep.md`
-- `../../handoff/2026-05-21-imvs-nycu-api-design-v0.1.md`
-
+- `../../handoff/2026-05-21-imvs-nycu-api-design-v0.2-draft.md`

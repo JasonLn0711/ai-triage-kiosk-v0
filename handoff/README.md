@@ -25,7 +25,7 @@ Current main meeting packet:
 Current detailed discussion artifacts:
 
 - `handoff/2026-05-21-huicheng-engineering-sync-prep.md`
-- `handoff/2026-05-21-imvs-nycu-api-design-v0.1.md`
+- `handoff/2026-05-21-imvs-nycu-api-design-v0.2-draft.md`
 - `handoff/2026-05-21-decision-defaults-and-owner-matrix.md`
 - `handoff/2026-05-22-api-v0.2-requirements-from-expert-review.md`
 - `docs/2026-05-19-two-phase-question-flow-design.md`
@@ -67,7 +67,7 @@ supplemental notes only if they come up in discussion.
 ## Required Before External Handoff
 
 - Confirm product / API materials from 慧誠.
-- Confirm whether `handoff/2026-05-21-imvs-nycu-api-design-v0.1.md` is enough
+- Confirm whether `handoff/2026-05-21-imvs-nycu-api-design-v0.2-draft.md` is enough
   for the engineering team or whether they need OpenAPI, a mock endpoint, or a
   sequence diagram.
 - Apply the expert-review v0.2 deltas before sharing the next API version:
@@ -85,4 +85,9 @@ supplemental notes only if they come up in discussion.
 - Confirm whether v0 uses mocked vital signs or real kiosk data.
 - Confirm which architecture diagram can be shared.
 - Confirm source-governance wording for any clinical question examples.
+- Before citing expert-cited FDA, TW Core, CDC, PDPC, or cybersecurity sources
+  externally, verify exact current source text and use them only for their
+  proper boundary: regulatory, interoperability, privacy, warning-sign, or
+  cybersecurity context. Do not treat them as blanket approval for clinical
+  triage logic.
 - Remove or summarize any private / patent-sensitive implementation detail.

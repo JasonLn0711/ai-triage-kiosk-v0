@@ -1,7 +1,7 @@
 # Demo Acceptance Criteria
 
 Status: v0 clickable demo gate
-Last updated: 2026-05-18
+Last updated: 2026-05-20
 
 ## FIRST PRINCIPLE
 
@@ -36,7 +36,10 @@ integration.
   - treatment advice;
   - final ESI / final acuity assignment;
   - emergency order;
+  - likely disease labels such as pneumonia or sepsis;
+  - safe-to-go-home or safe-to-wait wording;
   - FDA-cleared or FDA-approved claim;
+  - 510(k)-cleared, 510(k)-ready, or predicate-equivalent claim;
   - HIS / EMR / FHIR writeback claim.
 
 ## Data Criteria

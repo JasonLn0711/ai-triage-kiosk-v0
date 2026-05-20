@@ -60,3 +60,13 @@ Before any real patient or hospital data is used, require:
 - cybersecurity review;
 - reviewer-approved logging policy.
 
+## Privacy Source Routing
+
+Expert review on `2026-05-20` reinforced that Taiwan PDPA-sensitive categories
+and US HIPAA-style de-identification issues are a reason to keep June v0
+synthetic-only, not a reason to start de-identifying live patient data inside
+the demo lane.
+
+Use `data/source_registry.csv` entries for PDPA Article 6 and HHS HIPAA
+de-identification as privacy boundary references. Do not treat either reference
+as approval to process real patient data in v0.

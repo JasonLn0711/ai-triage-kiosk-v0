@@ -33,6 +33,23 @@ Do not expand the June critical path into:
 - full multilingual voice workflow;
 - full all-specialty triage.
 
+## 2026-05-20 Full-Record Update Assessment
+
+The complete user-provided expert-review record is now archived at
+`../source/2026-05-19-expert-review-scope-api-boundary/full-record.md`.
+
+Assessment:
+
+- No scope reversal is needed. The full record confirms the existing June
+  boundary and v0.2 direction.
+- The API v0.2 requirements, Thursday owner matrix, and smoke-test guardrails
+  already cover the main engineering changes.
+- Related documents still needed light updates for record completeness,
+  expert-cited source routing, forbidden claim wording, and privacy/source
+  guardrails.
+- External-facing use of the FDA, TW Core, CDC, PDPC, and cybersecurity links
+  should verify exact current source text before making claims.
+
 ## Changes To Make Before API v0.2
 
 ### Workflow phase

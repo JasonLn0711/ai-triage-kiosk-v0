@@ -66,7 +66,7 @@ go-to-market 與美國客戶展示，還不是正式醫療決策產品。
 | `planning-bridge/2026-05-huicheng-er-triage-ekg-asr.md` | Snapshot copy of the planning project locator at repo creation |
 | `planning-bridge/project-locators/` | Snapshots of related planning project locators: 慧誠, urology, TFDA/FDA advisor, and medical cybersecurity |
 | `workstreams/` | Active workstream notes for insertion point, clinical evidence governance, MVP boundary, and urology-reference reuse |
-| `handoff/` | Future handoff drafts for Prof. Wu, 慧誠, or internal collaborators, including the `2026-05-21` iMVS / NYCU API design v0.1 and JSON examples |
+| `handoff/` | Future handoff drafts for Prof. Wu, 慧誠, or internal collaborators, including the `2026-05-21` iMVS / NYCU API v0.2 draft and JSON examples |
 | `decisions/` | Dated repo/product decisions |
 
 ## Current System Frame
@@ -201,8 +201,8 @@ docs/repo-organization.md
 
 1. Use the expert-review packet to produce API v0.2 after the Thursday sync:
    `handoff/2026-05-22-api-v0.2-requirements-from-expert-review.md`.
-2. Review and discuss the `2026-05-21` API design v0.1 / v0.2-draft examples:
-   `handoff/2026-05-21-imvs-nycu-api-design-v0.1.md`.
+2. Review and discuss the `2026-05-21` API v0.2 draft and examples:
+   `handoff/2026-05-21-imvs-nycu-api-design-v0.2-draft.md`.
 3. In the Thursday meeting, close owner/date decisions for 慧誠 payload/UI/env,
    Johnny product success criteria, 多寶 clinical wording, Jason API v0.2, and a
    privacy/security owner.

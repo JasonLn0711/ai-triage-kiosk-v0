@@ -1,10 +1,10 @@
 ---
-id: 2026-05-21-imvs-nycu-api-design-v0.1
-title: "iMVS / NYCU AI Triage Demo API Design v0.1"
+id: 2026-05-21-imvs-nycu-api-design-v0.2-draft
+title: "iMVS / NYCU AI Triage Demo API Design v0.2 Draft"
 date: 2026-05-21
 topic: ai-triage
 type: handoff
-status: draft
+status: pre-sync draft
 audience: Johnny Fang and imedtac engineering design team
 source:
   - ../source/2026-05-19-johnny-ai-triage-product-spec/source.md
@@ -12,7 +12,7 @@ source:
   - ../source/2026-05-19-expert-review-scope-api-boundary/source.md
 ---
 
-# iMVS / NYCU AI Triage Demo API Design v0.1
+# iMVS / NYCU AI Triage Demo API Design v0.2 Draft
 
 ## Purpose
 
@@ -29,10 +29,14 @@ iMVS vital-sign payload
   -> NYCU next question or staff_review_summary
 ```
 
-Expert-review update: this v0.1 discussion draft has been updated with v0.2
-candidate safety fields before the Thursday sync. After 慧誠 confirms actual
-payload field names, produce `2026-05-22` API v0.2 from
-`handoff/2026-05-22-api-v0.2-requirements-from-expert-review.md`.
+This is NYCU's proposed pre-sync API v0.2 draft. It is safe to use for the
+Thursday engineering discussion, but it is not the confirmed / frozen bilateral
+contract until 慧誠 confirms actual payload field names, units,
+required/optional fields, missing/failure semantics, UI insertion point, and
+session ownership.
+
+After the Thursday sync, produce the confirmed `2026-05-22` API v0.2 from this
+draft and `handoff/2026-05-22-api-v0.2-requirements-from-expert-review.md`.
 
 多寶 workflow update: if 慧誠's UI can support it, prefer a two-phase flow:
 Phase 1 asks non-vital-dependent questions while iMVS is still measuring vital

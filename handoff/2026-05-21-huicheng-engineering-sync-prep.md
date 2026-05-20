@@ -106,7 +106,7 @@ the staff-review boundary.
      and no real patient audio retention.
 
 7. Confirm next artifacts and dates.
-   - Jason: API design document v0.1.
+   - Jason: API v0.2 draft.
    - 慧誠 engineering: sample payload, field dictionary, UI insertion point.
    - 多寶: one case stop-rule / safe wording review.
 
@@ -114,7 +114,7 @@ the staff-review boundary.
 
 Prepared artifact:
 
-- `handoff/2026-05-21-imvs-nycu-api-design-v0.1.md`
+- `handoff/2026-05-21-imvs-nycu-api-design-v0.2-draft.md`
 - `handoff/api-examples/`
 - `handoff/2026-05-21-decision-defaults-and-owner-matrix.md`
 - `docs/2026-05-19-two-phase-question-flow-design.md`
@@ -225,7 +225,7 @@ Bring this checklist and force closure:
 - [ ] Demo compute path: external server / laptop / local mock.
 - [ ] UI insertion path.
 - [ ] One engineer contact and communication channel.
-- [ ] Date when API doc v0.1 is expected.
+- [ ] Date when confirmed API v0.2 is expected.
 
 Current draft reply timing:
 
