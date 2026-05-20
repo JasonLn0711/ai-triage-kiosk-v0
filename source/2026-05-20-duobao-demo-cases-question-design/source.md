@@ -74,3 +74,4 @@ the regulatory boundary is updated.
 ## Derived Review
 
 - `../../docs/2026-05-20-duobao-demo-design-consistency-review.md`
+- `../../decisions/2026-05-20-june-demo-question-budget.md`

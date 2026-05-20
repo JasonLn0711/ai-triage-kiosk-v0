@@ -50,6 +50,11 @@ choice-first demo: OPQRST-like dynamic questions, fewer than eight questions,
 progress display, single-choice, multi-choice, scale input, and a demo doctor
 AI-result page.
 
+Current June design calibration: the demo may use fewer than `12` visible
+patient-facing questions per completed case flow. Treat the spec's smaller
+number as source history and keep first-flow implementation shorter when
+possible.
+
 ## Demo Scope Cut
 
 | Spec area | June demo stance | Reason |
@@ -103,7 +108,7 @@ POST /api/triage-demo/sessions
   },
   "capabilities": {
     "question_types": ["single_choice", "multi_choice", "scale"],
-    "max_questions": 8,
+    "max_questions": 11,
     "voice_input": false
   }
 }

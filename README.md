@@ -59,6 +59,7 @@ go-to-market 與美國客戶展示，還不是正式醫療決策產品。
 | `docs/2026-05-19-expert-review-action-plan.md` | Expert-review action plan: keep scope narrow, add v0.2 fields, use `review_basis` / `review_action`, lock wording, and require owner/date closeout |
 | `docs/2026-05-19-two-phase-question-flow-design.md` | Two-phase API/UI design for parallel measurement-time intake and post-vital follow-up |
 | `docs/2026-05-20-duobao-demo-design-consistency-review.md` | Review of 多寶's structured cases/question design against current demo, API, and claim-boundary decisions |
+| `decisions/2026-05-20-june-demo-question-budget.md` | Decision that June case flows may use fewer than 12 visible patient-facing questions, with first respiratory flow still preferred around 6-8 |
 | `docs/version-control-policy.md` | Automated version-control policy for SemVer runtime, API/schema/flow versions, and demo-readiness checks |
 | `data/version_manifest.json` | Canonical version manifest checked against runtime files and API examples |
 | `docs/source-index.md` | Complete index of copied source bundles and upstream context |

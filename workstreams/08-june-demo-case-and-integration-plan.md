@@ -45,7 +45,9 @@ Johnny Fang's company-side minutes after the meeting are preserved at:
 - `source/2026-05-15-huicheng-second-sync-and-duobao-followup/company-provided-meeting-minutes.md`
 
 They confirm the June urgent-care demo frame, `3-5` cases, touch plus partial
-voice input, `8-10` question budget, and doctor-facing chief-complaint summary.
+voice input, an earlier `8-10` question-budget reference, and doctor-facing
+chief-complaint summary. Current June design decision updates the hard cap to
+fewer than `12` visible patient-facing questions per completed case flow.
 
 They also create three items to confirm before implementation:
 
@@ -88,8 +90,10 @@ iMVS vital-sign payload
 Product-spec implications for the current runtime:
 
 - AC06-AC10 align well with the current choice-first v0: dynamic OPQRST-style
-  questions, fewer than `8` questions, progress display, single-choice, and
-  multi-choice interaction.
+  questions, progress display, single-choice, and multi-choice interaction.
+  Current June calibration allows fewer than `12` visible patient-facing
+  questions per completed case flow, with the first respiratory flow preferably
+  staying around `6-8`.
 - AC11 adds a pain/severity scale widget requirement that should be audited or
   added before the June demo if a pain case is shown.
 - AC12 voice input should stay out of v0 unless separately approved, because it
@@ -385,6 +389,9 @@ Use the content through the existing demo boundary:
   recommended department, or immediate actions without explicit owner approval;
 - treat all vital thresholds as clinical-signoff-needed until a company /
   clinical owner freezes source, units, and `>` / `>=` semantics;
+- use the updated June question budget: fewer than `12` visible patient-facing
+  questions per completed case flow, not counting hidden routing metadata,
+  vital payload fields, or staff-summary sections;
 - keep the first implementation path narrow: one respiratory early-handoff
   flow, then add abdominal-pain and tachycardia flows after v0.2 passes
   demo-ready checks.

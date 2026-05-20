@@ -19,9 +19,11 @@ The demo output should be a clinician-review intake summary, not a diagnosis or
 autonomous triage decision.
 
 Company-side minutes after the meeting add a useful constraint: keep the
-question count within `8-10`, use touch options plus partial voice input, and
-consider case families such as trauma, chronic disease, and allergy. Those case
-families should be confirmed against the vital-sign story before implementation.
+question count short, use touch options plus partial voice input, and consider
+case families such as trauma, chronic disease, and allergy. Earlier source
+material mentioned `8-10`; the current June decision allows fewer than `12`
+visible patient-facing questions per completed case flow. Those case families
+should be confirmed against the vital-sign story before implementation.
 
 多寶's first case draft is preserved at
 `source/2026-05-15-huicheng-second-sync-and-duobao-followup/duobao-demo-case-draft.md`.
@@ -110,7 +112,8 @@ For each case:
 - realistic age / sex;
 - chief complaint wording in patient language;
 - plausible vital-sign pattern;
-- `5-8` kiosk-level questions;
+- `6-11` visible kiosk-level questions, with `6-8` preferred for the first
+  respiratory flow when possible;
 - one sentence of staff-facing concern;
 - one sentence of what the system must not claim.
 
