@@ -19,10 +19,14 @@ Status: internal language guardrail for Friday / June discussion
 
 ## Writing Posture
 
-All articles, handoff notes, briefs, and company-facing material should use a
-confident and affirmative voice. The project should be framed as a concrete
-product-capability demo with a clear architecture and next decision, not as a
-defensive explanation of what it cannot do.
+All articles, handoff notes, briefs, pre-reads, meeting packets, and
+company-facing material must use a confident and affirmative voice. This is a
+repo-level writing rule, not a stylistic preference.
+
+The project should be framed as a concrete product-capability demo with a clear
+architecture and next decision, not as a defensive explanation of what it cannot
+do. For 慧誠智醫-facing documents, lead with the recommendation and product
+capability first, then state scope controls.
 
 Write like this:
 
@@ -47,9 +51,13 @@ The output is a staff-review summary for demo workflow review. It is not
 diagnosis, treatment advice, final triage level, or production HIS/EMR content.
 ```
 
-Avoid burying the main point under apologies, long disclaimers, or repeated
-hedging. Use "synthetic-data capability demo" or "pre-sync API v0.2 draft"
-instead of language that minimizes the work.
+Avoid burying the main point under apologies, long disclaimers, repeated
+hedging, or self-minimizing language. Use "synthetic-data capability demo" or
+"pre-sync API v0.2 draft" instead of language that minimizes the work.
+
+Canonical writing policy:
+
+- `docs/writing-method-policy.md`
 
 ## Cautious Phrases
 

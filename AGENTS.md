@@ -69,17 +69,23 @@ Do not turn this repo into:
 
 ## Article And Handoff Writing Method
 
-- Write articles, handoff notes, briefs, and company-facing material in a
-  confident, affirmative, product-minded voice.
-- Do not use defensive article structure or apologetic framing. Avoid writing
-  as if the project is asking for permission to exist.
+- This section is a non-negotiable repo rule. Write every article, handoff note,
+  brief, meeting packet, pre-read, README section, and company-facing artifact
+  in a confident, affirmative, product-minded voice.
+- Completely avoid defensive article structure, apologetic framing, permission-
+  seeking tone, and repeated self-minimization. The writing must not sound like
+  the project is asking whether it deserves to exist.
 - Lead with the project's positive thesis, architecture, capability, and next
   decision. Then state boundaries cleanly as design controls, not as excuses.
 - Prefer direct claims that are true within the demo boundary, such as:
   "This demo shows a synthetic-data vital-aware intake loop for staff-review
   summary generation."
-- Avoid weak hedging such as "maybe", "only a prototype", "we are not sure",
-  "hopefully", or long lists of disclaimers before the main point.
+- Avoid weak hedging such as "maybe", "only a prototype", "small prototype",
+  "we are not sure", "hopefully", "we are not claiming anything", "if this is
+  useful", or long lists of disclaimers before the main point.
+- For 慧誠智醫-facing material, the opening move must be a clear recommendation
+  or capability statement, not a defensive limitation statement. State "we
+  recommend" / "this demo shows" / "the API contract is" before scope controls.
 - Safety boundaries still apply. Confident writing must not become diagnosis,
   treatment advice, final triage / acuity claims, FDA / 510(k) readiness claims,
   production HIS / EMR / FHIR writeback claims, or real patient-data claims.
@@ -89,6 +95,7 @@ Do not turn this repo into:
 - Bad pattern:
   `Disclaimers -> apologies -> uncertainty -> vague technical possibility ->
   buried ask.`
+- Canonical policy file: `docs/writing-method-policy.md`.
 
 ## Git Rules
 
