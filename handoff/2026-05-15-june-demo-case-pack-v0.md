@@ -21,9 +21,10 @@ autonomous triage decision.
 Company-side minutes after the meeting add a useful constraint: keep the
 question count short, use touch options plus partial voice input, and consider
 case families such as trauma, chronic disease, and allergy. Earlier source
-material mentioned `8-10`; the current June decision allows fewer than `12`
-visible patient-facing questions per completed case flow. Those case families
-should be confirmed against the vital-sign story before implementation.
+material mentioned `8-10`; the later 慧誠 / iMVS product spec says fewer than
+`8`. The current June decision follows the product-spec requirement: fewer than
+`8` visible patient-facing questions per completed case flow. Those case
+families should be confirmed against the vital-sign story before implementation.
 
 多寶's first case draft is preserved at
 `source/2026-05-15-huicheng-second-sync-and-duobao-followup/duobao-demo-case-draft.md`.
@@ -112,7 +113,7 @@ For each case:
 - realistic age / sex;
 - chief complaint wording in patient language;
 - plausible vital-sign pattern;
-- `6-11` visible kiosk-level questions, with `6-8` preferred for the first
+- `5-7` visible kiosk-level questions, with `5-6` preferred for the first
   respiratory flow when possible;
 - one sentence of staff-facing concern;
 - one sentence of what the system must not claim.
