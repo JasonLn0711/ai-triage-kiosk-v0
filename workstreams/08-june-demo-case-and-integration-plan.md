@@ -363,6 +363,32 @@ source registry, output boundary, or next evidence gap.
    ask are clear, so reading stays tied to demo decisions rather than becoming a
    separate broad review.
 
+## 2026-05-20 多寶 Structured Case / Question Design Update
+
+Source and review:
+
+- `source/2026-05-20-duobao-demo-cases-question-design/source.md`
+- `docs/2026-05-20-duobao-demo-design-consistency-review.md`
+
+多寶's new files should become the clinical-design inventory for future case
+expansion. They add a broad symptom map, four structured demo cases, vital
+follow-up triggers, and a SOAP-shaped output template.
+
+Use the content through the existing demo boundary:
+
+- keep diagnosis-shaped labels such as acute cholecystitis, AfRVR, and
+  pneumonia as internal scenario labels only;
+- do not collect real names in the runtime demo;
+- convert `Assessment` / `Plan` into `review_basis`, `review_action`, and
+  `staff_handoff_note`;
+- do not output potential triage level, suggested acuity, disposition,
+  recommended department, or immediate actions without explicit owner approval;
+- treat all vital thresholds as clinical-signoff-needed until a company /
+  clinical owner freezes source, units, and `>` / `>=` semantics;
+- keep the first implementation path narrow: one respiratory early-handoff
+  flow, then add abdominal-pain and tachycardia flows after v0.2 passes
+  demo-ready checks.
+
 ## What To Build First
 
 Start with one case only:

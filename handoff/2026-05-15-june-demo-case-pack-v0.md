@@ -27,6 +27,13 @@ families should be confirmed against the vital-sign story before implementation.
 `source/2026-05-15-huicheng-second-sync-and-duobao-followup/duobao-demo-case-draft.md`.
 Use it as a clinical design anchor, not as customer-facing diagnosis output.
 
+多寶's later structured case and question-design files are preserved at
+`source/2026-05-20-duobao-demo-cases-question-design/`, with the consistency
+review at `docs/2026-05-20-duobao-demo-design-consistency-review.md`. Use those
+files as a broader clinical-design inventory. Do not directly import their
+real-name question, triage level, suggested acuity, disposition, department, or
+immediate-action wording into runtime.
+
 ## Case Table
 
 | Case | Demo purpose | Vital signs to use | Kiosk-level questions | Stop rule |

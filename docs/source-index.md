@@ -23,6 +23,7 @@ demo lane and its direct upstream Prof. Wu context.
 | `2026-05-19` | `source/2026-05-19-expert-review-scope-api-boundary/` | Expert reply after reviewing the project packet. Confirms the scope cut is appropriate if framed as `synthetic-data vital-aware intake + staff-review summary`, not clinical triage product. Adds required v0.2 deltas: runtime enforcement, clinical stop rule, field dictionary, failure fallback, UI wording lock, `review_action` replacing `plan_support`, staff-only summary, handoff flags, privacy/security owner/date closeout, and expert-cited FDA / TW Core / CDC / PDPC / cybersecurity references. The complete user-provided record is archived in `full-record.md`; use `source.md` as the working extraction. |
 | `2026-05-19` | `source/2026-05-19-expert-review-v02-freeze-gate/` | Second expert reply on the v0.2 freeze gate. Confirms the demo can proceed but API v0.2 is not frozen; adds timestamp correction, API question-to-registry mapping, respiratory flow registry alignment, per-vital quality preference, expanded error examples, `assessment_support` -> `review_basis`, case/fixture/question/wording versions, and owner/date/fallback closeout for Thursday. |
 | `2026-05-19` | `source/2026-05-19-duobao-two-phase-vital-questioning/` | User-provided clarification of 多寶's two-phase question-flow insight: ask non-vital-dependent questions while vital signs are being measured, then use measured vital values to choose the second-stage follow-up. This becomes the preferred API/UI design if 慧誠 can support it without disrupting measurement quality. |
+| `2026-05-20` | `source/2026-05-20-duobao-demo-cases-question-design/` | 多寶's structured demo case and question-design drafts. Preserves a broad symptom/question inventory, four structured demo cases, post-vital trigger questions, and a SOAP-shaped output sketch. Treat as clinical/product design input only: derived review flags required normalization around real-name collection, triage/acuity/disposition language, diagnosis-shaped case labels, vital-threshold signoff, question budget, and two-phase timing. |
 
 The `2026-05-12` source folder now also contains Johnny Fang's company-side
 follow-up package:
@@ -56,6 +57,8 @@ Derived analysis:
 - `source/2026-05-19-expert-review-v02-freeze-gate/source.md`
 - `source/2026-05-19-expert-review-scope-api-boundary/full-record.md`
 - `source/2026-05-19-duobao-two-phase-vital-questioning/source.md`
+- `source/2026-05-20-duobao-demo-cases-question-design/source.md`
+- `docs/2026-05-20-duobao-demo-design-consistency-review.md`
 - `docs/2026-05-19-expert-review-action-plan.md`
 - `docs/2026-05-19-two-phase-question-flow-design.md`
 - `docs/2026-05-19-api-session-design-plain-explanation.md`
