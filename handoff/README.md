@@ -24,6 +24,8 @@ Current main meeting packet:
 
 Current detailed discussion artifacts:
 
+- `handoff/2026-05-20-huicheng-pre-meeting-api-v02-pre-read.md`
+- `docs/writing-method-policy.md`
 - `handoff/2026-05-21-huicheng-engineering-sync-prep.md`
 - `handoff/2026-05-21-imvs-nycu-api-design-v0.2-draft.md`
 - `handoff/2026-05-21-decision-defaults-and-owner-matrix.md`
