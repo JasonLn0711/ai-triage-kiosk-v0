@@ -7,6 +7,8 @@
 - Sponsor / requester: Prof. Wu
 - External party: 慧誠智醫 / imedtac Co., Ltd.
 - Official website: `https://www.imedtac.com/`
+- Prof. Wu / 智德萬 public-profile dossier:
+  `source/2026-05-21-zhidewan-public-profile/source.md`
 - Upstream thread: follow-up to the 吳老師 / 余總 project discussion; the earlier 余總 `triage` remark refers to this lane.
 - Internal contact window: 林駿亦 and Jason, pending Prof. Wu / company confirmation
 - Status: standalone execution repo created; company follow-up package analyzed; Friday `2026-05-15` research artifact is the next bounded deliverable; implementation remains gated on integration mode, target device, clinical-source confirmation, and the sales-pressure boundary from the `2026-05-11` LINE update
@@ -51,6 +53,11 @@
 ## FIRST PRINCIPLE Scope
 
 - Scarce resource: execution bandwidth and clinical evidence.
+- IP / contracting scarce resource: 智德萬 / Prof. Wu-team background know-how,
+  clinical workflow translation, and public company-side FDA / TFDA / patent
+  context must be protected before deeper imedtac method transfer. NYCU is not
+  the default contracting route; check NYCU only for university-owned or
+  university-resource-derived material.
 - Canonical execution home: `../ai-triage-kiosk-demo/`.
 - Planning owns status, capacity, open questions, and routing only.
 - Execution repo owns copied source bundles, demo-specific briefs, architecture notes, implementation materials, and future deliverables.

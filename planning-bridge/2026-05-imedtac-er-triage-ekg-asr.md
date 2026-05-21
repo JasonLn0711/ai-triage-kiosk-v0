@@ -7,9 +7,11 @@
 - Sponsor / requester: Prof. Wu
 - External party: 慧誠智醫 / imedtac Co., Ltd.
 - Official website: `https://www.imedtac.com/`
+- Prof. Wu / 智德萬 public-profile dossier:
+  `source/2026-05-21-zhidewan-public-profile/source.md`
 - Upstream thread: follow-up to the 吳老師 / 余總 project discussion; the earlier 余總 `triage` remark refers to this lane.
 - Internal contact window: 林駿亦 and Jason, pending Prof. Wu / company confirmation
-- Status: standalone execution repo created; company follow-up package analyzed; Friday `2026-05-15` research artifact is the next bounded deliverable; implementation remains gated on integration mode, target device, clinical-source confirmation, and the sales-pressure boundary from the `2026-05-11` LINE update
+- Status: standalone execution repo created; company follow-up package analyzed; Friday `2026-05-15` research artifact is the next bounded deliverable; implementation remains gated on integration mode, target device, clinical-source confirmation, and the sales-pressure boundary from the `2026-05-11` LINE update. Current protection update as of `2026-05-21`: public-source diligence records 智德萬 / AItewan as an NYCU derivative AI medical-device startup with DeepBT TFDA registrations, FDA 510(k) `K252190`, and public patent / trademark signals. Treat imedtac method transfer as a commercial medical-AI / IP / regulatory collaboration routed through Prof. Wu / 智德萬, not NYCU by default.
 - Canonical execution repo: `../ai-triage-kiosk-demo/`
 - Repo operating contract: `../ai-triage-kiosk-demo/AGENTS.md`
 - Repo relationship note: `../ai-triage-kiosk-demo/docs/repo-relationships.md`
@@ -41,6 +43,8 @@
   `data/knowledge/personal/sources/2026-05-12-wu-google-meet-ai-triage-510k/source.md`
 - Prof. Wu Google Meet 510(k) meeting record:
   `data/knowledge/personal/sources/2026-05-12-wu-google-meet-ai-triage-510k/meeting-record.md`
+- 智德萬 / AItewan public-profile dossier:
+  `source/2026-05-21-zhidewan-public-profile/source.md`
 - Execution-repo source copies:
   - `../ai-triage-kiosk-demo/source/2026-05-11-wu-imedtac-er-triage-ekg-asr/`
   - `../ai-triage-kiosk-demo/source/2026-05-12-imedtac-company-ai-triage-sync/`
@@ -51,6 +55,11 @@
 ## FIRST PRINCIPLE Scope
 
 - Scarce resource: execution bandwidth and clinical evidence.
+- IP / contracting scarce resource: 智德萬 / Prof. Wu-team background know-how,
+  clinical workflow translation, and public company-side FDA / TFDA / patent
+  context must be protected before deeper imedtac method transfer. NYCU is not
+  the default contracting route; check NYCU only for university-owned or
+  university-resource-derived material.
 - Canonical execution home: `../ai-triage-kiosk-demo/`.
 - Planning owns status, capacity, open questions, and routing only.
 - Execution repo owns copied source bundles, demo-specific briefs, architecture notes, implementation materials, and future deliverables.
