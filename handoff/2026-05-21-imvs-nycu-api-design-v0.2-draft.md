@@ -7,6 +7,8 @@ type: handoff
 status: post-sync update needed
 audience: Johnny Fang and imedtac engineering design team
 source:
+  - ../docs/2026-05-12-imvs-hardware-and-vital-units-baseline.md
+  - ../source/2026-05-12-imedtac-company-ai-triage-sync/source.md
   - ../source/2026-05-19-johnny-ai-triage-product-spec/source.md
   - ../source/2026-05-19-johnny-line-thursday-engineering-sync/source.md
   - ../source/2026-05-19-expert-review-scope-api-boundary/source.md
@@ -33,8 +35,15 @@ iMVS vital-sign payload
 
 This file began as NYCU's pre-sync API v0.2 draft. After the sync, treat it as
 the working base for the confirmed post-sync API update. It is not frozen until
-慧誠 confirms actual payload field names, units, required/optional fields,
-missing/failure semantics, UI insertion point, and session ownership.
+慧誠 confirms current-device deltas from the 5/12 V1.4 payload baseline,
+required/optional fields, missing/failure semantics, UI insertion point, and
+session ownership.
+
+Important baseline update: 慧誠 already provided iMVS Product Spec `V2.0.4` and
+iMVS API Definition `V1.4` on `2026-05-12`. Those files define hardware modules,
+the Vital Sign Upload field family, and sample units. This API draft should use
+that company-provided baseline while still asking imedtac engineering to confirm
+current-device deltas and target-SKU optionality.
 
 Post-sync update on `2026-05-21`: the Thursday sync selected the simpler June
 path. The first integration pass should be `post_measurement_only`, with iMVS
@@ -53,8 +62,9 @@ After the sync, produce the confirmed post-sync API v0.2 from this draft,
 Post-Duobao internal sync update on `2026-05-21 10:57`: do not design this API
 as a formal triage-level output API. The API should return typed questions and
 staff-review summaries. The new engineering question is whether iMVS can render
-a reusable question object with variable options, progress, and numeric / scale
-metadata, instead of requiring one hand-coded screen per clinical question.
+a reusable question object with variable options and progress metadata, instead
+of requiring one hand-coded screen per clinical question. Numeric / scale
+metadata remains a future UI-template question after imedtac confirms support.
 
 ## Demo Boundary
 
@@ -92,6 +102,40 @@ the same `session_key`; NYCU returns either the next typed question or
 The future two-phase vitals-ready endpoint is documented in the appendix. It is
 not required for the June customer-demo integration.
 
+## Company-Provided Vital Payload Baseline
+
+Canonical extraction:
+
+- `docs/2026-05-12-imvs-hardware-and-vital-units-baseline.md`
+
+The June adapter should begin from the iMVS V1.4-style nested upload payload and
+normalize it into NYCU's per-vital object shape.
+
+| iMVS V1.4 object | iMVS value field(s) | iMVS unit sample | NYCU v0.2 normalized field(s) |
+| --- | --- | --- | --- |
+| `NBP` | `SYS_Value`, `DIA_Value` | `mmHg` | `blood_pressure_systolic_mm_hg`, `blood_pressure_diastolic_mm_hg` |
+| `SPO2` | `Value` | `%` | `spo2_percent` |
+| `HR` | `BP_Value` | `bpm` | `heart_rate_bpm` |
+| `Temp` | `Value` | `deg C` / source sample `°C` | `temperature_c` |
+| `Glucose` | `Value` | `mg/dL` | `glucose_mg_dl` |
+| `Weight` | `Value` | `kg` | `weight_kg` |
+| `Height` | `Value` | `cm` | `height_cm` |
+
+Adapter controls:
+
+- The company V1.4 values are typed as strings; NYCU runtime can parse numeric
+  values but should preserve source units in logs and summaries.
+- The company parameter table has an HR unit typo-like `bmp`, while its JSON
+  sample uses `bpm`; use `bpm` as the normalized unit.
+- `Respiratory rate` is not listed in the 5/12 V1.4 API. Keep any respiratory
+  rate field demo-only unless imedtac confirms a measured or manual-entry
+  source.
+- `BMI` is a report/derived concept from height and weight, not a confirmed
+  V1.4 upload field.
+- SpO2 and glucose appear in the API baseline, while the product spec marks
+  their hardware modules optional in some variants. Confirm target-SKU
+  availability before making either field mandatory.
+
 ## Endpoint 1: Start Session With Measured Vitals
 
 ```http
@@ -103,7 +147,7 @@ Content-Type: application/json
 
 Example:
 
-- `api-examples/2026-05-21-start-session-request-demo-respiratory.json`
+- `api-examples/2026-05-21-start-session-request-demo-tachycardia.json`
 
 Required fields:
 
@@ -111,7 +155,7 @@ Required fields:
 | --- | --- | --- | --- |
 | `api_version` | string | yes | Discussion value: `2026-05-22-demo-v0.2-draft`. |
 | `schema_version` | string | yes | Discussion value: `imvs-nycu-triage-demo-schema-v0.2-draft`. |
-| `flow_version` | string | yes | Discussion value: `respiratory-early-handoff-flow-v0.2-draft`. |
+| `flow_version` | string | yes | Discussion value: `tachycardia-live-demo-flow-v0.2-draft`. |
 | `case_id` | string | yes | Synthetic demo case id; do not use real encounter id. |
 | `case_version` | string | yes | Synthetic case content version. |
 | `fixture_version` | string | yes | Synthetic fixture version. |
@@ -132,11 +176,11 @@ Required fields:
 | `vitals.measurement_timestamp` | string | yes | ISO timestamp for the vital-sign measurement event. |
 | `vitals.device_id` | string | yes | Demo device identifier, not a patient identifier. |
 | `vitals.<field>.value` | number/null | yes | Per-vital measured value or `null` when unavailable / failed. |
-| `vitals.<field>.unit` | string | yes | Explicit unit such as `%`, `C`, `mmHg`, `beats/min`, `cm`, or `kg`. |
+| `vitals.<field>.unit` | string | yes | Explicit unit. Baseline units from iMVS V1.4 are `mmHg`, `%`, `bpm`, `deg C` / `C`, `mg/dL`, `kg`, and `cm`. |
 | `vitals.<field>.measurement_status` | string | yes | `measured`, `missing`, `failed`, `manual_entry`, or `not_available`. |
 | `vitals.<field>.quality_flag` | string | yes | `ok`, `needs_review`, `device_error`, `out_of_range_demo`, or `unknown`. |
 | `vitals.<field>.missing_reason` | string/null | no | Required when a vital is missing or failed. |
-| `capabilities.question_types` | array | yes | `single_choice`, `multi_choice`, `scale`. |
+| `capabilities.question_types` | array | yes | June tachycardia live lane uses `single_choice` and `multi_choice`; keep `scale` as a future UI template only after imedtac confirms support. |
 | `capabilities.max_questions` | number | yes | Current June design cap follows the 慧誠 / iMVS product spec: fewer than `8` visible patient-facing questions; use `7` as the hard maximum. |
 | `capabilities.max_options_per_question` | number | ask imedtac | Needed to keep iMVS screens readable without scrolling. |
 | `capabilities.max_option_label_length` | number | ask imedtac | Needed to avoid text overflow on the kiosk display. |
@@ -172,7 +216,7 @@ Required fields:
 | `question.source_refs` | array | yes | Source IDs backing this runtime question. |
 | `question.evidence_status` | string | yes | Current evidence status. |
 | `question.review_owner` | string | yes | Owner for wording/source review. |
-| `question.type` | string | yes if `status=question` | `single_choice`, `multi_choice`, or `scale`. |
+| `question.type` | string | yes if `status=question` | June tachycardia live lane uses `single_choice` or `multi_choice`; `scale` remains a future template. |
 | `question.ui_template` | string | yes if `status=question` | Proposed: same value as `question.type` unless imedtac has separate template names. |
 | `question.text` | string | yes if `status=question` | Rendered question text. |
 | `question.options` | array | yes for choice types | Stable option ids and labels. |
@@ -194,7 +238,7 @@ Content-Type: application/json
 
 Example:
 
-- `api-examples/2026-05-21-submit-answer-request-demo-respiratory.json`
+- `api-examples/2026-05-21-submit-answer-request-demo-tachycardia.json`
 
 Required fields:
 
@@ -216,8 +260,8 @@ Required fields:
 | `vitals_ready` | boolean | yes | June default: `true`. |
 | `question_phase` | string | yes | Phase of the question being answered. |
 | `question_id` | string | yes | The question being answered. |
-| `answer.selected_option_ids` | array | yes for choice questions | Empty only when scale is used. |
-| `answer.scale_value` | number/null | yes for scale questions | `null` for choice questions. |
+| `answer.selected_option_ids` | array | yes for choice questions | For the tachycardia live lane, send selected option ids such as `heart_racing`, `few_hours`, or `chest_heaviness`. |
+| `answer.scale_value` | number/null | no for June tachycardia lane | `null` for the current choice-question demo; retain only for future scale templates. |
 | `client_event.input_mode` | string | yes | `touch`, `keyboard`, `voice_confirmed`, etc. |
 | `client_event.answered_at` | string | no | ISO timestamp if available. |
 
@@ -225,9 +269,9 @@ Required fields:
 
 Example:
 
-- `api-examples/2026-05-21-next-question-response-demo-respiratory.json`
-- `api-examples/2026-05-21-post-vital-question-response-demo-respiratory.json`
-- `api-examples/2026-05-21-summary-response-demo-respiratory.json`
+- `api-examples/2026-05-21-next-question-response-demo-tachycardia.json`
+- `api-examples/2026-05-21-post-vital-question-response-demo-tachycardia.json`
+- `api-examples/2026-05-21-summary-response-demo-tachycardia.json`
 
 When `status=question`, the response follows the same typed question structure
 as Endpoint 1.
@@ -236,7 +280,7 @@ as Endpoint 1.
 
 Example:
 
-- `api-examples/2026-05-21-summary-response-demo-respiratory.json`
+- `api-examples/2026-05-21-summary-response-demo-tachycardia.json`
 
 Required fields:
 
@@ -252,7 +296,7 @@ Required fields:
 | `vitals_ready` | boolean | yes | Must be `true` for a staff summary. |
 | `question_phase` | string | yes | `summary`. |
 | `summary_visibility` | string | yes | Must be `staff_only` for June demo. |
-| `handoff_required` | boolean | yes | Explicitly true for the first respiratory handoff case. |
+| `handoff_required` | boolean | yes | Explicitly true for the tachycardia / chest-tightness live demo case. |
 | `handoff_reason_codes` | array | yes | Stable machine-readable reasons for staff-review handoff. |
 | `staff_review_summary.format` | string | yes | Proposed: `review_summary_demo`. |
 | `staff_review_summary.subjective` | array | yes | Patient-reported context. |
@@ -286,7 +330,7 @@ Content-Type: application/json
 
 Example:
 
-- `api-examples/2026-05-21-update-vitals-request-demo-respiratory.json`
+- `api-examples/2026-05-21-update-vitals-request-demo-tachycardia.json`
 
 Required fields for that future mode:
 
@@ -345,8 +389,8 @@ should clear other selected options.
   "option_count": 3,
   "none_option_id": "none",
   "options": [
-    {"id": "cough", "label": "Cough"},
-    {"id": "fever", "label": "Fever or chills"},
+    {"id": "shortness_of_breath", "label": "Shortness of breath"},
+    {"id": "dizziness", "label": "Dizziness / lightheadedness"},
     {"id": "none", "label": "None of these"}
   ]
 }
@@ -354,7 +398,8 @@ should clear other selected options.
 
 ### `scale`
 
-Use for pain / severity.
+Not used in the June tachycardia live lane. Keep this only as a future UI
+template if imedtac confirms a scale widget.
 
 ```json
 {
@@ -374,34 +419,37 @@ Use for pain / severity.
 Start with one case:
 
 ```text
-fever + dyspnea + low SpO2
+palpitations / chest tightness with elevated heart-rate cue
 ```
 
 Why:
 
-- It naturally uses temperature, SpO2, respiratory rate, and heart rate.
-- It shows measured vitals affecting follow-up questions.
+- It uses heart rate as the most controllable live vital cue for customer demo performance.
+- It shows measured vitals affecting follow-up questions after the iMVS measurement completes.
 - It can produce a useful staff-review summary without diagnosis.
-- It is easier to explain than all-specialty coverage.
+- It is easier to perform live than a low-SpO2 scenario while preserving respiratory synthetic fallback as a comparison lane.
 
 Demo-safe summary wording after expert review:
 
 ```text
 Synthetic demo case.
-Patient reports shortness of breath.
-Measured vitals include fever, increased respiratory rate, and lower oxygen saturation than expected for this demo scenario.
-Staff should review the respiratory complaint and measured vitals.
+Patient reports heart racing with chest heaviness for about half a day, plus shortness of breath.
+Measured vitals include HR 150 bpm, SpO2 98%, BP 102/68 mmHg, respiratory rate 16 breaths/min, and temperature 36.5 C.
+Staff should review the measured heart-rate cue, reported cardiopulmonary symptoms, rhythm-history selection, and medication/allergy confirmation.
 This demo does not diagnose, recommend treatment, assign a final triage level, or write to HIS/EMR.
 ```
 
-For the first respiratory case, do not force all eight questions. The preferred
-flow is:
+For the tachycardia live case, do not force all eight questions. The preferred
+flow is seven visible questions:
 
 ```text
-Q1 chief complaint
-Q2 dyspnea duration / severity
-Q3 chest pain / pressure
-Q4 chronic lung disease / baseline oxygen / medication context
+Q1 chief concern
+Q2 onset timing
+Q3 associated symptoms
+Q4 known rhythm / heart history
+Q5 current medication status
+Q6 medication allergy status
+Q7 heart-rate cue confirmation for staff review
 -> staff_review_summary
 ```
 
@@ -446,13 +494,15 @@ Use `demo_patient_id` only.
 
 ## Decisions Needed From 慧誠
 
-- Exact iMVS vital field names and units.
+- Current-device field-name and unit deltas from the `2026-05-12` iMVS API
+  `V1.4` baseline.
 - Which fields are guaranteed vs optional.
 - Whether NYCU may generate `session_key`.
 - Where AI triage appears in the UI flow.
 - Whether iMVS can render reusable question templates from a typed question
-  object: `single_choice`, `multi_choice`, numeric / scale, variable option
-  counts, option length limits, and no-scroll behavior.
+  object: `single_choice`, `multi_choice`, variable option counts, option
+  length limits, and no-scroll behavior. Keep numeric / scale as a future
+  template only if imedtac confirms support.
 - Whether June demo may call an external HTTPS endpoint or laptop API.
 - Whether local mock fallback is acceptable.
 - Required language: English only, Chinese only, or bilingual.

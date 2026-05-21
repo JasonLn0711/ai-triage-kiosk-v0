@@ -1,0 +1,58 @@
+{
+  "api_version": "2026-05-22-demo-v0.2-draft",
+  "schema_version": "imvs-nycu-triage-demo-schema-v0.2-draft",
+  "flow_version": "tachycardia-live-demo-flow-v0.2-draft",
+  "case_id": "demo-tachycardia-live-001",
+  "case_version": "demo-tachycardia-live-001-v0.2",
+  "fixture_version": "v0.2.0",
+  "question_set_version": "tachycardia-question-set-v0.2-draft",
+  "wording_version": "staff-summary-wording-v0.2-clinical-draft",
+  "request_id": "req-demo-tachy-answer-007",
+  "response_id": "resp-demo-tachy-summary-001",
+  "session_key": "demo-session-tachy-001",
+  "session_expires_at": "2026-05-21T10:20:00+08:00",
+  "session_state": "summary_ready",
+  "last_question_id": "tachy-medication-allergy-confirm",
+  "status": "summary",
+  "workflow_mode": "post_measurement_only",
+  "measurement_state": "complete",
+  "vitals_ready": true,
+  "question_phase": "summary",
+  "summary_visibility": "staff_only",
+  "handoff_required": true,
+  "handoff_reason_codes": [
+    "measured_elevated_heart_rate_demo",
+    "reported_palpitations",
+    "reported_chest_tightness",
+    "reported_shortness_of_breath",
+    "staff_review_needed"
+  ],
+  "staff_review_summary": {
+    "format": "review_summary_demo",
+    "subjective": [
+      "Synthetic demo patient reports heart racing with chest heaviness for about half a day.",
+      "Selected associated symptom: shortness of breath.",
+      "Patient selected known rhythm problem; medication and allergy details should be confirmed by staff."
+    ],
+    "objective": [
+      "Demo vital payload includes HR 150 bpm, SpO2 98%, BP 102/68 mmHg, respiratory rate 16 breaths/min, and temperature 36.5 C.",
+      "Heart-rate field quality flag is needs_review."
+    ],
+    "review_basis": [
+      "Measured heart-rate cue plus reported palpitation / chest-tightness symptoms supports staff review in this demo workflow.",
+      "The summary organizes measured vitals and selected answers for human review."
+    ],
+    "review_action": [
+      "Please review measured heart rate, reported symptoms, rhythm-history selection, and medication/allergy confirmation."
+    ],
+    "staff_handoff_note": "Review measured heart rate and reported cardiopulmonary symptoms.",
+    "scope_controls": [
+      "Staff-review intake support",
+      "Human review workflow",
+      "Synthetic-data demo context",
+      "Production integration managed through a separate validation path"
+    ]
+  },
+  "evidence_refs": ["LOCAL-PROTOCOL-TBD"],
+  "demo_boundary": "Synthetic-data staff-review intake support with human-review workflow and separate production validation path."
+}

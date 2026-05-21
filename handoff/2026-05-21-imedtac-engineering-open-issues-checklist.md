@@ -11,6 +11,7 @@ source:
   - ../source/2026-05-21-imedtac-post-meeting-progress-record/source.md
   - ../source/2026-05-21-imedtac-teams-api-followup/source.md
   - ./2026-05-21-imedtac-two-endpoint-api-reply.md
+  - ./2026-05-21-duobao-style-tachycardia-live-demo-question-set.md
   - ./2026-05-21-to-2026-05-25-imedtac-response-plan.md
 ---
 
@@ -60,7 +61,7 @@ iMVS 完成 vital-sign measurement
 | ID | Issue | Decision / Input Needed | Owner | Target | Acceptance Check |
 | --- | --- | --- | --- | --- | --- |
 | P0-01 | API change-control rule | 確認 endpoint shape 先 freeze；題目、選項、順序與 wording 透過版本欄位更新。 | NYCU / Jason | `2026-05-22` | API 回覆文件明確說明 question set 改版不等於 endpoint 改版。 |
-| P0-02 | Vital Upload API field dictionary | imedtac 提供實際 vital field names、units、required/optional、missing/failed/poor-quality 表示方式。 | imedtac engineering | `2026-05-22` ask | 至少包含 heart rate、SpO2、temperature、blood pressure、height、weight；respiratory rate 是否提供要明確。 |
+| P0-02 | Vital Upload API field dictionary | 以 `2026-05-12` iMVS API `V1.4` 的 `NBP/SPO2/HR/Temp/Glucose/Height/Weight` 與 units 作為 baseline；imedtac 確認 current demo machine / GitHub 格式的 field-name delta、required/optional、missing/failed/poor-quality 表示方式。 | imedtac engineering | `2026-05-22` ask | 至少確認 heart rate、SpO2、temperature、blood pressure、height、weight 是否沿用 V1.4；respiratory rate 是否提供要明確。 |
 | P0-03 | Session lifecycle | 定義 `session_key` expiry、abandoned session、summary-ready 後能否再送 answer、重整頁面是否可恢復。 | NYCU propose; imedtac confirm | `2026-05-22` draft | API 文件或 checklist 有明確 session-state behavior。 |
 | P0-04 | Retry / idempotency behavior | 確認 timeout retry 不會讓 question flow 前進兩次；相同 `idempotency_key` 搭不同 body 回 conflict。 | NYCU propose; imedtac confirm | `2026-05-22` draft | JSON examples 與 error code 包含 retry / conflict path。 |
 | P0-05 | Error / fallback UI contract | 確認 remote API unavailable、invalid answer、session expired、payload mismatch 時 iMVS 顯示與 fallback mode。 | imedtac UI + NYCU | `2026-05-24` | Local Scripted Demo Mode 標示方式與 fallback response 欄位確定。 |
@@ -80,7 +81,8 @@ iMVS 完成 vital-sign measurement
 | P1-04 | Mock server / contract test packet | 是否需要 NYCU 提供 mock endpoint 或只提供 JSON examples。 | imedtac engineering ask; NYCU implement if needed | `2026-05-24` decision | imedtac 可在 NYCU 正式部署前先串 UI。 |
 | P1-05 | Observability / debug logging | 雙方 log 至少保留 `request_id`、`response_id`、`session_key`、`case_id`、`flow_version`。 | both teams | rehearsal 前 | 出錯時能判斷是 payload、network、session state、question engine 或 UI 問題。 |
 | P1-06 | Staff-summary display location | 確認 `staff_review_summary` 放在 staff / doctor / customer preview，不放成病人診斷結果。 | imedtac UI + NYCU | `2026-05-24` | UI copy 不含 diagnosis、treatment、final triage level、production HIS/EMR claim。 |
-| P1-07 | Demo lane choice | tachycardia live-performance lane 與 respiratory synthetic fallback 的主次與 wording。 | Jason + 多寶 / 許醫師 + Johnny | `2026-05-25` | Monday 回覆可交付第一版 preset questions/options。 |
+| P1-07 | Demo lane choice | tachycardia live-performance lane 與 respiratory synthetic fallback 的主次與 wording。 | Jason + 多寶 / 許醫師 + Johnny | drafted | `handoff/2026-05-21-duobao-style-tachycardia-live-demo-question-set.md` 可作為 Monday 第一版 preset questions/options 的 review draft。 |
+| P1-08 | Live HR demo mode / fallback | 確認 demo script 是否標示 `live_measured`、`synthetic_override`、或 `local_scripted_demo`，避免 demo 成敗依賴現場心跳值。 | NYCU propose; imedtac confirm | rehearsal 前 | Presenter script 和 payload 都能顯示目前 mode；live HR 不適合時可切 scripted fixture。 |
 
 ## P2 Safety / Product Boundary Issues
 
@@ -93,6 +95,8 @@ iMVS 完成 vital-sign measurement
 | P2-03 | Real patient data | 六月維持 synthetic/demo data；若要 real data，需另開 privacy、security、clinical governance 路徑。 | Prof. Wu / 智德萬 / imedtac / legal | 任何 real identifier 或 PHI request 出現時。 |
 | P2-04 | HIS / EMR / FHIR writeback | 六月不做 production writeback；可展示 preview / export story，但不可暗示已整合正式醫院系統。 | imedtac + NYCU | 當 customer 要求 production integration。 |
 | P2-05 | Patent / reusable-method transfer | 對 imedtac 分享 interface-level API 與 demo examples；routing / scoring / source-governance / prompt / embedding / reusable framework details 保留內部。 | Prof. Wu / Tomi / 智德萬 + Jason | 深入技術教學或 co-development 前。 |
+| P2-06 | Live participant safety | 不要求任何人為 demo 做運動或追求特定心跳值；現場只使用自願量測，必要時切 synthetic fixture。 | Jason + imedtac demo owner | 任何 live-performance rehearsal 前。 |
+| P2-07 | Measurement artifact handling | 若 live HR quality 不穩或可能是 device artifact，summary 應以 `quality_flag=needs_review` 呈現，不當作乾淨臨床結論。 | imedtac engineering + NYCU | 接上真機量測品質欄位時。 |
 
 ## Minimal Rehearsal Acceptance Criteria
 

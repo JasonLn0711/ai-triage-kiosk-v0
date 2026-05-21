@@ -166,7 +166,11 @@ post_measurement_only
 
 ## 5. imedtac 需確認的 iMVS Vital Payload
 
-NYCU 團隊可以先依照以下 shape 建立 mock adapter 與 API v0.2 examples。imedtac engineering team 需確認實際欄位名稱、單位、required / optional、missing / failure semantics。
+Post-baseline update: imedtac 已在 `2026-05-12` iMVS API `V1.4` 提供
+`NBP/SPO2/HR/Temp/Glucose/Height/Weight` 與 sample units。NYCU 團隊可以先依照
+這份 baseline 建立 mock adapter 與 API v0.2 examples；imedtac engineering
+team 需確認 current demo machine / GitHub 格式是否有 field-name delta、
+required / optional 差異，以及 missing / failure semantics。
 
 ```json
 {
@@ -189,7 +193,7 @@ NYCU 團隊可以先依照以下 shape 建立 mock adapter 與 API v0.2 examples
     },
     "heart_rate": {
       "value": 102,
-      "unit": "beats/min",
+      "unit": "bpm",
       "measurement_status": "measured",
       "quality_flag": "ok",
       "missing_reason": null
@@ -197,7 +201,7 @@ NYCU 團隊可以先依照以下 shape 建立 mock adapter 與 API v0.2 examples
     "respiratory_rate": {
       "value": 23,
       "unit": "breaths/min",
-      "measurement_status": "measured",
+      "measurement_status": "manual_entry",
       "quality_flag": "needs_review",
       "missing_reason": null
     },
@@ -221,8 +225,8 @@ NYCU 團隊可以先依照以下 shape 建立 mock adapter 與 API v0.2 examples
 
 5/21 sync 建議確認：
 
-- iMVS 實際 field names；
-- 每個 vital field 的 unit；
+- current iMVS field names 是否沿用 5/12 V1.4 baseline；
+- 若每個 vital field 的 unit 與 V1.4 baseline 不同，請提供 current unit；
 - 哪些欄位是 guaranteed，哪些欄位是 optional；
 - measurement failure、missing value、poor-quality measurement 如何表示；
 - 是否能使用 per-vital `measurement_status`、`quality_flag`、`missing_reason`；
@@ -242,7 +246,7 @@ NYCU 團隊建議第一個 case 採用：
 - 性別：`male`
 - 體溫：`38.5 C`
 - SpO2：`92%`
-- 心率：`102 beats/min`
+- 心率：`102 bpm`
 - 呼吸速率：`23 breaths/min`
 - 血壓：`123/81 mmHg`
 
@@ -353,7 +357,7 @@ HIS / EMR / FHIR writeback 建議維持 future-state 或 mock export。六月版
 
 | Owner | 交付項目 | 建議期限 | 驗收方式 |
 | --- | --- | --- | --- |
-| imedtac | Synthetic iMVS vital payload example 與 field dictionary |  | 欄位名稱、單位、required / optional、missing / failure behavior 明確。 |
+| imedtac | Synthetic iMVS vital payload example 與 current field-dictionary delta |  | 確認是否沿用 5/12 V1.4 欄位與 units，並明確化 required / optional、missing / failure behavior。 |
 | imedtac | UI insertion decision |  | 明確指定 same-app、iframe、external link、backend API、laptop API 或 static mock。 |
 | imedtac | Two-phase feasibility decision |  | 確認 Phase 1 during measurement 與 vitals-ready endpoint 是否可行。 |
 | imedtac | demo 日期、受眾、成功標準、engineering POC |  | 明確指定日期、受眾、預期證明項目與單一 owner。 |
@@ -382,7 +386,7 @@ NYCU 團隊建議六月 demo 固定成一個 synthetic-data vital-aware intake l
 這份文件包含 API v0.2 建議合約、vital payload 欄位方向、第一個 respiratory demo case、staff_review_summary 格式、error fallback，以及 5/21 sync 建議收斂的 owner / date。
 
 明天會議建議優先確認：
-- iMVS actual field dictionary；
+- current iMVS field-dictionary delta from the 5/12 V1.4 baseline；
 - UI insertion point；
 - session_key ownership；
 - Phase 1 during measurement 是否可行；

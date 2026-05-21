@@ -7,55 +7,51 @@
   "fixture_version": "v0.2.0",
   "question_set_version": "tachycardia-question-set-v0.2-draft",
   "wording_version": "staff-summary-wording-v0.2-clinical-draft",
-  "request_id": "req-demo-tachy-start-001",
-  "response_id": "resp-demo-tachy-start-001",
+  "request_id": "req-demo-tachy-answer-004",
+  "response_id": "resp-demo-tachy-question-005",
   "session_key": "demo-session-tachy-001",
   "session_expires_at": "2026-05-21T10:20:00+08:00",
   "session_state": "active",
-  "last_question_id": null,
+  "last_question_id": "tachy-associated-symptoms",
   "status": "question",
   "workflow_mode": "post_measurement_only",
   "measurement_state": "complete",
   "vitals_ready": true,
   "question_phase": "post_measurement_intake",
-  "phase_reason": "Measurement is complete and the demo heart-rate cue is available, so the tachycardia live intake question set can start.",
+  "phase_reason": "Measured heart-rate context is available, so the system asks the post-vital heart-rate cue question for staff-review context.",
   "progress": {
-    "current": 1,
+    "current": 5,
     "expected_total": 7
   },
   "question": {
-    "id": "tachy-chief-concern",
-    "registry_refs": ["TACHY-001"],
-    "source_refs": [
-      "DUOBAO-DEMO-DESIGN-20260520",
-      "IMEDTAC-POST-MEETING-PROGRESS-20260521",
-      "LOCAL-PROTOCOL-TBD"
-    ],
-    "evidence_status": "clinical-review-needed",
+    "id": "tachy-post-vital-heart-rate-cue",
+    "registry_refs": ["TACHY-005"],
+    "source_refs": ["AHA-TACHYCARDIA-FAST-HR", "MEDLINEPLUS-AFIB", "DUOBAO-DEMO-DESIGN-20260520"],
+    "evidence_status": "source-backed",
     "review_owner": "clinical_reviewer_tbd",
     "type": "single_choice",
     "ui_template": "single_choice",
-    "text": "What is the main reason you are using the kiosk today?",
+    "text": "The kiosk received a high heart-rate reading for this demo. How do you feel right now?",
     "options": [
-      {"id": "heart_racing", "label": "Heart racing / palpitations"},
-      {"id": "chest_tightness", "label": "Chest tightness / pressure"},
-      {"id": "breathing_or_dizzy", "label": "Shortness of breath or dizziness"},
-      {"id": "other_or_not_sure", "label": "Other / not sure"}
+      {"id": "still_racing", "label": "My heart still feels fast"},
+      {"id": "chest_still_heavy", "label": "My chest still feels heavy / tight"},
+      {"id": "both", "label": "Both"},
+      {"id": "neither_or_not_sure", "label": "Neither now / not sure"}
     ],
     "option_count": 4,
-    "none_option_id": null,
+    "none_option_id": "neither_or_not_sure",
     "required": true,
     "allow_not_sure": true,
     "allow_skip": false,
     "max_selections": 1,
-    "trigger_reason_codes": ["post_measurement_tachycardia_live_demo"],
-    "summary_effect": "Adds the main cardiopulmonary concern to the staff-review summary.",
+    "trigger_reason_codes": ["measured_elevated_heart_rate_demo"],
+    "summary_effect": "Adds the post-vital current heart-racing / chest-heaviness status to the staff-review summary.",
     "rendering_constraints": {
       "requires_no_scroll": true,
       "max_visible_options_without_scroll": 4
     },
     "evidence_refs": ["LOCAL-PROTOCOL-TBD"],
-    "demo_boundary": "Synthetic-data demo question for staff-review intake support."
+    "demo_boundary": "Post-vital heart-rate cue follow-up for staff-review context."
   },
   "demo_boundary": "Synthetic-data staff-review intake support with human-review workflow and separate production validation path."
 }

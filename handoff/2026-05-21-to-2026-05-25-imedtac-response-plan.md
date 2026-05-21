@@ -12,6 +12,7 @@ source:
   - ../source/2026-05-21-imedtac-teams-api-followup/source.md
   - ../source/2026-05-21-duobao-post-imedtac-internal-sync/meeting-record.md
   - ./2026-05-21-imedtac-two-endpoint-api-reply.md
+  - ./2026-05-21-duobao-style-tachycardia-live-demo-question-set.md
   - ./2026-05-21-imedtac-engineering-open-issues-checklist.md
 ---
 
@@ -71,8 +72,8 @@ imedtac asked:
 | Thu `2026-05-21` night or Fri `2026-05-22` morning | Send holding reply in Teams. | Jason | ready | Acknowledge two-endpoint API document; say question template and skip behavior will be confirmed after internal clinical review. |
 | Fri `2026-05-22` | Send two-endpoint API document draft. | Jason / NYCU | ready as draft | Use `handoff/2026-05-21-imedtac-two-endpoint-api-reply.md`. |
 | Fri `2026-05-22` | Track engineering open issues and change-control. | Jason | ready as checklist | Use `handoff/2026-05-21-imedtac-engineering-open-issues-checklist.md`; send selected P0/P1 asks to imedtac. |
-| Fri `2026-05-22` | Draft preset question / option template. | Jason | pending | Use single-choice / multi-choice only; include `Not sure` / `Unable to answer` where clinically safer than silent skip. |
-| Fri `2026-05-22` | Ask imedtac for missing field dictionary and UI limits. | Jason | pending | Required to freeze exact payload names and rendering constraints. |
+| Fri `2026-05-22` | Draft preset question / option template. | Jason | drafted | Use `handoff/2026-05-21-duobao-style-tachycardia-live-demo-question-set.md` for the tachycardia live lane; keep single-choice / multi-choice only and include `Not sure` / staff-confirmation options where clinically safer than silent skip. |
+| Fri `2026-05-22` | Ask imedtac for current field-dictionary deltas from the 5/12 iMVS V1.4 baseline and UI limits. | Jason | pending | Required to freeze exact payload names, optionality, missing/failure semantics, and rendering constraints. |
 | Sat-Sun `2026-05-23` to `2026-05-24` | Refine tachycardia live-performance lane and respiratory synthetic fallback lane. | Jason + 多寶 / 許醫師 if available | pending | Avoid diagnosis, final triage level, treatment, disposition, or department recommendation. |
 | Mon `2026-05-25` | Send confirmed question / option template and skip-behavior answer. | Jason / NYCU | target | Include what is final for demo and what remains pending clinical / UI confirmation. |
 
@@ -109,6 +110,18 @@ Recommended structure:
 - clinical review owner;
 - output effect in `staff_review_summary`;
 - forbidden output language.
+
+Current first-lane packet:
+
+```text
+handoff/2026-05-21-duobao-style-tachycardia-live-demo-question-set.md
+```
+
+This packet implements the post-meeting decision to lead with a live-performable
+tachycardia / palpitation / chest-tightness lane while keeping respiratory
+low-SpO2 as a synthetic fallback lane. It also records the API impact: endpoints
+stay the same, but `flow_version`, `case_id`, `question_set_version`, and
+question-object metadata must reflect the tachycardia lane.
 
 ### Skip behavior
 

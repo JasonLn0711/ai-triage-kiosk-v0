@@ -7,40 +7,36 @@
   "fixture_version": "v0.2.0",
   "question_set_version": "tachycardia-question-set-v0.2-draft",
   "wording_version": "staff-summary-wording-v0.2-clinical-draft",
-  "request_id": "req-demo-tachy-start-001",
-  "response_id": "resp-demo-tachy-start-001",
+  "request_id": "req-demo-tachy-answer-001",
+  "response_id": "resp-demo-tachy-question-002",
   "session_key": "demo-session-tachy-001",
   "session_expires_at": "2026-05-21T10:20:00+08:00",
   "session_state": "active",
-  "last_question_id": null,
+  "last_question_id": "tachy-chief-concern",
   "status": "question",
   "workflow_mode": "post_measurement_only",
   "measurement_state": "complete",
   "vitals_ready": true,
   "question_phase": "post_measurement_intake",
-  "phase_reason": "Measurement is complete and the demo heart-rate cue is available, so the tachycardia live intake question set can start.",
+  "phase_reason": "The user selected heart racing / palpitations, so the next question collects onset timing for staff review.",
   "progress": {
-    "current": 1,
+    "current": 2,
     "expected_total": 7
   },
   "question": {
-    "id": "tachy-chief-concern",
-    "registry_refs": ["TACHY-001"],
-    "source_refs": [
-      "DUOBAO-DEMO-DESIGN-20260520",
-      "IMEDTAC-POST-MEETING-PROGRESS-20260521",
-      "LOCAL-PROTOCOL-TBD"
-    ],
+    "id": "tachy-onset",
+    "registry_refs": ["TACHY-002"],
+    "source_refs": ["DUOBAO-DEMO-DESIGN-20260520", "LOCAL-PROTOCOL-TBD"],
     "evidence_status": "clinical-review-needed",
     "review_owner": "clinical_reviewer_tbd",
     "type": "single_choice",
     "ui_template": "single_choice",
-    "text": "What is the main reason you are using the kiosk today?",
+    "text": "When did this start?",
     "options": [
-      {"id": "heart_racing", "label": "Heart racing / palpitations"},
-      {"id": "chest_tightness", "label": "Chest tightness / pressure"},
-      {"id": "breathing_or_dizzy", "label": "Shortness of breath or dizziness"},
-      {"id": "other_or_not_sure", "label": "Other / not sure"}
+      {"id": "within_1_hour", "label": "Within the last hour"},
+      {"id": "few_hours", "label": "A few hours ago"},
+      {"id": "half_day", "label": "About half a day"},
+      {"id": "more_than_1_day_or_not_sure", "label": "More than one day / not sure"}
     ],
     "option_count": 4,
     "none_option_id": null,
@@ -48,14 +44,14 @@
     "allow_not_sure": true,
     "allow_skip": false,
     "max_selections": 1,
-    "trigger_reason_codes": ["post_measurement_tachycardia_live_demo"],
-    "summary_effect": "Adds the main cardiopulmonary concern to the staff-review summary.",
+    "trigger_reason_codes": ["reported_palpitations"],
+    "summary_effect": "Adds onset and duration context to the staff-review summary.",
     "rendering_constraints": {
       "requires_no_scroll": true,
       "max_visible_options_without_scroll": 4
     },
     "evidence_refs": ["LOCAL-PROTOCOL-TBD"],
-    "demo_boundary": "Synthetic-data demo question for staff-review intake support."
+    "demo_boundary": "Staff should review this answer with the measured vitals."
   },
   "demo_boundary": "Synthetic-data staff-review intake support with human-review workflow and separate production validation path."
 }

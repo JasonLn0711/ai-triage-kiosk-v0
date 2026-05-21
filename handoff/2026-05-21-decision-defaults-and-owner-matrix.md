@@ -70,7 +70,8 @@ These are the questions that must have owners by the end of the call.
 
 ### Engineering / 慧誠
 
-- What are the real iMVS vital field names and units?
+- Does the current iMVS demo machine / GitHub payload still match the
+  `2026-05-12` iMVS API `V1.4` field/unit baseline?
 - Which fields are guaranteed vs optional?
 - Where is the AI step inserted in the iMVS flow?
 - Can Phase 1 questions be displayed while measurement is running?
@@ -79,8 +80,9 @@ These are the questions that must have owners by the end of the call.
 - Can the demo call an external HTTPS endpoint or laptop API?
 - Is local mock fallback acceptable?
 - Should iMVS or NYCU own session state?
-- Can iMVS render `single_choice`, `multi_choice`, `scale`, progress, and
-  mutually exclusive "none of these" behavior?
+- Can iMVS render `single_choice`, `multi_choice`, progress, and mutually
+  exclusive "none of these" behavior? Keep `scale` as a future template only
+  if imedtac confirms support.
 - Can option count vary per question, and what is the maximum no-scroll option
   count / label length?
 - Can 慧誠 freeze `measurement_timestamp`, `device_id`, `measurement_status`,
@@ -110,7 +112,7 @@ Fill this table before the call ends.
 
 | Owner | Deliverable | Due | Acceptance check | If missing |
 | --- | --- | --- | --- | --- |
-| 慧誠 engineering | iMVS synthetic vital payload example and field dictionary. | `2026-05-22` proposed | Includes field names, units, required/optional, missing-value representation. | NYCU uses current synthetic field names and marks integration as mock-only. |
+| 慧誠 engineering | iMVS synthetic vital payload example and current field-dictionary delta from the 5/12 V1.4 baseline. | `2026-05-22` proposed | Confirms whether `NBP/SPO2/HR/Temp/Glucose/Height/Weight` names and units remain current, plus required/optional and missing-value representation. | NYCU uses the 5/12 baseline with explicit provisional adapter status. |
 | 慧誠 engineering | Required/optional field rule plus missing/failure representation. | `2026-05-22` proposed | Defines `measurement_status`, `quality_flag`, and `missing_reason` for each vital or for the payload. | NYCU uses generic quality flags only; adapter remains provisional. |
 | 慧誠 engineering / UI | Post-measurement UI insertion confirmation. | `2026-05-22` proposed | Confirms the AI question loop appears after measurement and before final report / result preview. | Use separate NYCU demo page; no claim of iMVS integration. |
 | 慧誠 engineering | UI insertion decision. | `2026-05-22` proposed | Names same-app / iframe / external link / backend API / demo-only handoff. | Use separate NYCU demo page; no claim of iMVS integration. |
@@ -137,14 +139,17 @@ Decision to propose:
 {
   "api_version": "2026-05-22-demo-v0.2-draft",
   "schema_version": "imvs-nycu-triage-demo-schema-v0.2-draft",
-  "flow_version": "respiratory-early-handoff-flow-v0.2-draft",
-  "case_id": "demo-respiratory-low-spo2-001"
+  "flow_version": "tachycardia-live-demo-flow-v0.2-draft",
+  "case_id": "demo-tachycardia-live-001"
 }
 ```
 
-### 2. Unit Ambiguity
+### 2. Unit Baseline And Current-Device Confirmation
 
-Problem: clinical meaning changes if units are assumed.
+Problem: clinical meaning changes if units drift silently. The 5/12 iMVS API
+`V1.4` already provides a unit baseline: `mmHg`, `%`, `bpm`, `deg C` / `C`,
+`mg/dL`, `kg`, and `cm`. The remaining decision is whether the current demo
+device and current Vital Upload implementation still use that baseline.
 
 Meeting rule:
 
@@ -161,7 +166,7 @@ Problem: customer may read summary as diagnosis.
 Safe wording:
 
 ```text
-Synthetic demo case. Patient reports shortness of breath. Measured vitals include fever, increased respiratory rate, and lower oxygen saturation than expected for this demo scenario. Staff should review the respiratory complaint and measured vitals. This demo does not diagnose, assign final triage level, recommend treatment, or write to HIS/EMR.
+Synthetic demo case. Patient reports heart racing with chest heaviness for about half a day, plus shortness of breath. Measured vitals include HR 150 bpm, SpO2 98%, BP 102/68 mmHg, respiratory rate 16 breaths/min, and temperature 36.5 C. Staff should review the measured heart-rate cue, reported cardiopulmonary symptoms, rhythm-history selection, and medication/allergy confirmation. This demo does not diagnose, assign final triage level, recommend treatment, or write to HIS/EMR.
 ```
 
 Unsafe wording:

@@ -180,6 +180,10 @@ Use these field names in the first draft:
 - `staff_review_summary.staff_handoff_note`
 - `staff_review_summary.not_claimed`
 
+Use the `2026-05-12` iMVS API `V1.4` field/unit baseline for the first adapter
+assumption: `NBP` in `mmHg`, `SPO2` in `%`, `HR` in `bpm`, `Temp` in `deg C` /
+`C`, `Glucose` in `mg/dL`, `Height` in `cm`, and `Weight` in `kg`.
+
 ### 2. One synthetic vital payload
 
 Use one respiratory case first:
@@ -323,7 +327,7 @@ It should not provide diagnosis, treatment, final triage level, or discharge adv
   - weight
   - BMI
   - glucose, if available
-- What are the units?
+- Do current units differ from the 5/12 V1.4 baseline?
 - Which fields are guaranteed vs optional?
 - How do they represent missing, failed, or re-measured values?
 
@@ -422,7 +426,8 @@ Without versioning, even small field changes will break iMVS and NYCU alignment.
 
 ### 3. Units And Normalization
 
-Do not rely on implied units. Freeze units explicitly:
+Do not rely on implied units. The 5/12 V1.4 baseline gives the first unit set;
+freeze any current-device deltas explicitly:
 
 - temperature: Celsius vs Fahrenheit;
 - glucose: mg/dL vs mmol/L;

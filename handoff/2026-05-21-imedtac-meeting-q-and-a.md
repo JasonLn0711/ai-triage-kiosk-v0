@@ -78,7 +78,7 @@ through design.
 | Touch-option interaction plus partial voice input; question count `8-10`. | Explicit, 5/15 minutes | Use touch / structured choices as the main flow; keep voice optional; current product-spec-aligned cap is `<8`, implemented as `max_questions=7`, while earlier `8-10` is treated as historical upper-bound context. | Touch choices are faster, safer, and easier to audit; the later product spec says fewer than eight questions; voice adds noise/privacy/error risk. | Q28, Q36 |
 | Combine data and answers into a patient chief-complaint summary for doctors. | Explicit, 5/15 minutes | Output `staff_review_summary` / clinician-review summary, not diagnosis, final triage level, treatment advice, or production HIS writeback. | This preserves the useful doctor-facing summary while avoiding overclaiming clinical decision support. | Q21-Q24, Q41 |
 | Provide technical architecture design. | Explicit, 5/15 minutes | Provide RESTful JSON API contract, endpoints, JSON examples, session behavior, fallback behavior, versioning, and deployment questions. | imedtac engineering needs a contract they can wire into UI/API work; framework details are secondary. | Q5-Q7, Q31-Q34 |
-| Should iMVS upload vital sign data format to NYCU be discussed? | Explicit, 5/19 email | Yes. Freeze actual field names, units, required/optional semantics, missing/failure status, quality flags, timestamp, and demo device identifier. | Dynamic question routing depends on reliable vital payload meaning; missing/failed data must not become hidden medical inference. | Q11-Q13 |
+| Should iMVS upload vital sign data format to NYCU be discussed? | Explicit, 5/19 email | Yes. Use the 5/12 V1.4 field/unit baseline, then freeze current-device deltas, required/optional semantics, missing/failure status, quality flags, timestamp, and demo device identifier. | Dynamic question routing depends on reliable vital payload meaning; missing/failed data must not become hidden medical inference. | Q11-Q13 |
 | What question format should NYCU return: type, options, expected question count / AC07, session key? | Explicit, 5/19 email | Return typed `question` objects with `single_choice`, `multi_choice`, or `scale`, stable options, progress, registry/source refs where available, and `session_key`. | The iMVS UI needs deterministic rendering and state continuity; question count and progress are product-spec acceptance criteria. | Q5-Q8, Q34, Q39 |
 | How should iMVS upload user answer plus session key, and how does NYCU return next question or diagnosis/output format? | Explicit, 5/19 email | iMVS posts answer + `session_key`; NYCU returns next question or `staff_review_summary`. Do not name output `diagnosis`; use `summary`, `review_basis`, `review_action`, and `staff_handoff_note`. | The loop matches imedtac's requested API shape while preserving the no-diagnosis / human-review boundary. | Q7-Q10, Q23, Q39 |
 | When can NYCU provide the API design document? | Explicit, 5/19 LINE | Use the 5/20 pre-read and this Q&A as the meeting answer; offer Markdown API spec + JSON examples first, then OpenAPI / Postman / mock endpoint if imedtac engineering requests them. | It gives engineering a usable near-term contract without waiting for all future production details. | Q5, Q42 |
@@ -172,7 +172,8 @@ API spec 至少要定義：
 - HTTP methods;
 - JSON request / response;
 - required / optional fields;
-- field types and units;
+- field types and units, starting from the `2026-05-12` iMVS API `V1.4`
+  baseline;
 - `session_key` rules;
 - error behavior;
 - timeout / retry / idempotency;
@@ -260,10 +261,12 @@ Demo 建議 `15-30` 分鐘。過期後回 `session_expired` 或 `invalid_session
 
 **Answer:**
 
-需要 imedtac engineering 確認：
+`2026-05-12` iMVS API `V1.4` 已提供 `NBP/SPO2/HR/Temp/Glucose/Height/Weight`
+與 sample units。現在需要 imedtac engineering 確認 current demo machine /
+GitHub 格式：
 
-- actual field names;
-- units;
+- 是否沿用 V1.4 field names；
+- units 是否與 V1.4 baseline 一致；
 - required vs optional;
 - missing / failed / re-measured representation;
 - per-vital `measurement_status`;
@@ -659,12 +662,13 @@ Use:
 
 ```json
 {
-  "api_version": "2026-05-demo-v0.2",
-  "schema_version": "imvs-nycu-triage-demo-schema-v0.2",
-  "flow_version": "respiratory_demo_v0.2",
-  "case_version": "respiratory_case_v0.2",
-  "question_set_version": "2026-05-21-demo",
-  "wording_version": "staff_summary_v0.2"
+  "api_version": "2026-05-22-demo-v0.2-draft",
+  "schema_version": "imvs-nycu-triage-demo-schema-v0.2-draft",
+  "flow_version": "tachycardia-live-demo-flow-v0.2-draft",
+  "case_id": "demo-tachycardia-live-001",
+  "case_version": "demo-tachycardia-live-001-v0.2",
+  "question_set_version": "tachycardia-question-set-v0.2-draft",
+  "wording_version": "staff-summary-wording-v0.2-clinical-draft"
 }
 ```
 
@@ -918,19 +922,20 @@ Log 方面，demo 需要 lightweight audit log，至少記 session_key、request
 
 如果沒有 api_version、schema_version、flow_version、case_version、question_set_version、wording_version，之後會很難知道某次 demo 用的是哪一版問題、哪一版 summary wording、哪一版 payload contract。
 
-版本號不是多餘欄位，是讓雙方工程和臨床 review 可以對齊的最低成本控制。
+版本號不是多餘欄位，是讓雙方工程和臨床 review 可以對齊的最低成本控制。六月 MVP 可以由 NYCU 依 `case_id` 管理並在 response echo，不需要要求 iMVS 每個 request 都手動填完整版本欄位。
 ```
 
 Recommended version block:
 
 ```json
 {
-  "api_version": "2026-05-demo-v0.2",
-  "schema_version": "imvs-nycu-triage-demo-schema-v0.2",
-  "flow_version": "respiratory_demo_v0.2",
-  "case_version": "respiratory_case_v0.2",
-  "question_set_version": "2026-05-21-demo",
-  "wording_version": "staff_summary_v0.2"
+  "api_version": "2026-05-22-demo-v0.2-draft",
+  "schema_version": "imvs-nycu-triage-demo-schema-v0.2-draft",
+  "flow_version": "tachycardia-live-demo-flow-v0.2-draft",
+  "case_id": "demo-tachycardia-live-001",
+  "case_version": "demo-tachycardia-live-001-v0.2",
+  "question_set_version": "tachycardia-question-set-v0.2-draft",
+  "wording_version": "staff-summary-wording-v0.2-clinical-draft"
 }
 ```
 
@@ -1132,8 +1137,8 @@ triage protocol signoff。
 ```text
 最小交付物是：
 1. API v0.2 Markdown spec；
-2. start-session / submit-answer / update-vitals / summary / error JSON examples；
-3. first respiratory synthetic case fixture；
+2. start-session / submit-answer / next-question / summary / error JSON examples；
+3. first tachycardia live demo case fixture；
 4. question object schema；
 5. staff_review_summary schema；
 6. error and fallback behavior；
@@ -1226,8 +1231,9 @@ Ask these before the call ends:
 2. What is the UI insertion path: same app, iframe, external link, backend API,
    laptop-adjacent demo, or static/local fallback?
 3. Can Phase 1 questions be shown during measurement without disrupting signal quality?
-4. What are the actual iMVS vital field names, units, required / optional rules,
-   and missing / failed semantics?
+4. Does the current iMVS vital payload still match the 5/12 V1.4 field/unit
+   baseline, and what are the required / optional rules and missing / failed
+   semantics?
 5. Is NYCU-generated `session_key` acceptable?
 6. Does engineering need Markdown API spec, OpenAPI, Postman collection, mock endpoint, or all of them?
 7. Can the demo call external HTTPS? Any firewall, CORS, VPN, or WebView limit?

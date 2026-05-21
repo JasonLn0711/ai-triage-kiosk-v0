@@ -104,8 +104,11 @@ engineering boundary after the imedtac call:
    - Use `handoff/2026-05-21-to-2026-05-25-imedtac-response-plan.md` for the
      holding reply and Monday plan.
 
-4. Request the imedtac field dictionary.
-   - Field names, units, required/optional, missing/failed/quality flags.
+4. Request the current imedtac field-dictionary delta against the 5/12 V1.4
+   baseline.
+   - Confirm whether `NBP/SPO2/HR/Temp/Glucose/Height/Weight` and units still
+     match iMVS API `V1.4`.
+   - Required/optional, missing/failed/quality flags.
    - Blood pressure structure.
    - Whether respiratory rate exists as measured, manually entered, or absent.
    - Example payload for one synthetic or demo patient.
@@ -155,8 +158,8 @@ Sources:
 
 | Needed input | Why it matters |
 | --- | --- |
-| Vital Upload API field dictionary | NYCU cannot build the adapter safely from guessed field names. |
-| Example payload | Confirms units, required fields, and null/failure semantics. |
+| Vital Upload API field dictionary delta | NYCU has the 5/12 V1.4 baseline; adapter freeze still needs current demo-machine field-name, optionality, and quality-semantics confirmation. |
+| Example payload | Confirms whether current units match V1.4, which fields are required, and null/failure semantics. |
 | UI insertion point | Confirms the question loop appears after measurement and before report. |
 | Generic question-template support | Confirms NYCU can return a reusable typed question object instead of imedtac hand-coding each question screen. |
 | UI option limits | Controls question wording, option count, label length, and no-scroll design. |

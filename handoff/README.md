@@ -33,6 +33,7 @@ Current detailed discussion artifacts:
 - `handoff/2026-05-21-imedtac-engineering-sync-closeout.md`
 - `handoff/2026-05-21-imvs-nycu-api-design-v0.2-draft.md`
 - `handoff/2026-05-21-imedtac-two-endpoint-api-reply.md`
+- `handoff/2026-05-21-duobao-style-tachycardia-live-demo-question-set.md`
 - `handoff/2026-05-21-imedtac-engineering-open-issues-checklist.md`
 - `handoff/2026-05-21-to-2026-05-25-imedtac-response-plan.md`
 - `handoff/2026-05-21-decision-defaults-and-owner-matrix.md`
@@ -62,6 +63,9 @@ Current v0.2 freeze-gate additions:
 - runtime question IDs are mapped through `../data/api_question_mapping.csv`;
 - respiratory early handoff is registered as
   `FLOW-RESPIRATORY-EARLY-HANDOFF`;
+- tachycardia live demo is registered as `FLOW-TACHYCARDIA-LIVE-DEMO` with the
+  first-lane question template in
+  `2026-05-21-duobao-style-tachycardia-live-demo-question-set.md`;
 - examples carry `case_version`, `fixture_version`, `question_set_version`, and
   `wording_version`;
 - staff summary uses `review_basis` rather than `assessment_support`;
