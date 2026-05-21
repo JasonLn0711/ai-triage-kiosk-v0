@@ -23,10 +23,13 @@ raw_files:
   - transcript-duobao-followup-1358.txt
   - assets/2026-05-15-imedtac-company-meeting-minutes-email.pdf
   - extracted/2026-05-15-imedtac-company-meeting-minutes-email.txt
+  - assets/2026-05-21-imedtac-meeting-minutes-thread-pre-sync.pdf
+  - extracted/2026-05-21-imedtac-meeting-minutes-thread-pre-sync.txt
   - assets/2026-05-15-duobao-demo-case-draft.pdf
   - extracted/2026-05-15-duobao-demo-case-draft.txt
 derived_analysis:
   - company-provided-meeting-minutes.md
+  - pre-sync-thread-snapshot-2026-05-21.md
   - duobao-demo-case-draft.md
   - ../../workstreams/08-june-demo-case-and-integration-plan.md
   - ../../handoff/2026-05-15-june-demo-case-pack-v0.md
@@ -49,6 +52,9 @@ renamed for durable routing:
 | `line-thread-2026-05-15.md` | User-provided LINE export pasted in chat | Full same-day LINE context around the meeting, Notion note, and 多寶's case-design commitment. |
 | `assets/2026-05-15-imedtac-company-meeting-minutes-email.pdf` | `Gmail - [20260515] AI-Triage 可行性 Meeting Minutes.pdf` | 慧誠智醫 / Johnny Fang's company-side meeting minutes email. |
 | `extracted/2026-05-15-imedtac-company-meeting-minutes-email.txt` | Extracted from the company-side PDF | Searchable text for the company-side minutes. |
+| `assets/2026-05-21-imedtac-meeting-minutes-thread-pre-sync.pdf` | `Gmail - [20260515] AI-Triage 可行性 Meeting Minutes.pdf`, exported from Gmail before the 5/21 sync | Three-message thread snapshot: original 5/15 Johnny minutes, 5/20 NYCU API v0.2 pre-read reply, and 5/21 Johnny reply adding Ben Siu from imedtac engineering. |
+| `extracted/2026-05-21-imedtac-meeting-minutes-thread-pre-sync.txt` | Extracted from the 5/21 Gmail thread PDF | Searchable text for the complete pre-sync thread. |
+| `pre-sync-thread-snapshot-2026-05-21.md` | Derived from the 5/21 thread PDF | Complete message-by-message record and progress interpretation for the 5/21 engineering sync. |
 | `assets/2026-05-15-duobao-demo-case-draft.pdf` | `Demo Case.pdf` exported from 多寶's `Demo Case.docx` | 多寶's first clinical case draft with four candidate demo cases. |
 | `extracted/2026-05-15-duobao-demo-case-draft.txt` | Extracted from the demo-case PDF | Searchable text for 多寶's draft cases. |
 | `meeting-record.md` | Derived from all files above | Structured source-backed record and next-step interpretation. |
@@ -80,6 +86,10 @@ June demo execution problem:
   touch/partial voice input, and `8-10` questions, but add confirmation needs
   around `AI 資料訓練 study`, example case categories, output wording, and next
   week's technical sync.
+- The `2026-05-21 09:50` Gmail thread export adds the pre-sync status: NYCU sent
+  the API v0.2 pre-read on `2026-05-20 22:21`, and Johnny added Ben Siu from
+  imedtac engineering on `2026-05-21 09:48` for detailed discussion in the
+  10:00 sync.
 - 多寶 provided the first concrete case draft: acute cholecystitis, AfRVR,
   pneumonia, and URI scenario labels. Treat these as private design anchors and
   clinician-readable target summaries, not as system diagnosis outputs.
@@ -92,6 +102,9 @@ June demo execution problem:
 - Company-provided minutes: `source/2026-05-15-imedtac-second-sync-and-duobao-followup/company-provided-meeting-minutes.md`
 - Company PDF: `source/2026-05-15-imedtac-second-sync-and-duobao-followup/assets/2026-05-15-imedtac-company-meeting-minutes-email.pdf`
 - Company PDF extracted text: `source/2026-05-15-imedtac-second-sync-and-duobao-followup/extracted/2026-05-15-imedtac-company-meeting-minutes-email.txt`
+- 5/21 pre-sync thread snapshot: `source/2026-05-15-imedtac-second-sync-and-duobao-followup/pre-sync-thread-snapshot-2026-05-21.md`
+- 5/21 pre-sync thread PDF: `source/2026-05-15-imedtac-second-sync-and-duobao-followup/assets/2026-05-21-imedtac-meeting-minutes-thread-pre-sync.pdf`
+- 5/21 pre-sync thread extracted text: `source/2026-05-15-imedtac-second-sync-and-duobao-followup/extracted/2026-05-21-imedtac-meeting-minutes-thread-pre-sync.txt`
 - 多寶 demo-case draft: `source/2026-05-15-imedtac-second-sync-and-duobao-followup/duobao-demo-case-draft.md`
 - 多寶 demo-case PDF: `source/2026-05-15-imedtac-second-sync-and-duobao-followup/assets/2026-05-15-duobao-demo-case-draft.pdf`
 - 多寶 demo-case extracted text: `source/2026-05-15-imedtac-second-sync-and-duobao-followup/extracted/2026-05-15-duobao-demo-case-draft.txt`

@@ -12,6 +12,7 @@ status: active
 source_id: IMEDTAC-MINUTES-20260515
 pdf_file: assets/2026-05-15-imedtac-company-meeting-minutes-email.pdf
 extracted_text_file: extracted/2026-05-15-imedtac-company-meeting-minutes-email.txt
+pre_sync_thread_snapshot: pre-sync-thread-snapshot-2026-05-21.md
 related_internal_record: meeting-record.md
 ---
 
@@ -24,6 +25,13 @@ The complete original email is preserved as:
 
 - PDF: `assets/2026-05-15-imedtac-company-meeting-minutes-email.pdf`
 - Searchable text: `extracted/2026-05-15-imedtac-company-meeting-minutes-email.txt`
+
+The complete Gmail thread exported before the `2026-05-21` engineering sync is
+preserved separately:
+
+- Thread snapshot: `pre-sync-thread-snapshot-2026-05-21.md`
+- Thread PDF: `assets/2026-05-21-imedtac-meeting-minutes-thread-pre-sync.pdf`
+- Thread searchable text: `extracted/2026-05-21-imedtac-meeting-minutes-thread-pre-sync.txt`
 
 ## Email Context
 
@@ -139,3 +147,32 @@ This email does not overturn our internal interpretation. It tightens it:
   not broad model training.
 - Prepare the technical sync question list now, because 慧誠 expects technical
   alignment next week.
+
+## 2026-05-21 Pre-Sync Thread Update
+
+The `2026-05-21 09:50` Gmail export confirms that the 5/15 minutes became the
+active pre-sync thread for the Thursday engineering meeting.
+
+Thread additions:
+
+- Jason sent the NYCU API v0.2 pre-read on `2026-05-20 22:21`, recommending a
+  synthetic-data vital-aware intake loop:
+  iMVS synthetic vital payload -> NYCU structured question object and
+  `session_key` -> iMVS structured answer -> NYCU `staff_review_summary`.
+- The NYCU message explicitly asked the 5/21 sync to close actual iMVS field
+  dictionary, UI insertion point, `session_key` ownership, Phase 1 during
+  measurement feasibility, first respiratory case wording, safe summary
+  wording, and confirmed API v0.2 delivery timing.
+- Johnny replied on `2026-05-21 09:48` and added Ben Siu from imedtac
+  engineering to the loop, saying detailed points can be discussed in the
+  meeting.
+
+Updated interpretation:
+
+- The immediate counterparty on 5/21 includes imedtac engineering, not only
+  product coordination.
+- The meeting should be run as an API / integration contract closeout, with
+  clinical wording and stop-rule review kept explicit through 許醫師.
+- The pre-read successfully reframes `AI 資料訓練 study` into a demo-safe
+  synthetic-data / feasibility / API-loop discussion unless imedtac explicitly
+  asks for a different scope.

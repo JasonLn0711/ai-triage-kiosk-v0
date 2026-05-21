@@ -1,0 +1,153 @@
+Gmail - [20260515] AI-Triage 可⾏性 Meeting Minutes                 https://mail.google.com/mail/u/0/?ik=69124dd482&view=p...
+
+
+
+
+                                                                                Jason Lin <cre062400@gmail.com>
+
+
+
+         [20260515] AI-Triage 可⾏性 Meeting Minutes
+         3 messages
+
+         Johnny Fang ⽅偉翰, imedtac Corp. <Johnny.Fang@imedtac.com>                      Fri, May 15, 2026 at 3:25 PM
+         To: "cre062400@gmail.com" <cre062400@gmail.com>, "Jason Miao 苗中聖, imedtac Corp."
+         <Jason.Miao@imedtac.com>
+         Cc: "Ken Yu 余⾦樹, imedtac Corp." <Ken.Yu@imedtac.com>, "ytwu@nycu.edu.tw" <ytwu@nycu.edu.tw>
+
+
+
+          Hi ⼤家好,
+
+          感謝今天會議的討論，本次會議的討論主要圍繞 AI triage 的可⾏性及其相關的醫療和技術細
+          節，以下為會議記錄與後續的 Action Item:
+
+               • AI triage 的範圍
+                     ◦ 以國外 Urgent care 的 AI triage 系統為設計⽬標
+                     ◦ 短期先以六⽉份美國客⼾來訪 Demo 為基礎設計
+               • AI 設計⽅向
+                     ◦ 準備3-5個Demo⽤的傷患案例(eg: 外傷/慢性病/過敏等)，規劃如何在這些案例中
+                        完成⽐較完整的解讀結果
+                     ◦ ⽤⼾⾏為可以以觸控選項勾選/部分語⾳輸⼊等完成，題數控制在8-10題內
+                     ◦ 綜合數據與回答，產出患者的主訴摘要內容給醫⽣
+               • Action Item
+                     ◦ Imedtac
+                           ▪ 流程/Spec規劃
+                           ▪ 技術討論/設計修改
+                           ▪ 待以上內部討論過後，將於下周盡速安排陽交⼤與我們技術端對接的討論
+                     ◦ 陽交⼤
+                           ▪ 研究 3-5 個Demo⽤的傷患案例，並進⾏ AI 資料訓練 study
+                           ▪ 技術架構設計
+
+          以上，有任何建議請再回覆討論
+
+          另外，如需要的話請 Jason 將許醫師也加到 Email Loop 中。
+
+          Thanks,
+          Johnny
+          ---------------
+          Johnny Fang / ⽅偉翰
+          iMedtac Co., Ltd. www.imedtac.com
+          Rm. �, ��F., No.335, Ruiguang Rd. Neihu Dist., Taipei City �����, Taiwan (R.O.C)
+          本通訊及其所有附件所含之資訊均屬機密，僅供指定之收件⼈使⽤，未經寄件⼈許可不得揭露、複製或散布本通
+          訊。若您⾮指定之收件⼈，嚴禁使⽤、保存或揭露本通訊之任何部分，請通知寄件⼈並完全刪除本通訊。網路通訊
+          可能含有病毒，收件⼈應⾃⾏確認本郵件是否安全。此外，該電⼦訊息內容可能被變更，且網際網路並不保證該電
+
+
+
+1 of 3                                                                                                        5/21/26, 09:50
+Gmail - [20260515] AI-Triage 可⾏性 Meeting Minutes                           https://mail.google.com/mail/u/0/?ik=69124dd482&view=p...
+
+
+          ⼦訊息內容之完整性，因此，慧誠智醫股份有限公司及其關係企業對於他⼈變更、修改、竄改或偽造之電⼦訊息內
+          容，恕不負任何責任。 The information contained in this communication and attachment is confidential and is for
+          the use of the intended recipient only. Any disclosure, copying or distribution of this communication without the
+          sender’s consent is strictly prohibited. If you are not the intended recipient, please notify the sender and delete this
+          communication entirely without using, retaining, or disclosing any of its contents. Internet message cannot be
+          guaranteed to be virus-free. The recipient is responsible for ensuring that this message is virus free. Besides, the
+          Message is susceptible to alteration and cannot guarantee the integrity of the Message. Therefore, imedtac Co.,
+          Ltd. and its affiliates shall not be liable for the Message if altered, modified, changed or falsified by any third party.
+
+
+         Jason Lin <cre062400@gmail.com>                                          Wed, May 20, 2026 at 10:21 PM
+         To: "Johnny Fang ⽅偉翰, imedtac Corp." <Johnny.Fang@imedtac.com>
+         Cc: "Jason Miao 苗中聖, imedtac Corp." <Jason.Miao@imedtac.com>, "Ken Yu 余⾦樹, imedtac Corp."
+         <Ken.Yu@imedtac.com>, "ytwu@nycu.edu.tw" <ytwu@nycu.edu.tw>, max870121@gmail.com
+
+          Johnny 與 imedtac team 您們好，
+
+          NYCU 團隊端先整理本次 iMVS / AI Triage Demo API v0.2 的會前閱讀⽂件，供 5/21 sync 直接收斂⼯程與臨床
+          review 決策。
+
+          NYCU 團隊建議六⽉ demo 固定成⼀個 synthetic-data vital-aware intake loop：iMVS 提供合成⽣命徵象 payload，
+          NYCU 團隊回傳結構化 question object 與 session_key，iMVS 回傳結構化回答，NYCU 團隊最後回傳
+          staff_review_summary 給⼯作⼈員 / 臨床⼈員檢閱。
+
+          這份⽂件包含 API v0.2 建議合約、vital payload 欄位⽅向、第⼀個 respiratory demo case、staff_review_summary
+          格式、error fallback，以及 5/21 sync 建議收斂的 owner / date。
+
+          建議確認：
+          - iMVS actual field dictionary；
+          - UI insertion point；
+          - session_key ownership；
+          - Phase 1 during measurement 是否可⾏；
+          - first respiratory case 與 safe summary wording；
+          - confirmed API v0.2 的交付時間。
+
+          祝
+          業安
+
+          林家聖 (Jason Lin)
+          國⽴陽明交通⼤學
+          醫⼯學院 ⽣醫光電研究所 博⼠班
+          Email: cre062400@gmail.com
+
+
+
+
+               NYCU_Response_to_imedtac_AI_Triage_Demo_API_v0.2_1-2026-05-21.pdf
+               179K
+
+
+         Johnny Fang ⽅偉翰, imedtac Corp. <Johnny.Fang@imedtac.com>                     Thu, May 21, 2026 at 9:48 AM
+         To: Jason Lin <cre062400@gmail.com>, "Ben Siu 蕭銳輝, imedtac Corp." <Ben.Siu@imedtac.com>
+         Cc: "Jason Miao 苗中聖, imedtac Corp." <Jason.Miao@imedtac.com>, "Ken Yu 余⾦樹, imedtac Corp."
+         <Ken.Yu@imedtac.com>, "ytwu@nycu.edu.tw" <ytwu@nycu.edu.tw>, "max870121@gmail.com"
+         <max870121@gmail.com>
+
+          Hi Jason,
+          我將⼯程團隊的代表 Ben 加到 loop 中⼀起討論，詳細的細節也可以會議中討論。
+
+
+
+2 of 3                                                                                                                           5/21/26, 09:50
+Gmail - [20260515] AI-Triage 可⾏性 Meeting Minutes            https://mail.google.com/mail/u/0/?ik=69124dd482&view=p...
+
+
+         Thanks,
+         Johnny
+         ---------------
+         Johnny Fang / ⽅偉翰
+         iMedtac Co., Ltd. www.imedtac.com
+         Rm. �, ��F., No.335, Ruiguang Rd. Neihu Dist., Taipei City �����, Taiwan (R.O.C)
+
+         寄件者: Jason Lin <cre062400@gmail.com>
+         寄件⽇期: 2026年5⽉20⽇ 下午 10:21
+         收件者: Johnny Fang ⽅偉翰, imedtac Corp. <Johnny.Fang@imedtac.com>
+         副本: Jason Miao 苗中聖, imedtac Corp. <Jason.Miao@imedtac.com>; Ken Yu 余⾦樹, imedtac Corp.
+         <Ken.Yu@imedtac.com>; ytwu@nycu.edu.tw <ytwu@nycu.edu.tw>; max870121@gmail.com
+         <max870121@gmail.com>
+         主旨: Re: [20260515] AI-Triage 可⾏性 Mee�ng Minutes
+
+         [Quoted text hidden]
+         [Quoted text hidden]
+
+
+               NYCU_Response_to_imedtac_AI_Triage_Demo_API_v0.2_1-2026-05-21.pdf
+               179K
+
+
+
+
+3 of 3                                                                                                  5/21/26, 09:50
+
