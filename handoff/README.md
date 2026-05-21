@@ -28,6 +28,7 @@ Current detailed discussion artifacts:
   - Active copy of the user's manually edited file recorded under
     `source/2026-05-20-nycu-response-to-imedtac-user-edited/`
 - `handoff/2026-05-20-imedtac-pre-meeting-api-v02-pre-read.md`
+- `handoff/2026-05-20-huicheng-pre-meeting-api-v02-pre-read.md`
 - `docs/writing-method-policy.md`
 - `handoff/2026-05-21-imedtac-engineering-sync-prep.md`
 - `handoff/2026-05-21-imedtac-meeting-q-and-a.md`
