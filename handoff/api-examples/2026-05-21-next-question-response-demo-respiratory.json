@@ -14,12 +14,11 @@
   "session_state": "active",
   "last_question_id": "chief-concern",
   "status": "question",
-  "workflow_mode": "parallel_measurement_intake",
-  "measurement_state": "in_progress",
-  "vitals_ready": false,
-  "safe_to_ask_phase1_question": true,
-  "question_phase": "pre_vital_intake",
-  "phase_reason": "Patient-reported dyspnea timing can be collected while vital signs are still being measured.",
+  "workflow_mode": "post_measurement_only",
+  "measurement_state": "complete",
+  "vitals_ready": true,
+  "question_phase": "post_measurement_intake",
+  "phase_reason": "Measured vitals are already available; this question collects dyspnea timing for staff review.",
   "progress": {
     "current": 2,
     "expected_total": 4
@@ -31,13 +30,19 @@
     "evidence_status": "source-family",
     "review_owner": "clinical_reviewer_tbd",
     "type": "single_choice",
+    "ui_template": "single_choice",
     "text": "How long have you felt short of breath?",
     "options": [
       {"id": "today", "label": "Started today"},
       {"id": "few_days", "label": "A few days"},
       {"id": "week_plus", "label": "More than a week"}
     ],
+    "option_count": 3,
     "none_option_id": null,
+    "rendering_constraints": {
+      "requires_no_scroll": true,
+      "max_visible_options_without_scroll": 4
+    },
     "evidence_refs": ["LOCAL-PROTOCOL-TBD"],
     "demo_boundary": "Staff should review this answer with the measured vitals."
   },

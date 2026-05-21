@@ -6,6 +6,9 @@ topic: ai-triage
 type: workstream
 status: active
 source_bundle: ../source/2026-05-15-imedtac-second-sync-and-duobao-followup/
+related_source:
+  - ../source/2026-05-21-imedtac-engineering-sync/meeting-record.md
+  - ../source/2026-05-21-duobao-post-imedtac-internal-sync/meeting-record.md
 ---
 
 # June Demo Case And Integration Plan
@@ -190,7 +193,8 @@ Source and design:
 - `source/2026-05-19-duobao-two-phase-vital-questioning/source.md`
 - `docs/2026-05-19-two-phase-question-flow-design.md`
 
-多寶's workflow insight should be treated as the preferred June demo flow:
+多寶's workflow insight was the preferred pre-sync demo flow and remains the
+future optimized path:
 
 ```text
 Phase 1: ask non-vital-dependent questions while iMVS is measuring
@@ -199,20 +203,18 @@ Phase 1: ask non-vital-dependent questions while iMVS is measuring
 -> staff_review_summary
 ```
 
-This is worth implementing because it uses the patient's measurement waiting
-time and makes the system feel faster without creating a stronger clinical
-claim. It also creates a cleaner engineering boundary: Phase 1 does not depend
-on vital values; Phase 2 cannot begin until `vitals_ready=true`.
+It is worth preserving because it uses the patient's measurement waiting time
+and makes the system feel faster without creating a stronger clinical claim.
+Post-`2026-05-21`, implement the simpler post-measurement loop first, then
+reopen this design after imedtac field and UI integration works.
 
 Implementation decision:
 
 - Add `workflow_mode`, `measurement_state`, `vitals_ready`, `question_phase`,
   and `phase_reason` to API examples.
-- Prefer a new vitals-ready endpoint:
+- Future optimized path: use a new vitals-ready endpoint:
   `POST /api/triage-demo/sessions/{session_key}/vitals`.
-- Keep the original post-measurement-only flow as fallback if 慧誠's kiosk UI
-  cannot safely show questions during measurement or if questions would affect
-  measurement posture / signal quality.
+- Post-sync June path: use post-measurement-only flow as the default.
 - Runtime question metadata now separates `pre_vital_intake` from
   `post_vital_followup`.
 
@@ -417,6 +419,80 @@ Implementation status on `2026-05-20`:
   `FLOW-RESPIRATORY-EARLY-HANDOFF`.
 - `npm run demo:ready` and `python3 scripts/check_governance_registries.py`
   are the current gates before meeting use.
+
+## 2026-05-21 imedtac Engineering Sync Update
+
+Source:
+
+- `source/2026-05-21-imedtac-engineering-sync/meeting-record.md`
+- `handoff/2026-05-21-imedtac-engineering-sync-closeout.md`
+
+The Thursday sync changed the June integration default from the pre-sync
+two-phase proposal to a conservative post-measurement flow:
+
+```text
+iMVS completes vital measurement
+-> iMVS sends measured vital payload to NYCU
+-> NYCU returns session_key + first question
+-> short answer loop
+-> staff_review_summary
+```
+
+Implementation implication:
+
+- Endpoint 1 and Endpoint 3 should be merged for June.
+- The separate vitals-ready endpoint stays as a future optimized design.
+- Voice input is out of the June critical path.
+- The runtime / API examples should be realigned to `post_measurement_only`
+  before the next imedtac rehearsal.
+- Prepare Remote REST API Mode and Local Scripted Demo Mode as two explicitly
+  labeled execution modes.
+
+Case implication:
+
+- Keep the respiratory low-SpO2 lane as the strongest synthetic vital-aware
+  story.
+- Prepare tachycardia / palpitations as the live-performance lane because heart
+  rate can be raised in the room.
+- Use healthy vs unhealthy contrast if the customer needs a more legible live
+  demonstration.
+
+## 2026-05-21 多寶 Post-imedtac Internal Sync Update
+
+Source:
+
+- `source/2026-05-21-duobao-post-imedtac-internal-sync/meeting-record.md`
+- `source/2026-05-21-duobao-post-imedtac-internal-sync/transcript-corrected.md`
+
+The internal follow-up with 多寶 sharpened the June build plan:
+
+```text
+fixed baseline questions
+-> vital-aware question selection from a reviewed question bank
+-> staff_review_summary
+-> human review
+```
+
+Do not build:
+
+```text
+vital signs + answers
+-> AI assigns formal five-level triage result
+```
+
+Planning implications:
+
+- Treat formal triage level, acuity, department, disposition, and immediate
+  action language as out of the June runtime unless a named clinical/company
+  owner explicitly approves it.
+- Keep the AI story narrow: measured vitals help select the next controlled
+  question and help organize the final staff-review summary.
+- Ask imedtac engineering whether their iMVS UI can render reusable typed
+  question templates. A scalable API needs `single_choice`, `multi_choice`,
+  numeric / scale, variable option counts, and no-scroll limits.
+- Schedule an actual iMVS machine review with 多寶 / 許醫師 next week. The flow
+  should be adjusted after observing the real screen order, measurement posture,
+  option capacity, result page, and operator script.
 
 ## What To Build Next
 

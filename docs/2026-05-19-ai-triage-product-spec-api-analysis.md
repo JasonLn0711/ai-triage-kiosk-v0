@@ -6,6 +6,9 @@ topic: ai-triage
 type: analysis
 status: draft
 source_bundle: ../source/2026-05-19-johnny-ai-triage-product-spec/
+related_source:
+  - ../source/2026-05-21-imedtac-engineering-sync/meeting-record.md
+  - ../source/2026-05-21-duobao-post-imedtac-internal-sync/meeting-record.md
 ---
 
 # AI Triage Product Spec API Analysis
@@ -45,6 +48,16 @@ The `2026-05-19` email creates three concrete interface questions:
 4. Can iMVS start Phase 1 questions while measurements are still running, then
    send a vitals-ready payload for Phase 2 vital-aware follow-up?
 
+The `2026-05-21` imedtac engineering sync answered this for the June customer
+demo: use the post-measurement flow first. The two-phase design remains a
+future optimized workflow after the June integration loop is stable.
+
+The `2026-05-21 10:57` internal sync with 多寶 adds one practical API/UI
+requirement: the question object must be reusable enough for iMVS to render
+without hand-coding each question screen. Ask engineering to confirm
+`single_choice`, `multi_choice`, numeric / scale, variable option counts, label
+limits, and no-scroll behavior.
+
 The linked spec adds product-level acceptance criteria that mostly align with a
 choice-first demo: OPQRST-like dynamic questions, fewer than eight questions,
 progress display, single-choice, multi-choice, scale input, and a demo doctor
@@ -58,7 +71,7 @@ than `8` visible patient-facing questions per completed case flow.
 | Spec area | June demo stance | Reason |
 | --- | --- | --- |
 | Vital-sign upload | Include with synthetic or mock iMVS-shaped payload. | This is the core differentiator and the API question 慧誠 is asking now. |
-| Two-phase question flow | Prefer if UI can support it. | Saves patient time: non-vital questions run during measurement; vital-aware questions wait until values are ready. |
+| Two-phase question flow | Future optimized path, not June default after the `2026-05-21` sync. | The June customer demo should minimize iMVS UI and measurement-flow change; ask after measurement is complete. |
 | Dynamic question loop | Include as deterministic session flow. | Matches AC06-AC10 and current runtime direction. |
 | Progress indicator / question budget | Include. | AC07 is explicit and low-risk. |
 | Single-choice / multi-choice | Include. | Already aligned with v0 choice-only runtime. |
@@ -238,6 +251,7 @@ or return a demo staff-summary:
 | Retry/idempotency | A duplicated answer retry could advance the dynamic flow twice. | Add `request_id` and `idempotency_key`. |
 | Session state | The API needs explicit expiry and last-question recovery. | Add `session_expires_at`, `session_state`, and `last_question_id`. |
 | Question type enum | Needed for UI rendering. | Freeze `single_choice`, `multi_choice`, and `scale` first. |
+| Question UI template metadata | Needed to avoid hand-coding each question screen. | Add `ui_template`, `option_count`, rendering constraints, and ask imedtac for option / label limits. |
 | Progress semantics | AC07 asks for visible progress. | Return `current`, `expected_total`, and optional `remaining_estimate`. |
 | "Diagnosis" field wording | Company email uses `診斷等格式`. | Rename our output as `summary` / `staff_review_summary` with `review_basis`, not `diagnosis`. |
 | `plan_support` wording | Expert review flagged SOAP `Plan` wording as risky. | Replace with `review_action` and `staff_handoff_note`. |
@@ -273,11 +287,13 @@ This creates a narrow W21/W22 plan:
 4. Add the v0.2 expert-review fields: session expiry/state, retry keys,
    measurement quality, staff-only visibility, handoff flags, and stable error
    behavior.
-5. Add two-phase flow fields: `workflow_mode`, `measurement_state`,
-   `vitals_ready`, `question_phase`, and `phase_reason`; use a vitals-ready
-   endpoint if 慧誠 can support it.
-6. Build a mock iMVS adapter using synthetic vital payloads.
-7. Rehearse the loop with one early-handoff respiratory case before expanding
+5. For the post-sync June path, set `workflow_mode=post_measurement_only`.
+   Preserve two-phase fields and the vitals-ready endpoint as future optimized
+   mode after the first imedtac loop works.
+6. For the post-Duobao UI gate, confirm generic iMVS question-template support
+   before promising dynamic question expansion.
+7. Build a mock iMVS adapter using synthetic vital payloads.
+8. Rehearse the loop with one early-handoff respiratory case before expanding
    to `3-5` cases.
 
 Do not start a broad product rewrite, real identity integration, real HIS

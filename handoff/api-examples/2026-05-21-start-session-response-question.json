@@ -14,12 +14,11 @@
   "session_state": "active",
   "last_question_id": null,
   "status": "question",
-  "workflow_mode": "parallel_measurement_intake",
-  "measurement_state": "in_progress",
-  "vitals_ready": false,
-  "safe_to_ask_phase1_question": true,
-  "question_phase": "pre_vital_intake",
-  "phase_reason": "This intake question does not depend on measured vital values.",
+  "workflow_mode": "post_measurement_only",
+  "measurement_state": "complete",
+  "vitals_ready": true,
+  "question_phase": "post_measurement_intake",
+  "phase_reason": "Measurement is complete, so the first intake question can start with measured vitals already available.",
   "progress": {
     "current": 1,
     "expected_total": 4
@@ -31,6 +30,7 @@
     "evidence_status": "clinician-signoff-needed",
     "review_owner": "company_clinical_owner_tbd",
     "type": "single_choice",
+    "ui_template": "single_choice",
     "text": "What is the main reason you are using the kiosk today?",
     "options": [
       {"id": "breathing", "label": "Shortness of breath"},
@@ -38,7 +38,12 @@
       {"id": "fever", "label": "Fever or infection concern"},
       {"id": "other", "label": "Something else"}
     ],
+    "option_count": 4,
     "none_option_id": null,
+    "rendering_constraints": {
+      "requires_no_scroll": true,
+      "max_visible_options_without_scroll": 4
+    },
     "evidence_refs": ["LOCAL-PROTOCOL-TBD"],
     "demo_boundary": "Synthetic-data demo question for staff-review intake support."
   },

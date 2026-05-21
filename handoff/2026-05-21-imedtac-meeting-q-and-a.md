@@ -16,6 +16,8 @@ source:
   - ../source/2026-05-19-johnny-line-thursday-engineering-sync/source.md
   - ../source/2026-05-19-johnny-direct-line-thursday-engineering-sync/source.md
   - ../source/2026-05-20-imedtac-personal-pre-meeting-note/AI-Triage_imedtac_Pre-Meeting_Pre-Read_2026-05-21.md
+  - ../source/2026-05-15-imedtac-second-sync-and-duobao-followup/pre-sync-thread-snapshot-2026-05-21.md
+  - ../source/2026-05-21-imedtac-engineering-sync/meeting-record.md
 ---
 
 # imedtac 2026-05-21 Meeting Classified Q&A
@@ -25,9 +27,19 @@ source:
 This Q&A is the classified response sheet for the `2026-05-21` imedtac
 engineering sync. It consolidates earlier anticipated Q&A, the 5/21 engineering
 prep, the owner matrix, the API v0.2 draft, and the personal pre-meeting notes.
+The `2026-05-21 09:50` Gmail thread snapshot confirms that Johnny added Ben Siu
+from imedtac engineering before the sync, so route payload, UI/API, session, and
+fallback details to Ben when the meeting moves from product framing into
+implementation decisions.
 
 Use this as a speaking aid. It is not a clinical protocol, production API
 specification, regulatory submission, or customer-facing claim sheet.
+
+Post-sync note: this file remains useful as the pre-meeting classified answer
+bank, but the `2026-05-21` sync closed several items. The June default is now
+post-measurement-only, Endpoint 1/3 merge for June, voice out of scope, and
+product wording centered on `vital-aware intake support` /
+`staff_review_summary` rather than final clinical triage.
 
 ## Core Position
 
@@ -35,8 +47,9 @@ Recommended opening:
 
 ```text
 六月 demo 的主線是 synthetic-data vital-aware intake support workflow。
-正常路徑是 Remote REST API Mode：iMVS 送 vital payload 與 structured answers，
-NYCU 回 typed questions 與 staff_review_summary。
+正常路徑是 Remote REST API Mode：iMVS 先完成 vital measurement，
+再把 measured vital payload 送給 NYCU，NYCU 回 session_key、typed questions
+與 staff_review_summary。
 備援路徑是 Local Scripted Demo Mode，只用於 demo continuity，必須清楚標示不是 live AI API mode。
 ```
 
@@ -76,6 +89,8 @@ through design.
 | US06-US11: OPQRST dynamic questioning, progress, single choice, multi choice, scale. | Spec-derived, 5/19 product spec | Include deterministic dynamic question flow, progress display, `single_choice`, `multi_choice`, and `scale`; use `<8` visible questions. | These are explicit acceptance expectations and low-risk for June. | Q25, Q34, Q36, Q39 |
 | US14: demo doctor sees AI result page. | Spec-derived, 5/19 product spec | Provide a staff/doctor review page or response with `staff_review_summary`, `summary_visibility=staff_only`, handoff reason codes, and no diagnosis. | Satisfies demo doctor view while preserving safety and human review. | Q23-Q24, Q41 |
 | US15-US16: SOAP / evidence mapping / HIS-side decision support. | Spec-derived, future side | For June, show reviewer-only source placeholders and safe summary fields; defer production SOAP/HIS and full evidence mapping until clinical source governance is complete. | Evidence mapping matters, but unverified clinical references or production HIS writeback would overstate readiness. | Q23, Q29, Q41 |
+| Section 4 User Flow: IT admin configuration, patient measurement/intake flow, and doctor/HIS view. | Spec-derived, required coverage | Include the three-lane flow as design input. June demo covers patient measurement/intake and demo doctor review; IT admin configuration and production HIS view are future-state / imedtac-owned unless explicitly scoped. | This preserves the product spec while keeping June API/demo scope realistic. | Q45 |
+| Section 5 Constraints & Risks: visible non-diagnostic statement. | Spec-derived, required coverage | Include a visible demo boundary and non-diagnostic statement in API responses, UI copy, summary wording, and fallback/error behavior. | This is a required safety constraint and must be visible, not only implied in internal notes. | Q46 |
 
 ## A. Scope And Product Positioning
 
@@ -1152,6 +1167,56 @@ rehearsal 的最小材料。
 
 **Why this answer:** 把可工程凍結的部分和需臨床審查的部分分開，才能同時推進
 demo integration 和安全邊界。
+
+### Q45. 慧誠規格第 4 節 `使用者流程 (User Flow)`，我們有納入嗎？
+
+**Answer:**
+
+有，但需要分成「六月 demo 主線」與「future-state / 慧誠既有系統」兩層來納入。
+
+規格第 4 節有三個維度：
+
+| 慧誠 User Flow | NYCU 目前設計狀態 | 六月回答 |
+| --- | --- | --- |
+| `4.1 IT 管理員：出廠與院內設定` | 部分納入為 API/config assumptions；未做完整 admin UI。 | 六月 demo 不實作 imedtac admin backend。NYCU 需要知道啟用哪些 vital fields、identity mode、workflow mode；管理端配置由 imedtac 既有系統或 demo setup 控制。 |
+| `4.2 用戶（病患）：檢傷量測流程` | 已納入主線。 | iMVS 身分/量測流程後，NYCU API 接收 synthetic or iMVS-shaped vital payload，回傳 structured questions；支援 OPQRST-style dynamic follow-up、progress、single/multi/scale。 |
+| `4.3 醫師：HIS 系統端` | 以 demo doctor / staff-review view 納入；production HIS deferred。 | 六月提供 `staff_review_summary` 或 demo doctor review page；不連接 production HIS / EMR / FHIR，不輸出正式 SOAP A/P 或 final triage level。 |
+
+**Imedtac pre-meeting prompt:** `iMVS AI Triage 智慧檢傷分流系統_20260515`
+第 4 節明確列出 IT 管理端配置、病患端量測/問診流程、醫師端 HIS 檢視流程。
+
+**Why this answer:** 如果全部照產品規格一次做，會變成 admin backend + identity
+integration + production HIS project；六月 demo 應先把 patient measurement/intake
+loop 和 demo doctor review loop 打通，其他保留為 future-state or imedtac-owned setup。
+
+### Q46. 慧誠規格第 5 節 `非功能性需求與限制 (Constraints & Risks)`，我們有納入嗎？
+
+**Answer:**
+
+有，而且這是目前設計中最明確納入的部分。第 5 節目前抽取到的明確限制是：
+
+```text
+系統介面必須在顯眼處標註「本建議僅供分流參考，非正式醫療診斷」
+```
+
+NYCU 設計已經把它落到四個地方：
+
+1. API / summary 欄位使用 `staff_review_summary`，不使用 `diagnosis`。
+2. `not_claimed` 明確列出不診斷、不治療、不指定 final triage level、不寫入 HIS/EMR/FHIR。
+3. UI / demo copy 必須顯示 non-diagnostic boundary。
+4. Error / fallback 時不產生假的 clinical summary，回 standard staff workflow。
+
+建議會議中使用這句：
+
+```text
+本 demo 產生的是 staff-review summary；本建議僅供分流參考，非正式醫療診斷。最終判斷仍由工作人員 / 臨床人員覆核。
+```
+
+**Imedtac pre-meeting prompt:** `iMVS AI Triage 智慧檢傷分流系統_20260515`
+第 5 節明確要求系統介面顯眼標註非診斷性聲明。
+
+**Why this answer:** 這不是 optional wording，而是慧誠規格中的安全限制；如果只
+寫在內部文件而沒有進 API/UI/summary/fallback，就不算真正納入設計。
 
 ## L. Must-Ask Closeout Questions
 

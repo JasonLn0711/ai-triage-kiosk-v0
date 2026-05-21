@@ -2,7 +2,7 @@
   "project_version": "0.2.0",
   "version_scheme": "semver",
   "status": "draft_demo_only",
-  "updated_at": "2026-05-20",
+  "updated_at": "2026-05-21",
   "api_contract": {
     "api_version": "2026-05-22-demo-v0.2-draft",
     "schema_version": "imvs-nycu-triage-demo-schema-v0.2-draft",
@@ -11,7 +11,11 @@
     "fixture_version": "v0.2.0",
     "question_set_version": "respiratory-question-set-v0.2-draft",
     "wording_version": "staff-summary-wording-v0.2-clinical-draft",
-    "workflow_mode": "parallel_measurement_intake"
+    "workflow_mode": "post_measurement_only",
+    "future_workflow_modes": ["parallel_measurement_intake"],
+    "future_workflow_example_files": [
+      "2026-05-21-update-vitals-request-demo-respiratory.json"
+    ]
   },
   "runtime_controls": {
     "package_json": "package.json",

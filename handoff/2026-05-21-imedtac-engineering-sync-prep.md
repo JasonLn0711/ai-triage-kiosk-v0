@@ -12,6 +12,7 @@ source:
   - ../source/2026-05-19-johnny-ai-triage-product-spec/source.md
   - ../source/2026-05-19-expert-review-scope-api-boundary/source.md
   - ../source/2026-05-20-duobao-demo-cases-question-design/source.md
+  - ../source/2026-05-15-imedtac-second-sync-and-duobao-followup/pre-sync-thread-snapshot-2026-05-21.md
 ---
 
 # 慧誠 Thursday Engineering Sync Prep
@@ -66,11 +67,18 @@ measurement-in-progress mode, uses a visible `Vitals ready` transition, and
 keeps the visible patient-facing flow at `7` questions maximum. Use this as the
 meeting demo path instead of discussing the case only from static docs.
 
+Pre-sync email-thread update on `2026-05-21 09:48`: Johnny added Ben Siu from
+imedtac engineering to the Gmail loop and said the detailed points can be
+discussed in the meeting. Treat Ben as the likely engineering-side owner to
+confirm iMVS field dictionary, UI insertion point, session/fallback behavior,
+and delivery timing.
+
 ## Roles
 
 | Person / team | Meeting role | What they should decide |
 | --- | --- | --- |
 | Johnny Fang | Product / coordination owner | June demo target, UI readiness, engineer owner, when API doc is needed. |
+| Ben Siu | imedtac engineering representative | Actual field dictionary, UI/API integration details, session behavior, and engineering follow-up owner/date. |
 | 慧誠 engineering design team | iMVS integration owner | Payload fields, UI insertion point, call sequence, environment, network, failure handling. |
 | Jason | NYCU demo/API owner | Proposed session API, synthetic case flow, runtime boundary, mock adapter plan. |
 | 多寶 | Clinical sanity-check owner | Case plausibility, stop rules, safe summary wording, what must be left to staff/clinician review. |

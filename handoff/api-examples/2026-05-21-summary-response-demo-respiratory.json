@@ -14,7 +14,7 @@
   "session_state": "summary_ready",
   "last_question_id": "lung-history-context",
   "status": "summary",
-  "workflow_mode": "parallel_measurement_intake",
+  "workflow_mode": "post_measurement_only",
   "measurement_state": "complete",
   "vitals_ready": true,
   "question_phase": "summary",

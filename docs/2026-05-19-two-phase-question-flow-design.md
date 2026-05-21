@@ -9,13 +9,32 @@ source:
   - ../source/2026-05-19-duobao-two-phase-vital-questioning/source.md
   - ../source/2026-05-15-imedtac-second-sync-and-duobao-followup/meeting-record.md
   - ../source/2026-05-19-expert-review-scope-api-boundary/source.md
+  - ../source/2026-05-21-imedtac-engineering-sync/meeting-record.md
 ---
 
 # Two-Phase Question Flow Design
 
-## Decision
+## Post-Sync Status
 
-Adopt 多寶's two-phase question-flow idea as the preferred June demo workflow:
+After the `2026-05-21` imedtac engineering sync, this two-phase design is no
+longer the June integration default. It remains the future optimized workflow.
+
+June default:
+
+```text
+iMVS completes measurement
+-> iMVS sends measured vital payload to NYCU
+-> NYCU returns session_key + first question
+-> structured answer loop
+-> staff_review_summary
+```
+
+Reason: imedtac can show the June capability with less UI and measurement-flow
+change by inserting the AI question loop after measurement completion.
+
+## Original Design Decision
+
+Document 多寶's two-phase question-flow idea as the optimized workflow:
 
 ```text
 Phase 1: pre-vital intake while iMVS is measuring
@@ -24,9 +43,10 @@ Phase 1: pre-vital intake while iMVS is measuring
 -> staff_review_summary
 ```
 
-This should become the recommended v0.2 API and UI flow, while preserving the
-existing post-measurement-only flow as fallback if 慧誠 cannot render questions
-during measurement.
+This was the recommended v0.2 API and UI flow before the engineering sync. It
+should now be treated as the optimized post-June path, while the June customer
+demo uses the post-measurement flow unless a later explicit stakeholder
+decision changes it.
 
 Expert freeze-gate update: `measurement_state=in_progress` is not enough to
 prove it is safe to ask questions. The API should include an explicit
@@ -179,7 +199,8 @@ recommend treatment, or write to HIS/EMR.
 
 ## Acceptance Check
 
-The two-phase flow is ready for June only when:
+The two-phase flow is ready for future demo use, or for June only if explicitly
+reopened, when:
 
 - Phase 1 questions are confirmed not to depend on vital values.
 - 慧誠 confirms the specific measurement step is safe for touch interaction.

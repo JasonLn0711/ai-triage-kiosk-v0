@@ -4,11 +4,13 @@ title: "Thursday Decision Defaults And Owner Matrix"
 date: 2026-05-21
 topic: ai-triage
 type: handoff
-status: draft
+status: post-sync updated
 source:
   - ./2026-05-21-imedtac-engineering-sync-prep.md
   - ./2026-05-21-imvs-nycu-api-design-v0.2-draft.md
   - ../source/2026-05-19-expert-review-scope-api-boundary/source.md
+  - ../source/2026-05-21-imedtac-engineering-sync/meeting-record.md
+  - ../source/2026-05-21-duobao-post-imedtac-internal-sync/meeting-record.md
 ---
 
 # Thursday Decision Defaults And Owner Matrix
@@ -21,6 +23,10 @@ Use this as the meeting control sheet for the `2026-05-21 10:00` 慧誠 / Johnny
 The meeting should end with explicit decisions, owners, due dates, and fallback
 rules. Do not leave with only "we will think about it."
 
+Post-sync note: the meeting did close the June workflow default. Use
+`post_measurement_only` for the first June integration pass, merge start-session
+and vital upload, and preserve the two-phase flow as a future optimized path.
+
 ## Recommended Default Decisions
 
 Bring these as NYCU's recommended defaults. They can be changed only if 慧誠
@@ -29,14 +35,16 @@ engineering or 多寶 gives a concrete reason.
 | Decision | Recommended default | Why | If not accepted |
 | --- | --- | --- | --- |
 | `session_key` ownership | NYCU generates `session_key`; iMVS echoes it back. | Keeps dynamic question state in one place for June demo. | 慧誠 must provide their encounter/session id format and retry semantics. |
-| Question timing | Prefer two-phase flow: Phase 1 pre-vital intake during measurement, Phase 2 vital-aware follow-up after values arrive. | Uses measurement waiting time and keeps vital-dependent questions honest. | Use post-measurement-only flow if answering questions disrupts measurement quality or UI cannot support it. |
+| Question timing | Use post-measurement-only flow for June: iMVS completes measurement, then starts the NYCU question loop with measured vitals. | Minimizes imedtac UI / measurement-flow change before the customer demo. | Reopen two-phase only after the June loop works and imedtac confirms safe measurement-time interaction windows. |
+| AI placement | Use AI for vital-aware question selection and staff-review summary organization. Do not return formal triage level. | 多寶 flagged five-level triage assignment as the risky boundary. | If imedtac requires triage-level output, pause and require named clinical/regulatory ownership before implementation. |
+| Question UI template | Ask imedtac to support reusable typed question templates. | Dynamic question flow is not scalable if every question screen is hand-coded. | If generic templates are unavailable, use a local scripted UI and keep API v0.2 as backend/sample-JSON contract. |
 | Output field name | Use `staff_review_summary`. Do not use `diagnosis`. | Prevents downstream UI and customer wording from implying diagnosis. | At minimum use `review_basis`; never label it final diagnosis. |
 | Summary action field | Use `review_action` and `staff_handoff_note`; do not use `plan_support`. | Expert review flagged SOAP `Plan` wording as too close to medical action. | Use only generic staff-review note until 多寶 approves wording. |
 | Summary visibility | Set `summary_visibility: "staff_only"`. | Prevents patient-facing interpretation as a clinical result. | If 慧誠 needs patient display, create separate patient-safe copy after clinical review. |
 | Handoff flags | Include `handoff_required` and stable `handoff_reason_codes`. | Makes the respiratory case an explicit staff-review handoff rather than hidden triage advice. | If not implemented, keep respiratory case as static demo only. |
 | Voice input | Out of June critical path. Optional stretch only. | Voice adds ASR latency, audio privacy, transcript error, and noisy-room failover risk. | Require transcript confirmation, retry/fallback, and no raw-audio retention. |
 | HIS / EMR / FHIR writeback | Future-state only; not implemented in June demo. | Johnny's email already says grey-text HIS return flow is not implemented for this demo. | Show a doctor-view page only; no live writeback. |
-| First case | `fever + dyspnea + low SpO2`, ending in early staff-review handoff after about four questions. | Best first demonstration that measured vitals affect follow-up without pretending to finish autonomous triage. | 多寶 chooses one alternative case and defines stop rule before engineering starts. |
+| First case | Keep respiratory as the synthetic API proof and prepare tachycardia / palpitations as the live-performance candidate. | Respiratory best shows vital-aware logic; tachycardia is easier to perform with a real person. | Use healthy vs unhealthy contrast with synthetic values if live vital control is unreliable. |
 | Case count | One full loop first, then expand to `3-5` cases. | One complete case is safer than several incomplete flows. | Extra cases stay fixtures only until one loop is integrated. |
 | Evidence refs | Use `LOCAL-PROTOCOL-TBD` for unresolved source mapping. | Honest boundary; avoids claiming BMJ / NICE / UpToDate support without mapped text. | Only cite named sources when exact source text and question mapping are reviewed. |
 | Patient identity | Use `demo_patient_id`; no real name, MRN, ID, phone, or raw audio. | Keeps demo local-safe and non-clinical. | If real identifiers are requested, stop and create separate governance path. |
@@ -73,6 +81,8 @@ These are the questions that must have owners by the end of the call.
 - Should iMVS or NYCU own session state?
 - Can iMVS render `single_choice`, `multi_choice`, `scale`, progress, and
   mutually exclusive "none of these" behavior?
+- Can option count vary per question, and what is the maximum no-scroll option
+  count / label length?
 - Can 慧誠 freeze `measurement_timestamp`, `device_id`, `measurement_status`,
   `quality_flag`, and `missing_reason` semantics for v0.2?
 - Can each vital carry its own `measurement_status`, `quality_flag`, and
@@ -88,13 +98,21 @@ These are the questions that must have owners by the end of the call.
 
 ## Meeting Closeout Matrix
 
+Post-sync resolved items:
+
+- June question timing: post-measurement-only.
+- Voice input: out of June critical path.
+- Endpoint 1/3: merge for June.
+- Session key: NYCU generates, iMVS echoes.
+- Product wording: staff-review intake support, not final clinical triage.
+
 Fill this table before the call ends.
 
 | Owner | Deliverable | Due | Acceptance check | If missing |
 | --- | --- | --- | --- | --- |
 | 慧誠 engineering | iMVS synthetic vital payload example and field dictionary. | `2026-05-22` proposed | Includes field names, units, required/optional, missing-value representation. | NYCU uses current synthetic field names and marks integration as mock-only. |
 | 慧誠 engineering | Required/optional field rule plus missing/failure representation. | `2026-05-22` proposed | Defines `measurement_status`, `quality_flag`, and `missing_reason` for each vital or for the payload. | NYCU uses generic quality flags only; adapter remains provisional. |
-| 慧誠 engineering / UI | Two-phase UI feasibility decision. | `2026-05-22` proposed | Confirms whether Phase 1 questions can appear during measurement without disrupting posture/signal quality. | Use post-measurement-only flow. |
+| 慧誠 engineering / UI | Post-measurement UI insertion confirmation. | `2026-05-22` proposed | Confirms the AI question loop appears after measurement and before final report / result preview. | Use separate NYCU demo page; no claim of iMVS integration. |
 | 慧誠 engineering | UI insertion decision. | `2026-05-22` proposed | Names same-app / iframe / external link / backend API / demo-only handoff. | Use separate NYCU demo page; no claim of iMVS integration. |
 | 慧誠 engineering | Demo environment constraints. | `2026-05-22` proposed | Confirms internet, external HTTPS, CORS/firewall/VPN, local fallback. | Build local static/mock flow only. |
 | Johnny | Demo date and expected audience story. | `2026-05-21` call | Names customer-demo date and whether it is UI/API/workflow proof. | Keep scope to API skeleton and one synthetic case. |
@@ -102,7 +120,7 @@ Fill this table before the call ends.
 | Jason / NYCU | API design v0.2. | `2026-05-22` proposed | Updated with confirmed field names, session ownership, question enum, error behavior. | Keep v0.1 as discussion draft; do not implement adapter. |
 | Jason / NYCU | API question mapping and respiratory flow registry. | `2026-05-22` proposed | Runtime question IDs map to registry/source/review rows and `FLOW-RESPIRATORY-EARLY-HANDOFF` is registered. | Do not call API v0.2 frozen. |
 | Jason / NYCU | Mock adapter / static integration rehearsal plan. | `2026-05-25` proposed | One respiratory case can run through request/answer/summary examples. | Do not expand to more cases. |
-| 多寶 | Respiratory case approval. | `2026-05-22` proposed | Confirms `fever + dyspnea + low SpO2` is acceptable as the first early-handoff case. | Use only static API example; no live clinical-looking flow. |
+| 多寶 | First case-lane approval. | `2026-05-22` proposed | Chooses respiratory synthetic, tachycardia live-performance, or paired healthy/unhealthy contrast as the first customer-visible lane. | Use only static API example; no live clinical-looking flow. |
 | 多寶 | Stop rule, forbidden wording, and safe summary wording. | `2026-05-22` proposed | Approves safe summary wording and flags forbidden phrasing. | Use only generic staff-review wording; no vital interpretation beyond measured values. |
 | 多寶 | Case expansion priority. | `2026-05-22` proposed | Chooses second case: abdominal pain + fever, tachycardia/chest tightness, or URI contrast. | Keep only respiratory case in engineering path. |
 | Privacy/security owner | Demo data and endpoint boundary. | `2026-05-22` proposed | Confirms no real identifiers, no raw audio, no production endpoint, and acceptable log/screenshot handling. | Keep demo offline/static; do not connect to iMVS runtime. |

@@ -4,12 +4,14 @@ title: "iMVS / NYCU AI Triage Demo API Design v0.2 Draft"
 date: 2026-05-21
 topic: ai-triage
 type: handoff
-status: pre-sync draft
+status: post-sync update needed
 audience: Johnny Fang and imedtac engineering design team
 source:
   - ../source/2026-05-19-johnny-ai-triage-product-spec/source.md
   - ../source/2026-05-19-johnny-line-thursday-engineering-sync/source.md
   - ../source/2026-05-19-expert-review-scope-api-boundary/source.md
+  - ../source/2026-05-21-imedtac-engineering-sync/meeting-record.md
+  - ../source/2026-05-21-duobao-post-imedtac-internal-sync/meeting-record.md
 ---
 
 # iMVS / NYCU AI Triage Demo API Design v0.2 Draft
@@ -29,19 +31,30 @@ iMVS vital-sign payload
   -> NYCU next question or staff_review_summary
 ```
 
-This is NYCU's proposed pre-sync API v0.2 draft. It is safe to use for the
-Thursday engineering discussion, but it is not the confirmed / frozen bilateral
-contract until 慧誠 confirms actual payload field names, units,
-required/optional fields, missing/failure semantics, UI insertion point, and
-session ownership.
+This file began as NYCU's pre-sync API v0.2 draft. After the sync, treat it as
+the working base for the confirmed post-sync API update. It is not frozen until
+慧誠 confirms actual payload field names, units, required/optional fields,
+missing/failure semantics, UI insertion point, and session ownership.
 
-After the Thursday sync, produce the confirmed `2026-05-22` API v0.2 from this
-draft and `handoff/2026-05-22-api-v0.2-requirements-from-expert-review.md`.
+Post-sync update on `2026-05-21`: the Thursday sync selected the simpler June
+path. The first integration pass should be `post_measurement_only`, with iMVS
+completing measurement before starting the NYCU session and sending the vital
+payload in that first call.
 
-多寶 workflow update: if 慧誠's UI can support it, prefer a two-phase flow:
-Phase 1 asks non-vital-dependent questions while iMVS is still measuring vital
-signs; Phase 2 asks vital-aware follow-up only after values are available. See
-`docs/2026-05-19-two-phase-question-flow-design.md`.
+This means Endpoint 1 and Endpoint 3 should be merged for June. The separate
+vitals-ready endpoint remains the optimized future flow described in
+`docs/2026-05-19-two-phase-question-flow-design.md`, not the current June
+default.
+
+After the sync, produce the confirmed post-sync API v0.2 from this draft,
+`handoff/2026-05-22-api-v0.2-requirements-from-expert-review.md`, and
+`source/2026-05-21-imedtac-engineering-sync/meeting-record.md`.
+
+Post-Duobao internal sync update on `2026-05-21 10:57`: do not design this API
+as a formal triage-level output API. The API should return typed questions and
+staff-review summaries. The new engineering question is whether iMVS can render
+a reusable question object with variable options, progress, and numeric / scale
+metadata, instead of requiring one hand-coded screen per clinical question.
 
 ## Demo Boundary
 
@@ -61,7 +74,7 @@ output field. Expert freeze-gate update: prefer `review_basis` over
 `assessment_support` because the latter can be confused with SOAP Assessment.
 Do not name the output field `diagnosis`.
 
-## Endpoint 1: Start Triage Session / Phase 1 Intake
+## Endpoint 1: Start Triage Session With Measured Vitals
 
 ```http
 POST /api/triage-demo/sessions
@@ -88,10 +101,10 @@ Required fields:
 | `wording_version` | string | yes | Staff-summary wording version pending clinical signoff. |
 | `request_id` | string | yes | Client-generated request id for tracing and retry discussion. |
 | `idempotency_key` | string | yes | Prevents duplicate start-session retries from creating duplicate workflow advancement. |
-| `workflow_mode` | string | yes | Preferred: `parallel_measurement_intake`. Fallback: `post_measurement_only`. |
-| `measurement_state` | string | yes | `in_progress` when asking Phase 1 during measurement; `complete` for post-measurement fallback. |
-| `vitals_ready` | boolean | yes | `false` during Phase 1; `true` after measured vital payload arrives. |
-| `safe_to_ask_phase1_question` | boolean | yes when measurement is active | True only when 慧誠 confirms the current measurement step can safely accept touch questions. |
+| `workflow_mode` | string | yes | Post-sync June default: `post_measurement_only`. Future optimized value: `parallel_measurement_intake`. |
+| `measurement_state` | string | yes | June default: `complete` because iMVS calls this endpoint after measurement. |
+| `vitals_ready` | boolean | yes | June default: `true` because measured vitals are included in this first call. |
+| `safe_to_ask_phase1_question` | boolean | no for June default | Only needed for future `parallel_measurement_intake`. |
 | `client.source` | string | yes | Example: `imvs-demo`. |
 | `client.locale` | string | yes | Example: `en-US`. |
 | `patient_context.demo_patient_id` | string | yes | Demo-only ID. Do not send real MRN or name. |
@@ -107,6 +120,9 @@ Required fields:
 | `vitals.<field>.missing_reason` | string/null | no | Required when a vital is missing or failed. |
 | `capabilities.question_types` | array | yes | `single_choice`, `multi_choice`, `scale`. |
 | `capabilities.max_questions` | number | yes | Current June design cap follows the 慧誠 / iMVS product spec: fewer than `8` visible patient-facing questions; use `7` as the hard maximum. |
+| `capabilities.max_options_per_question` | number | ask imedtac | Needed to keep iMVS screens readable without scrolling. |
+| `capabilities.max_option_label_length` | number | ask imedtac | Needed to avoid text overflow on the kiosk display. |
+| `capabilities.variable_option_count` | boolean | ask imedtac | Confirms whether NYCU may return different option counts per question. |
 | `capabilities.voice_input` | boolean | yes | Recommended `false` for June critical path. |
 
 ### Response
@@ -129,7 +145,7 @@ Required fields:
 | `workflow_mode` | string | yes | Echoes the chosen workflow mode. |
 | `measurement_state` | string | yes | Current measurement state. |
 | `vitals_ready` | boolean | yes | Whether Phase 2 can start. |
-| `question_phase` | string | yes if `status=question` | `pre_vital_intake` or `post_vital_followup`. |
+| `question_phase` | string | yes if `status=question` | June default may use `post_measurement_intake`; future two-phase uses `pre_vital_intake` or `post_vital_followup`. |
 | `phase_reason` | string | yes if `status=question` | Short reason why this question is allowed in the current phase. |
 | `progress.current` | number | yes | Required for AC07 progress display. |
 | `progress.expected_total` | number | yes | Can be estimated for dynamic flows. |
@@ -139,9 +155,13 @@ Required fields:
 | `question.evidence_status` | string | yes | Current evidence status. |
 | `question.review_owner` | string | yes | Owner for wording/source review. |
 | `question.type` | string | yes if `status=question` | `single_choice`, `multi_choice`, or `scale`. |
+| `question.ui_template` | string | yes if `status=question` | Proposed: same value as `question.type` unless imedtac has separate template names. |
 | `question.text` | string | yes if `status=question` | Rendered question text. |
 | `question.options` | array | yes for choice types | Stable option ids and labels. |
+| `question.option_count` | number | yes for choice types | Number of options in this response; lets iMVS validate template capacity. |
 | `question.none_option_id` | string/null | no | Used for mutually exclusive "none" option. |
+| `question.rendering_constraints.max_visible_options_without_scroll` | number | no until imedtac confirms | Display limit for customer-demo readability. |
+| `question.rendering_constraints.requires_no_scroll` | boolean | no until imedtac confirms | Recommended `true` for customer-facing demo screens. |
 | `question.evidence_refs` | array | no | For demo, may be `LOCAL-PROTOCOL-TBD`. |
 | `demo_boundary` | string | yes | Explicit demo-only boundary. |
 
@@ -173,9 +193,9 @@ Required fields:
 | `request_id` | string | yes | Client-generated id for tracing one answer submission. |
 | `idempotency_key` | string | yes | Prevents retry from advancing the question flow twice. |
 | `session_key` | string | yes | Same key returned by Endpoint 1. |
-| `workflow_mode` | string | yes | `parallel_measurement_intake` for the optimized flow. |
-| `measurement_state` | string | yes | Current measurement state from iMVS. |
-| `vitals_ready` | boolean | yes | Whether the measured vital payload has been sent. |
+| `workflow_mode` | string | yes | June default: `post_measurement_only`. |
+| `measurement_state` | string | yes | June default: `complete`. |
+| `vitals_ready` | boolean | yes | June default: `true`. |
 | `question_phase` | string | yes | Phase of the question being answered. |
 | `question_id` | string | yes | The question being answered. |
 | `answer.selected_option_ids` | array | yes for choice questions | Empty only when scale is used. |
@@ -194,9 +214,11 @@ The response follows the same `status=question` structure as Endpoint 1.
 
 ## Endpoint 3: Submit Vital Payload When Ready
 
-Use this endpoint only for the optimized two-phase workflow. It allows Phase 1
-questions to run during measurement, then starts Phase 2 after vital signs are
-available.
+Post-sync status: out of the June default path.
+
+Use this endpoint only for the optimized future two-phase workflow. It allows
+Phase 1 questions to run during measurement, then starts Phase 2 after vital
+signs are available.
 
 ```http
 POST /api/triage-demo/sessions/{session_key}/vitals
@@ -223,9 +245,9 @@ Required fields:
 | `vitals_ready` | boolean | yes | `true` only when measured values and quality flags are available. |
 | `vitals` | object | yes | Measured vital payload plus quality fields. |
 
-Fallback: if 慧誠 cannot add Endpoint 3 for June, use the original
-post-measurement-only flow: call Endpoint 1 only after all synthetic vital
-values are available.
+June default: do not require Endpoint 3. Call Endpoint 1 only after measured or
+synthetic vital values are available. Reintroduce Endpoint 3 only for the future
+two-phase workflow.
 
 ### Response: Staff Summary
 
@@ -242,7 +264,7 @@ Required fields:
 | `session_state` | string | yes | `summary_ready`. |
 | `last_question_id` | string | yes | Last answered question before summary. |
 | `status` | string | yes | `summary`. |
-| `workflow_mode` | string | yes | `parallel_measurement_intake` or fallback mode. |
+| `workflow_mode` | string | yes | June default: `post_measurement_only`; future optimized flow may use `parallel_measurement_intake`. |
 | `measurement_state` | string | yes | `complete` unless an error occurred. |
 | `vitals_ready` | boolean | yes | Must be `true` for a staff summary. |
 | `question_phase` | string | yes | `summary`. |
@@ -261,6 +283,9 @@ Required fields:
 
 ## Question Types
 
+The API should let imedtac render a small set of reusable templates. This is
+the practical alternative to hand-coding every possible question screen.
+
 ### `single_choice`
 
 Use for mutually exclusive answers.
@@ -268,10 +293,16 @@ Use for mutually exclusive answers.
 ```json
 {
   "type": "single_choice",
+  "ui_template": "single_choice",
+  "option_count": 2,
   "options": [
     {"id": "today", "label": "Started today"},
     {"id": "days", "label": "A few days"}
-  ]
+  ],
+  "rendering_constraints": {
+    "requires_no_scroll": true,
+    "max_visible_options_without_scroll": 4
+  }
 }
 ```
 
@@ -283,6 +314,8 @@ should clear other selected options.
 ```json
 {
   "type": "multi_choice",
+  "ui_template": "multi_choice",
+  "option_count": 3,
   "none_option_id": "none",
   "options": [
     {"id": "cough", "label": "Cough"},
@@ -299,6 +332,7 @@ Use for pain / severity.
 ```json
 {
   "type": "scale",
+  "ui_template": "scale",
   "scale": {
     "min": 0,
     "max": 10,
@@ -389,6 +423,9 @@ Use `demo_patient_id` only.
 - Which fields are guaranteed vs optional.
 - Whether NYCU may generate `session_key`.
 - Where AI triage appears in the UI flow.
+- Whether iMVS can render reusable question templates from a typed question
+  object: `single_choice`, `multi_choice`, numeric / scale, variable option
+  counts, option length limits, and no-scroll behavior.
 - Whether June demo may call an external HTTPS endpoint or laptop API.
 - Whether local mock fallback is acceptable.
 - Required language: English only, Chinese only, or bilingual.

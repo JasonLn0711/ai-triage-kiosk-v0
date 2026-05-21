@@ -57,9 +57,13 @@ def main() -> int:
                 errors.append(
                     f"{path.relative_to(ROOT)} {key}={payload.get(key)!r} != {api_contract[key]!r}"
                 )
-        if payload.get("workflow_mode") != api_contract["workflow_mode"]:
+        future_workflow_files = set(api_contract.get("future_workflow_example_files", []))
+        allowed_workflow_modes = {api_contract["workflow_mode"]}
+        if path.name in future_workflow_files:
+            allowed_workflow_modes.update(api_contract.get("future_workflow_modes", []))
+        if payload.get("workflow_mode") not in allowed_workflow_modes:
             errors.append(
-                f"{path.relative_to(ROOT)} workflow_mode={payload.get('workflow_mode')!r} != {api_contract['workflow_mode']!r}"
+                f"{path.relative_to(ROOT)} workflow_mode={payload.get('workflow_mode')!r} not in {sorted(allowed_workflow_modes)!r}"
             )
 
     manifest_flow_versions = manifest.get("flow_versions", {})

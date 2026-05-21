@@ -11,6 +11,8 @@ source:
   - ../handoff/2026-05-21-imvs-nycu-api-design-v0.2-draft.md
   - ./demo-acceptance-criteria.md
   - ../decisions/2026-05-20-june-demo-question-budget.md
+  - ../source/2026-05-21-imedtac-engineering-sync/meeting-record.md
+  - ../source/2026-05-21-duobao-post-imedtac-internal-sync/meeting-record.md
 ---
 
 # Duobao Demo Design Consistency Review
@@ -39,6 +41,17 @@ patient name + all-specialty questionnaire
 -> suggested acuity / disposition / department / immediate action
 ```
 
+Post-`2026-05-21` sync note: use `post_measurement_only` as the June integration
+default. The two-phase model below remains useful as a future optimized design,
+but the next imedtac rehearsal should first align runtime / API examples to
+measurement complete -> vital payload -> question loop -> staff summary.
+
+Post-Duobao internal sync note: this review should be read even more
+conservatively. 多寶's key warning is that collecting facts and generating a
+staff-readable summary is acceptable for the demo, while asking AI to return a
+formal triage level is the risky boundary. The practical AI placement is
+question selection plus summary organization, not a final five-level result.
+
 ## What Aligns Well
 
 | 多寶 draft element | Repo alignment |
@@ -46,7 +59,7 @@ patient name + all-specialty questionnaire
 | Four demo scenarios: abdominal pain/fever, palpitation/chest tightness, dyspnea/low SpO2, URI contrast. | Matches the existing `3-5` synthetic urgent-care demo plan and the earlier 多寶 case anchors. |
 | Choice-first symptom questions. | Matches the current runtime's no-free-text / no-ASR v0 boundary. |
 | Numeric pain scale. | Matches the product spec's AC11 scale requirement; useful before showing abdominal pain or back pain. |
-| Post-vital follow-up questions. | Matches the two-phase design: Phase 2 starts after `vitals_ready=true`. |
+| Post-vital follow-up questions. | Matches both the post-sync June flow and the future two-phase design because vital-aware questions start only after measured values are available. |
 | SOAP-shaped staff output. | Useful as a staff-summary structure, but field names and claim strength must be rewritten. |
 
 ## Inconsistencies To Fix Before Runtime Use
@@ -59,8 +72,9 @@ patient name + all-specialty questionnaire
 | Diagnosis-shaped case labels. | `Acute Cholecystitis`, `AfRVR`, `Pneumonia`, `URI`. | Useful as internal scenario labels, risky as system output. | Keep labels internal. Runtime summary must describe symptoms/vitals, not diagnose. |
 | Vital thresholds as fixed rules. | Temperature, SpO2, HR, BP, RR trigger tables. | Repo treats thresholds as clinical validation gates, not source-verified rules. | Mark as `clinical-signoff-needed`; use only as synthetic-demo routing until owner approves. |
 | Question count expansion. | Initial + symptom-specific + universal + post-vital can exceed the 慧誠 / iMVS product-spec limit. | Current June decision follows the product-spec requirement: fewer than `8` visible patient-facing questions. | Count only visible patient questions; keep the first respiratory flow around `5-7` questions and never exceed `7`. |
+| Hand-coded question screens. | Any flow requiring a new UI screen for each question. | The post-meeting internal sync identified this as a scalability blocker for an AI-guided question loop. | Ask imedtac to confirm reusable `single_choice`, `multi_choice`, numeric / scale, variable-option, and no-scroll templates. |
 | Universal phase asks every patient PMH/surgery/medication/allergy/pregnancy. | Section 2 universal phase. | Useful, but too heavy for June and can create sensitive-data capture. | For demo, ask only medication/allergy or pregnancy when relevant, as staff-review context. |
-| Flow chart timing is ambiguous. | Symptom-specific phase can trigger abnormal vitals even though vitals timing is not explicit. | Current API has explicit `measurement_state`, `vitals_ready`, and two-phase flow. | Rewrite flow as Phase 1 pre-vital intake -> vitals-ready payload -> Phase 2 vital-aware follow-up. |
+| Flow chart timing is ambiguous. | Symptom-specific phase can trigger abnormal vitals even though vitals timing is not explicit. | Post-sync June flow starts questions after measurement; future two-phase flow needs explicit `measurement_state` and `vitals_ready`. | For June, rewrite as measurement complete -> vital payload -> question loop. For future optimized flow, use Phase 1 pre-vital intake -> vitals-ready payload -> Phase 2 vital-aware follow-up. |
 | Fever threshold mismatch. | Question design says `T > 37.5°C`; URI case treats `T 37.5°C` as fever trigger. | Strict `>` does not include exactly `37.5`; this could confuse demo behavior. | Either change to demo wording "temperature cue" or have clinical owner freeze `>=` / `>` threshold. |
 | Respiratory-rate mismatch. | Question design triggers RR only at `>24 or <10`; URI case marks RR `21` as mild tachypnea, pneumonia marks RR `23` as abnormal. | The cases and trigger table disagree. | Do not present RR 21/23 as a rule-driven abnormality until threshold is approved; call it a synthetic review cue if needed. |
 
@@ -142,3 +156,4 @@ Do not import the full question bank into runtime yet. Instead:
 | Whether department recommendation is allowed in June. | company product + clinical owner |
 | Whether universal PMH/medication/allergy/pregnancy questions are required for every case. | 多寶 + company UI owner |
 | Whether Phase 1 questions can run during measurement without affecting measurement quality. | 慧誠 engineering / UI owner |
+| Whether iMVS can render generic typed question templates with variable options. | 慧誠 engineering / UI owner |

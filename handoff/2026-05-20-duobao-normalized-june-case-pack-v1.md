@@ -11,6 +11,8 @@ source:
   - ../docs/2026-05-20-duobao-demo-design-consistency-review.md
   - ../decisions/2026-05-20-june-demo-question-budget.md
   - ./2026-05-21-imvs-nycu-api-design-v0.2-draft.md
+  - ../source/2026-05-21-imedtac-engineering-sync/meeting-record.md
+  - ../source/2026-05-21-duobao-post-imedtac-internal-sync/meeting-record.md
 ---
 
 # Duobao Normalized June Demo Case Pack v1
@@ -28,10 +30,20 @@ reviewable bridge:
 多寶 clinical draft
 -> demo-safe case labels
 -> fewer-than-8 visible questions
--> two-phase question flow
+-> post-measurement June question flow
 -> staff_review_summary
 -> explicit clinical-review questions
 ```
+
+Post-`2026-05-21` sync note: the June integration default is now
+`post_measurement_only`. The two-phase flow remains a future optimized path,
+but the next imedtac rehearsal should start from measured vital payload ->
+question loop -> staff-review summary.
+
+Post-Duobao internal sync note: treat 多寶's diagnosis-shaped case labels and
+draft triage levels as internal design anchors only. The customer-visible loop
+should demonstrate vital-aware question selection and staff-review summary
+generation, not AI assignment of formal triage level.
 
 ## Boundary
 
@@ -73,10 +85,10 @@ clinical design discussion because they explain why the synthetic vitals and
 symptoms were chosen. They should not be shown as system conclusions. Runtime
 labels should describe patient-facing symptoms and vital cues instead.
 
-### Why use the two-phase flow?
+### Why keep the two-phase flow as future optimized path?
 
-The two-phase flow keeps the demo fast without pretending to interpret vital
-signs before they exist:
+The two-phase flow can keep a future demo fast without pretending to interpret
+vital signs before they exist:
 
 ```text
 Phase 1: ask non-vital-dependent questions during measurement
@@ -85,8 +97,9 @@ Phase 1: ask non-vital-dependent questions during measurement
 -> staff_review_summary
 ```
 
-This also matches the API shape that is already being prepared for the 慧誠
-engineering discussion.
+After the `2026-05-21` engineering sync, it should not be the first June
+integration default. Use post-measurement first, then reopen two-phase after the
+basic imedtac payload -> NYCU answer loop works.
 
 ### Why keep each flow under seven questions?
 
@@ -340,9 +353,10 @@ Ask 多寶 to review only the following high-value items first:
 
 Implementation status as of `2026-05-20`: Case 1 has been translated into the
 clickable kiosk runtime as `respiratory-low-spo2-early-handoff`. The runtime
-uses a two-phase flow, starts with measurement in progress, exposes a `Vitals
-ready` transition, and caps the visible patient-facing sequence at `7`
-questions.
+uses the pre-sync two-phase flow, starts with measurement in progress, exposes a
+`Vitals ready` transition, and caps the visible patient-facing sequence at `7`
+questions. After the `2026-05-21` sync, this runtime should be adapted or
+wrapped for a post-measurement June rehearsal before customer-demo use.
 
 Completed items:
 
@@ -366,7 +380,10 @@ npm run demo:ready
 Next after 多寶 / 慧誠 review:
 
 1. Ask 多寶 to approve or edit the seven visible questions.
-2. Add abdominal-pain and tachycardia fixtures only after Case 1 wording is
+2. Ask imedtac engineering whether iMVS can render the question templates used
+   here: `single_choice`, `multi_choice`, numeric / scale, variable option
+   counts, and no-scroll display limits.
+3. Add abdominal-pain and tachycardia fixtures only after Case 1 wording is
    accepted.
 
 ## What Not To Do Yet

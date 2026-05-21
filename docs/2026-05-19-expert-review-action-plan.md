@@ -5,7 +5,9 @@ date: 2026-05-19
 topic: ai-triage
 type: analysis
 status: active
-source: ../source/2026-05-19-expert-review-scope-api-boundary/source.md
+source:
+  - ../source/2026-05-19-expert-review-scope-api-boundary/source.md
+  - ../source/2026-05-21-imedtac-engineering-sync/meeting-record.md
 ---
 
 # Expert Review Action Plan
@@ -54,7 +56,17 @@ Assessment:
 
 ### Workflow phase
 
-Adopt 多寶's two-phase workflow if 慧誠 can support it:
+Post-`2026-05-21` sync update: use `post_measurement_only` as the June default:
+
+```text
+iMVS completes measurement
+-> measured vital payload starts NYCU session
+-> answer loop
+-> staff_review_summary
+```
+
+Keep 多寶's two-phase workflow as the future optimized path after the June loop
+works:
 
 - Phase 1: pre-vital intake questions during measurement;
 - vitals-ready payload / event;
@@ -198,7 +210,9 @@ Avoid:
 2. Add API question-to-registry mapping and respiratory flow registry row.
 3. Add API v0.2 requirements file for the `2026-05-22` post-sync deliverable.
 4. Update Thursday owner matrix with privacy/security owner.
-5. Confirm whether 慧誠 can support the two-phase measurement-time question flow.
-6. After Thursday sync, convert confirmed field names into API v0.2.
+5. Convert the API docs/examples from the pre-sync two-phase default to the
+   post-sync `post_measurement_only` June default.
+6. Convert confirmed imedtac field names into API v0.2 when the field
+   dictionary arrives.
 7. Keep the runtime forbidden-language smoke check passing before broader demo
    sharing.

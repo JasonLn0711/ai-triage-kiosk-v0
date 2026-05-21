@@ -11,7 +11,7 @@
   "response_id": "resp-demo-resp-error-quality-001",
   "session_key": "demo-session-resp-001",
   "session_state": "error",
-  "workflow_mode": "parallel_measurement_intake",
+  "workflow_mode": "post_measurement_only",
   "measurement_state": "failed",
   "vitals_ready": false,
   "status": "error",

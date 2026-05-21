@@ -8,6 +8,8 @@ status: draft
 source:
   - ../handoff/2026-05-21-imvs-nycu-api-design-v0.2-draft.md
   - ../handoff/2026-05-21-decision-defaults-and-owner-matrix.md
+  - ../source/2026-05-21-imedtac-engineering-sync/meeting-record.md
+  - ../source/2026-05-21-duobao-post-imedtac-internal-sync/meeting-record.md
 ---
 
 # API Session Design Plain Explanation
@@ -20,6 +22,44 @@ source:
   that 慧誠 engineers can connect to iMVS.
 - Boundary: this is a demo integration contract, not a clinical product,
   diagnosis engine, or HIS writeback system.
+
+## 2026-05-21 Post-Sync Update
+
+The imedtac engineering sync chose the simpler June flow:
+
+```text
+iMVS finishes measuring vitals
+-> iMVS sends measured vital payload when starting the NYCU session
+-> NYCU returns session_key + first question
+-> answer loop
+-> staff_review_summary
+```
+
+So the first June implementation can be two endpoints:
+
+```text
+POST /api/triage-demo/sessions
+POST /api/triage-demo/sessions/{session_key}/answers
+```
+
+The separate vitals-ready endpoint remains useful for the future two-phase flow,
+but it is not the first June default.
+
+The post-meeting internal sync with 多寶 adds one practical UI point: the API
+cannot just say "ask a question." It needs to send a question object that iMVS
+can render with reusable templates.
+
+For example:
+
+```text
+question.type = single_choice
+question.option_count = 4
+question.options = four stable choices
+question.rendering_constraints = no-scroll preferred
+```
+
+If iMVS cannot render generic templates, the June demo should use a local
+scripted UI while the API remains a backend/sample-JSON contract.
 
 ## High-School Version
 

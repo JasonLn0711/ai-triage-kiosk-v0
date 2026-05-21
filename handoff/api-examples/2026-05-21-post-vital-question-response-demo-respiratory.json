@@ -14,11 +14,11 @@
   "session_state": "active",
   "last_question_id": "breathing-duration",
   "status": "question",
-  "workflow_mode": "parallel_measurement_intake",
+  "workflow_mode": "post_measurement_only",
   "measurement_state": "complete",
   "vitals_ready": true,
-  "question_phase": "post_vital_followup",
-  "phase_reason": "Measured vitals are available, so the system can ask a targeted respiratory staff-review follow-up.",
+  "question_phase": "post_measurement_intake",
+  "phase_reason": "Measured vitals are available from session start, so the system can ask a targeted respiratory staff-review follow-up.",
   "progress": {
     "current": 3,
     "expected_total": 4
@@ -30,6 +30,7 @@
     "evidence_status": "source-backed",
     "review_owner": "clinical_reviewer_tbd",
     "type": "single_choice",
+    "ui_template": "single_choice",
     "text": "Do you have chest pain or chest pressure right now?",
     "options": [
       {"id": "no", "label": "No"},
@@ -37,7 +38,12 @@
       {"id": "yes_pressure", "label": "Yes, pressure or tightness"},
       {"id": "not_sure", "label": "Not sure"}
     ],
+    "option_count": 4,
     "none_option_id": "no",
+    "rendering_constraints": {
+      "requires_no_scroll": true,
+      "max_visible_options_without_scroll": 4
+    },
     "evidence_refs": ["LOCAL-PROTOCOL-TBD"],
     "demo_boundary": "Post-vital follow-up for staff-review context only."
   },
