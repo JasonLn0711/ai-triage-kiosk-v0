@@ -19,9 +19,9 @@
   "fallback_to_standard_staff_workflow": true,
   "error": {
     "code": "measurement_quality_unavailable",
-    "message": "Vital measurement quality is unavailable. Do not infer normal vital signs; continue with the standard staff workflow.",
+    "message": "Vital measurement quality requires staff workflow confirmation. Continue with the standard staff workflow.",
     "retry_allowed": false,
-    "no_summary_generated": true
+    "summary_generation_status": "fallback_to_staff_workflow"
   },
-  "demo_boundary": "Synthetic-data capability demo only; not diagnosis, treatment advice, final triage, or production integration."
+  "demo_boundary": "Synthetic-data staff-review intake support with human-review workflow and separate production validation path."
 }

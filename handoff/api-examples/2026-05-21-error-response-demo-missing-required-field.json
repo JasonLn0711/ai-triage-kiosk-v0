@@ -19,10 +19,10 @@
   "fallback_to_standard_staff_workflow": true,
   "error": {
     "code": "missing_required_field",
-    "message": "A required demo API field is missing. Continue with the standard staff workflow; no AI-generated clinical summary was produced.",
+    "message": "A required demo API field needs correction. Continue with the standard staff workflow.",
     "field": "session_key",
     "retry_allowed": false,
-    "no_summary_generated": true
+    "summary_generation_status": "fallback_to_staff_workflow"
   },
-  "demo_boundary": "Synthetic-data capability demo only; not diagnosis, treatment advice, final triage, or production integration."
+  "demo_boundary": "Synthetic-data staff-review intake support with human-review workflow and separate production validation path."
 }

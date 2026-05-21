@@ -45,7 +45,7 @@
       "max_visible_options_without_scroll": 4
     },
     "evidence_refs": ["LOCAL-PROTOCOL-TBD"],
-    "demo_boundary": "Post-vital follow-up for staff-review context only."
+    "demo_boundary": "Post-vital follow-up for staff-review context."
   },
-  "demo_boundary": "Synthetic-data capability demo only; not diagnosis, treatment advice, final triage, or production integration."
+  "demo_boundary": "Synthetic-data staff-review intake support with human-review workflow and separate production validation path."
 }

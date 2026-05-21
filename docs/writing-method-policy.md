@@ -58,6 +58,36 @@ Avoid:
 This is only a small prototype and we are not sure whether it is useful.
 ```
 
+## Positive Scope-Control Language
+
+API reply files and company-facing engineering handoffs use affirmative scope
+language. The document should read like a confident integration contract, not a
+defense brief.
+
+Use:
+
+```text
+This API contract is scoped to synthetic-data vital-aware intake support,
+typed-question workflow, staff-review summary, demo preview, and a separate
+validation path for production integration.
+```
+
+Use positive fields and phrases:
+
+```text
+scope_controls
+staff-review intake support
+human review workflow
+synthetic-data demo context
+separate validation path
+production governance path
+```
+
+Convert negative safety lists into positive operating-scope controls. For
+example, replace a field such as `not_claimed` with `scope_controls` in
+outward-facing API reply documents, and express the human-review boundary as a
+designed workflow property.
+
 ## 慧誠智醫-Facing Material
 
 For 慧誠智醫-facing material, including the `2026-05-20` API v0.2 pre-read:

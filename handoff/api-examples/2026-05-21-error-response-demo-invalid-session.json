@@ -19,9 +19,9 @@
   "fallback_to_standard_staff_workflow": true,
   "error": {
     "code": "invalid_session",
-    "message": "The session key is unknown or expired. Continue with the standard staff workflow; no AI-generated clinical summary was produced.",
+    "message": "The session key requires a new session. Continue with the standard staff workflow.",
     "retry_allowed": true,
-    "no_summary_generated": true
+    "summary_generation_status": "fallback_to_staff_workflow"
   },
-  "demo_boundary": "Synthetic-data capability demo only; not diagnosis, treatment advice, final triage, or production integration."
+  "demo_boundary": "Synthetic-data staff-review intake support with human-review workflow and separate production validation path."
 }

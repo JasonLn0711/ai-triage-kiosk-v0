@@ -86,6 +86,12 @@ Do not turn this repo into:
 - For 慧誠智醫-facing material, the opening move must be a clear recommendation
   or capability statement, not a defensive limitation statement. State "we
   recommend" / "this demo shows" / "the API contract is" before scope controls.
+- For API reply files and company-facing engineering handoffs, write safety and
+  scope boundaries as positive design controls. Prefer affirmative fields and
+  wording such as `scope_controls`, `staff-review intake support`, `human
+  review workflow`, `synthetic-data demo context`, and `separate validation
+  path`. Convert legacy exclusion lists into a confident description of the
+  operating scope and validation path.
 - Use the official English company name consistently. First formal mention:
   `慧誠智醫（imedtac Co., Ltd.）`; subsequent English shorthand: `imedtac`.
   Do not use `imedtac` as the English company name except in historical file

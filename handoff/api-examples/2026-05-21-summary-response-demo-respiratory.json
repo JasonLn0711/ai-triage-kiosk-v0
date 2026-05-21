@@ -41,13 +41,13 @@
       "Staff or clinician review required."
     ],
     "staff_handoff_note": "Please review measured vitals and reported symptoms.",
-    "not_claimed": [
-      "This demo does not diagnose.",
-      "This demo does not recommend treatment.",
-      "This demo does not assign a final triage level.",
-      "This demo does not write to HIS/EMR/FHIR."
+    "scope_controls": [
+      "Staff-review intake support",
+      "Human review workflow",
+      "Synthetic-data demo context",
+      "Production integration managed through a separate validation path"
     ]
   },
   "evidence_refs": ["LOCAL-PROTOCOL-TBD"],
-  "demo_boundary": "Synthetic-data capability demo only."
+  "demo_boundary": "Synthetic-data staff-review intake support with human-review workflow and separate production validation path."
 }

@@ -9,8 +9,9 @@ The current useful answer is:
 
 > The June demo should show a post-measurement iMVS vital payload entering a
 > NYCU structured question loop and returning a staff-review summary. The demo
-> proves vital-aware intake workflow integration, not diagnosis, final clinical
-> triage, treatment advice, or production HIS / EMR writeback.
+> proves vital-aware intake workflow integration, staff-review support, human
+> review workflow, synthetic-data demo operation, and a separate production
+> validation path.
 
 Current main meeting packet:
 

@@ -47,5 +47,5 @@
     "evidence_refs": ["LOCAL-PROTOCOL-TBD"],
     "demo_boundary": "Synthetic-data demo question for staff-review intake support."
   },
-  "demo_boundary": "Synthetic-data capability demo only; not diagnosis, treatment advice, final triage, or production integration."
+  "demo_boundary": "Synthetic-data staff-review intake support with human-review workflow and separate production validation path."
 }
