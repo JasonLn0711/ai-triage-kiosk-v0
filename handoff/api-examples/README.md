@@ -10,6 +10,21 @@ temperature `deg C` / `C`, glucose `mg/dL`, weight `kg`, and height `cm`.
 Example field names are normalized for NYCU runtime while preserving explicit
 `value` and `unit` fields.
 
+## Value Contract
+
+The example JSON files use fixed machine-readable values for workflow state,
+question rendering, answer submission, error handling, fallback behavior, and
+staff-review routing. Values such as `status`, `session_state`,
+`workflow_mode`, `question.type`, `measurement_status`, `quality_flag`,
+`error.code`, `fallback.recommended_mode`, `question.id`, `option.id`, and
+`handoff_reason_codes` should be treated as code values.
+
+Display strings such as `question.text`, `option.label`, `phase_reason`, and
+`staff_review_summary.*` are versioned wording. iMVS should display them as
+provided and should not parse them for workflow logic. Numeric values are
+governed by type, unit, nullable behavior, and measurement-quality fields rather
+than by an exhaustive value list.
+
 ## June Required Flow
 
 Use these files for the current `post_measurement_only` contract. The examples

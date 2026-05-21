@@ -102,6 +102,41 @@ the same `session_key`; NYCU returns either the next typed question or
 The future two-phase vitals-ready endpoint is documented in the appendix. It is
 not required for the June customer-demo integration.
 
+## Value-Set Contract
+
+The JSON keys are fixed by the endpoint schema. Values are split into four
+contract classes:
+
+| Class | Contract rule | Examples |
+| --- | --- | --- |
+| Programmatic enum / code | Must list allowed values. Any value that affects routing, UI template selection, session state, retry, fallback, error handling, or audit trace must be stable. | `status`, `session_state`, `workflow_mode`, `measurement_state`, `question.type`, `measurement_status`, `quality_flag`, `error.code` |
+| Stable ID | Must be stable within the active versioned question set. The UI displays labels but submits ids. | `question.id`, `option.id`, `answer.selected_option_ids`, `handoff_reason_codes` |
+| Display text | Must define owner, locale, visibility, length guidance, and versioning; do not enumerate every possible sentence. Frontend must not parse display text for logic. | `question.text`, `option.label`, `phase_reason`, `staff_review_summary.subjective`, `staff_handoff_note` |
+| Numeric / boolean / timestamp | Define type, nullable behavior, unit, precision/range if needed, and missing/failure representation. Do not enumerate all possible values. | `heart_rate_bpm.value`, `vitals_ready`, `measurement_timestamp` |
+
+June v0.2 enum baseline:
+
+| Field | Allowed values / rule |
+| --- | --- |
+| `status` | `question`, `summary`, `error` |
+| `session_state` | `active`, `summary_ready`, `expired`, `abandoned`, `error` |
+| `workflow_mode` | Current June value: `post_measurement_only`; future optimized value: `parallel_measurement_intake` |
+| `measurement_state` | Current June normal value: `complete`; error/future values: `failed`, `missing`, `in_progress` |
+| `question_phase` | Current June values: `post_measurement_intake`, `summary`; future optimized values: `pre_vital_intake`, `post_vital_followup` |
+| `question.type` | Current June values: `single_choice`, `multi_choice`; future value after UI confirmation: `scale` |
+| `question.ui_template` | Same as `question.type` unless imedtac defines a separate template enum. |
+| `vitals.<field>.measurement_status` | `measured`, `missing`, `failed`, `manual_entry`, `not_available` |
+| `vitals.<field>.quality_flag` | `ok`, `needs_review`, `device_error`, `out_of_range_demo`, `unknown` |
+| `summary_visibility` | `staff_only` |
+| `client_event.input_mode` | June value: `touch`; optional/future values: `keyboard`, `voice_confirmed`, `operator_scripted` |
+| `fallback.recommended_mode` | `standard_staff_workflow`, `local_scripted_demo`, `retry_remote_api` |
+| `error.code` | `api_timeout`, `invalid_session`, `measurement_quality_unavailable`, `missing_required_field`, `unsupported_question_type`, `idempotency_conflict` |
+
+`answer.selected_option_ids` is constrained by the immediately preceding
+`question.options[*].id` list. This is intentional: option labels may change
+with wording review, but option ids remain the machine-readable contract for
+answer submission and summary mapping.
+
 ## Company-Provided Vital Payload Baseline
 
 Canonical extraction:

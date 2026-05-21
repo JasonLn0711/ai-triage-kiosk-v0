@@ -37,6 +37,42 @@ source:
 | `voice_input` | MVP 必要 | 六月版本以固定值關閉語音路徑。 |
 | `question.type` | MVP 必要 / 完整 API | 六月先支援 `single_choice` / `multi_choice`；`scale` 屬完整 API 擴充。 |
 
+## Value-Set Scope
+
+Field keys are only half of the contract. For integration stability, every value
+used by code must be classified as either fixed enum/code, stable id, display
+text, or numeric/boolean/timestamp.
+
+| Value class | Scope decision | MVP treatment |
+| --- | --- | --- |
+| Programmatic enum / code | Must be fixed and listed. | Freeze allowed values for state, rendering, fallback, error, measurement quality, and summary visibility. |
+| Stable id | Must be fixed within `question_set_version`. | `question.id`, `option.id`, `selected_option_ids`, and `handoff_reason_codes` are codes; labels are not submitted back. |
+| Display text | Do not exhaustively enumerate. | Define locale, visibility, max-length guidance, owner, and wording version; frontend displays but does not parse it. |
+| Numeric / boolean / timestamp | Do not enumerate values. | Define type, unit, nullable behavior, precision/range if needed, and missing/failure representation. |
+
+MVP fixed value baseline:
+
+| Field | MVP fixed values |
+| --- | --- |
+| `status` | `question`, `summary`, `error` |
+| `session_state` | `active`, `summary_ready`, `expired`, `abandoned`, `error` |
+| `workflow_mode` | `post_measurement_only`; future: `parallel_measurement_intake` |
+| `measurement_state` | `complete`; error/future: `failed`, `missing`, `in_progress` |
+| `question_phase` | `post_measurement_intake`, `summary`; future: `pre_vital_intake`, `post_vital_followup` |
+| `question.type` | `single_choice`, `multi_choice`; future: `scale` |
+| `vitals.<field>.measurement_status` | `measured`, `missing`, `failed`, `manual_entry`, `not_available` |
+| `vitals.<field>.quality_flag` | `ok`, `needs_review`, `device_error`, `out_of_range_demo`, `unknown` |
+| `summary_visibility` | `staff_only` |
+| `client_event.input_mode` | `touch`; future: `keyboard`, `voice_confirmed`, `operator_scripted` |
+| `fallback.recommended_mode` | `standard_staff_workflow`, `local_scripted_demo`, `retry_remote_api` |
+| `error.code` | `api_timeout`, `invalid_session`, `measurement_quality_unavailable`, `missing_required_field`, `unsupported_question_type`, `idempotency_conflict` |
+
+For the tachycardia live lane, option IDs such as `heart_racing`,
+`chest_tightness`, and `breathing_or_dizzy` are stable ids under
+`tachycardia-question-set-v0.2-draft`. Labels such as
+`Heart racing / palpitations` are display text and may change after 多寶 /
+許醫師 wording review without changing the API answer contract.
+
 ## Endpoint 1 Request
 
 | Field | Scope | 判斷 |
