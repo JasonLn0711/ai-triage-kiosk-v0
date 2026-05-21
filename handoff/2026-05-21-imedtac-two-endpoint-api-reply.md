@@ -49,14 +49,14 @@ iMVS 使用者登入 / demo case 開始
 
 六月預設值：
 
-| 欄位 | 六月預設值 | 定義 |
-| --- | --- | --- |
-| `workflow_mode` | `post_measurement_only` | 表示本次 demo 使用「先完成量測、再開始問答」的流程模式。 |
-| `measurement_state` | `complete` | 表示 iMVS 呼叫 NYCU API 時，vital-sign measurement 已經完成。 |
-| `vitals_ready` | `true` | 表示 request 內已包含可供 demo 問答流程使用的 vital payload。 |
-| `question_phase` | 問題回覆用 `post_measurement_intake`；最終摘要用 `summary` | 標示目前回覆屬於量測後問答階段，或已經進入摘要階段。 |
-| `voice_input` | `false` | 表示六月 critical path 聚焦觸控選項題；語音輸入列為後續擴充能力。 |
-| `question.type` | `single_choice`、`multi_choice`；`scale` 需待 imedtac UI 確認 | 定義 iMVS 需要使用哪一種 UI template 顯示問題。 |
+| 欄位 | 六月預設值 | 定義 | 備註 |
+| --- | --- | --- | --- |
+| `workflow_mode` | `post_measurement_only` | 表示本次 demo 使用「先完成量測、再開始問答」的流程模式。 | MVP 必要：兩個 endpoint flow 的核心控制欄位。 |
+| `measurement_state` | `complete` | 表示 iMVS 呼叫 NYCU API 時，vital-sign measurement 已經完成。 | MVP 必要：支撐「先 vital sign、後 Q&A」的流程判斷。 |
+| `vitals_ready` | `true` | 表示 request 內已包含可供 demo 問答流程使用的 vital payload。 | MVP 必要：Endpoint 1 啟動問答前的資料可用性旗標。 |
+| `question_phase` | 問題回覆用 `post_measurement_intake`；最終摘要用 `summary` | 標示目前回覆屬於量測後問答階段，或已經進入摘要階段。 | MVP 必要：iMVS 依此判斷目前要顯示問題或摘要。 |
+| `voice_input` | `false` | 表示六月 critical path 聚焦觸控選項題；語音輸入列為後續擴充能力。 | MVP 必要：六月版本以固定值關閉語音路徑。 |
+| `question.type` | `single_choice`、`multi_choice`；`scale` 需待 imedtac UI 確認 | 定義 iMVS 需要使用哪一種 UI template 顯示問題。 | MVP 必要：先支援 `single_choice` / `multi_choice`；`scale` 屬完整 API 擴充。 |
 
 ## Endpoint 清單
 
@@ -120,49 +120,62 @@ NYCU 建議六月先 freeze 兩個 endpoint 的 shape。多寶 / 許醫師後續
 因此，題庫與 wording 可以持續臨床審查；endpoint 串接則可先依照本文兩個
 endpoint 進行。
 
+## 欄位備註分級
+
+下列表格的「備註」欄位用來區分六月 demo MVP 與完整 API 設計。
+「必填」欄位表示完整 contract 的 request / response shape；「備註」欄位補充
+六月 MVP 需要真實串接、可先固定 / placeholder、或保留給完整 API 的實作層級。
+
+| 備註標籤 | 定義 |
+| --- | --- |
+| MVP 必要 | 六月 demo 最小可跑 two-endpoint loop 需要實作或固定回傳的欄位。 |
+| MVP 建議 | 建議在 MVP 保留；可先用固定值、簡化值、placeholder 或 log-only 方式實作。 |
+| 完整 API | 支援多 case、多版本、臨床審查、production validation 或後續擴充的完整設計欄位；MVP 可先以 placeholder 或固定值管理。 |
+| 需 imedtac 確認 | 實作方式取決於 iMVS field dictionary、UI template、畫面限制或 demo environment。 |
+
 ## Endpoint 1 Request
 
 必填 request 欄位：
 
-| 欄位 | 型別 | 必填 | 定義 |
-| --- | --- | --- | --- |
-| `api_version` | string | yes | 本次 API contract 的版本識別碼；目前 draft 值為 `2026-05-22-demo-v0.2-draft`。 |
-| `schema_version` | string | yes | request / response JSON schema 的版本識別碼；目前 draft 值為 `imvs-nycu-triage-demo-schema-v0.2-draft`。 |
-| `flow_version` | string | yes | 問答流程版本，用來區分不同 demo lane；例如 `tachycardia-live-demo-flow-v0.2-draft` 或 `respiratory-early-handoff-flow-v0.2-draft`。 |
-| `case_id` | string | yes | synthetic demo case 的識別碼；六月 demo 使用 synthetic/demo id，正式 encounter id 由 production governance path 管理。 |
-| `case_version` | string | yes | synthetic case 內容版本；用來追蹤同一個 `case_id` 的內容是否有更新。 |
-| `fixture_version` | string | yes | demo fixture 版本；用來追蹤範例 vital payload / answer path / expected output 的版本。 |
-| `question_set_version` | string | yes | 問題清單、問題順序、問題文字與 option mapping 的版本。 |
-| `wording_version` | string | yes | `staff_review_summary` 顯示文字與安全邊界 wording 的版本。 |
-| `request_id` | string | yes | iMVS 端產生的單次 request 追蹤識別碼，用於 log、debug 與雙方對帳。 |
-| `idempotency_key` | string | yes | 防止 retry 造成重複建立 session 或重複推進流程的冪等鍵。 |
-| `workflow_mode` | string | yes | demo workflow 模式；六月必須為 `post_measurement_only`。 |
-| `measurement_state` | string | yes | vital-sign measurement 的狀態；六月呼叫此 endpoint 時必須為 `complete`。 |
-| `vitals_ready` | boolean | yes | 是否已提供可使用的 vital payload；六月呼叫此 endpoint 時必須為 `true`。 |
-| `client.source` | string | yes | 呼叫來源識別，例如 `imvs-demo`；用來區分不同前端、設備或 demo client。 |
-| `client.locale` | string | yes | 前端顯示語系，例如 `en-US`；六月美國客戶 demo 建議使用英文顯示。 |
-| `patient_context.demo_patient_id` | string | yes | demo-only patient id；六月 demo 使用 synthetic/demo id，MRN、身分證字號、姓名、電話與正式病歷資料由 production governance path 管理。 |
-| `patient_context.age` | number | no | synthetic demo 年齡；只供 demo case 情境使用。 |
-| `patient_context.sex` | string | no | synthetic demo 生理性別或情境性別；只供 demo case 情境使用。 |
-| `vitals` | object | yes | iMVS 量測完成後送給 NYCU 的 measured 或 synthetic vital payload。 |
-| `capabilities.question_types` | array | yes | iMVS UI 支援的題型清單；六月建議先使用 `["single_choice", "multi_choice"]`。 |
-| `capabilities.max_questions` | number | yes | 此 session 最多可顯示的病人端問題數；六月建議 hard cap 為 `7` 題以內。 |
-| `capabilities.max_options_per_question` | number | ask imedtac | iMVS 單題最多可清楚顯示幾個選項；需要 imedtac 確認以維持 kiosk 畫面清楚。 |
-| `capabilities.max_option_label_length` | number | ask imedtac | 單一選項 label 最長可接受字元數；需要 imedtac 確認以維持 kiosk 排版穩定。 |
-| `capabilities.variable_option_count` | boolean | ask imedtac | iMVS 是否允許每一題有不同選項數量；若不允許，NYCU 需固定 option count。 |
-| `capabilities.voice_input` | boolean | yes | 本次 session 是否支援語音輸入；六月 critical path 建議固定為 `false`。 |
+| 欄位 | 型別 | 必填 | 定義 | 備註 |
+| --- | --- | --- | --- | --- |
+| `api_version` | string | yes | 本次 API contract 的版本識別碼；目前 draft 值為 `2026-05-22-demo-v0.2-draft`。 | MVP 必要：讓雙方鎖定同一份 API contract。 |
+| `schema_version` | string | yes | request / response JSON schema 的版本識別碼；目前 draft 值為 `imvs-nycu-triage-demo-schema-v0.2-draft`。 | MVP 必要：讓 request / response 欄位對齊。 |
+| `flow_version` | string | yes | 問答流程版本，用來區分不同 demo lane；例如 `tachycardia-live-demo-flow-v0.2-draft` 或 `respiratory-early-handoff-flow-v0.2-draft`。 | MVP 必要：六月至少要區分 tachycardia live lane 與 respiratory fallback lane。 |
+| `case_id` | string | yes | synthetic demo case 的識別碼；六月 demo 使用 synthetic/demo id，正式 encounter id 由 production governance path 管理。 | MVP 必要：選定本次 demo case。 |
+| `case_version` | string | yes | synthetic case 內容版本；用來追蹤同一個 `case_id` 的內容是否有更新。 | MVP 建議：MVP 可先固定；完整 API 用於 case 內容變更追蹤。 |
+| `fixture_version` | string | yes | demo fixture 版本；用來追蹤範例 vital payload / answer path / expected output 的版本。 | MVP 建議：MVP 可先固定；完整 API 用於 rehearsal / regression 對帳。 |
+| `question_set_version` | string | yes | 問題清單、問題順序、問題文字與 option mapping 的版本。 | MVP 必要：多寶 / 許醫師調整題目時維持 endpoint 穩定。 |
+| `wording_version` | string | yes | `staff_review_summary` 顯示文字與安全邊界 wording 的版本。 | MVP 必要：管理對外 summary wording 與 scope-control wording。 |
+| `request_id` | string | yes | iMVS 端產生的單次 request 追蹤識別碼，用於 log、debug 與雙方對帳。 | MVP 必要：demo rehearsal debug 需要。 |
+| `idempotency_key` | string | yes | 防止 retry 造成重複建立 session 或重複推進流程的冪等鍵。 | MVP 必要：處理 timeout / retry 的核心欄位。 |
+| `workflow_mode` | string | yes | demo workflow 模式；六月必須為 `post_measurement_only`。 | MVP 必要：固定六月流程。 |
+| `measurement_state` | string | yes | vital-sign measurement 的狀態；六月呼叫此 endpoint 時必須為 `complete`。 | MVP 必要：支撐 measure-first demo flow。 |
+| `vitals_ready` | boolean | yes | 是否已提供可使用的 vital payload；六月呼叫此 endpoint 時必須為 `true`。 | MVP 必要：支撐 vital-aware question selection。 |
+| `client.source` | string | yes | 呼叫來源識別，例如 `imvs-demo`；用來區分不同前端、設備或 demo client。 | MVP 建議：MVP 可固定為 `imvs-demo`；完整 API 用於多 client。 |
+| `client.locale` | string | yes | 前端顯示語系，例如 `en-US`；六月美國客戶 demo 建議使用英文顯示。 | MVP 必要：六月 customer demo 顯示語系控制。 |
+| `patient_context.demo_patient_id` | string | yes | demo-only patient id；六月 demo 使用 synthetic/demo id，MRN、身分證字號、姓名、電話與正式病歷資料由 production governance path 管理。 | MVP 必要：demo session 需要 synthetic identity。 |
+| `patient_context.age` | number | no | synthetic demo 年齡；只供 demo case 情境使用。 | 完整 API：MVP 可依 case 固定或省略。 |
+| `patient_context.sex` | string | no | synthetic demo 生理性別或情境性別；只供 demo case 情境使用。 | 完整 API：MVP 可依 case 固定或省略。 |
+| `vitals` | object | yes | iMVS 量測完成後送給 NYCU 的 measured 或 synthetic vital payload。 | MVP 必要：兩個 endpoint flow 的主要輸入。 |
+| `capabilities.question_types` | array | yes | iMVS UI 支援的題型清單；六月建議先使用 `["single_choice", "multi_choice"]`。 | MVP 必要：讓 NYCU 只回 iMVS 可顯示的題型。 |
+| `capabilities.max_questions` | number | yes | 此 session 最多可顯示的病人端問題數；六月建議 hard cap 為 `7` 題以內。 | MVP 必要：控制 demo 題數與畫面節奏。 |
+| `capabilities.max_options_per_question` | number | ask imedtac | iMVS 單題最多可清楚顯示幾個選項；需要 imedtac 確認以維持 kiosk 畫面清楚。 | 需 imedtac 確認：MVP 可先採 4 個 option 的 conservative default。 |
+| `capabilities.max_option_label_length` | number | ask imedtac | 單一選項 label 最長可接受字元數；需要 imedtac 確認以維持 kiosk 排版穩定。 | 需 imedtac 確認：MVP 可先採 48 字元 default。 |
+| `capabilities.variable_option_count` | boolean | ask imedtac | iMVS 是否支援每一題有不同選項數量；若 iMVS 使用固定 template，NYCU 會依 template 固定 option count。 | 需 imedtac 確認：完整 API 支援 variable options；MVP 可先固定選項數。 |
+| `capabilities.voice_input` | boolean | yes | 本次 session 是否支援語音輸入；六月 critical path 建議固定為 `false`。 | MVP 必要：固定 `false`；語音輸入屬完整 API 後續擴充。 |
 
 Vital payload 最小欄位結構：
 
-| 欄位 | 型別 | 定義 |
-| --- | --- | --- |
-| `vitals.measurement_timestamp` | string | iMVS 完成量測的時間戳，建議使用 ISO 8601 格式。 |
-| `vitals.device_id` | string | demo device identifier；用來識別設備，病人識別由 `patient_context.demo_patient_id` 或 production governance path 管理。 |
-| `vitals.<field>.value` | number/null | 單一 vital 欄位的量測值；若 unavailable、failed 或不適用，可為 `null`。 |
-| `vitals.<field>.unit` | string | 單位；例如 `%`、`C`、`mmHg`、`beats/min`、`cm`、`kg`。 |
-| `vitals.<field>.measurement_status` | string | 此 vital 欄位的量測狀態；可用值建議為 `measured`、`missing`、`failed`、`manual_entry`、`not_available`。 |
-| `vitals.<field>.quality_flag` | string | 此 vital 欄位的品質旗標；可用值建議為 `ok`、`needs_review`、`device_error`、`out_of_range_demo`、`unknown`。 |
-| `vitals.<field>.missing_reason` | string/null | 當 `value` 缺漏或量測失敗時，說明缺漏原因；若正常量測則可為 `null`。 |
+| 欄位 | 型別 | 定義 | 備註 |
+| --- | --- | --- | --- |
+| `vitals.measurement_timestamp` | string | iMVS 完成量測的時間戳，建議使用 ISO 8601 格式。 | MVP 建議：rehearsal debug 與 log 對帳需要。 |
+| `vitals.device_id` | string | demo device identifier；用來識別設備，病人識別由 `patient_context.demo_patient_id` 或 production governance path 管理。 | MVP 建議：MVP 可固定 demo device id；完整 API 用於多設備。 |
+| `vitals.<field>.value` | number/null | 單一 vital 欄位的量測值；若 unavailable、failed 或不適用，可為 `null`。 | MVP 必要：heart rate、SpO2 等 demo vital 的核心數值。 |
+| `vitals.<field>.unit` | string | 單位；例如 `%`、`C`、`mmHg`、`beats/min`、`cm`、`kg`。 | MVP 必要：工程與 UI 顯示需明確單位。 |
+| `vitals.<field>.measurement_status` | string | 此 vital 欄位的量測狀態；可用值建議為 `measured`、`missing`、`failed`、`manual_entry`、`not_available`。 | MVP 建議：MVP 可先支援 `measured` / `missing`；完整 API 擴充 failed / manual_entry。 |
+| `vitals.<field>.quality_flag` | string | 此 vital 欄位的品質旗標；可用值建議為 `ok`、`needs_review`、`device_error`、`out_of_range_demo`、`unknown`。 | MVP 建議：MVP 可先支援 `ok` / `needs_review`；完整 API 擴充 device-quality semantics。 |
+| `vitals.<field>.missing_reason` | string/null | 當 `value` 缺漏或量測失敗時，說明缺漏原因；若正常量測則可為 `null`。 | 完整 API：MVP 可先使用 `null` 或簡化固定值。 |
 
 Endpoint 1 request 範例：
 
@@ -172,6 +185,10 @@ Endpoint 1 request 範例：
   "schema_version": "imvs-nycu-triage-demo-schema-v0.2-draft",
   "flow_version": "tachycardia-live-demo-flow-v0.2-draft",
   "case_id": "demo-tachycardia-live-001",
+  "case_version": "demo-tachycardia-live-001-v0.2",
+  "fixture_version": "v0.2.0",
+  "question_set_version": "tachycardia-question-set-v0.2-draft",
+  "wording_version": "staff-summary-wording-v0.2-clinical-draft",
   "request_id": "req-demo-start-001",
   "idempotency_key": "idem-demo-start-001",
   "workflow_mode": "post_measurement_only",
@@ -220,42 +237,42 @@ Endpoint 1 request 範例：
 
 NYCU 回傳 session 與第一題 typed question：
 
-| 欄位 | 型別 | 必填 | 定義 |
-| --- | --- | --- | --- |
-| `session_key` | string | yes | NYCU 產生的 session key；iMVS 在 Endpoint 2 後續每次送 answer 時都要帶回。 |
-| `request_id` | string | yes | 回傳 iMVS 原本送出的 `request_id`，方便雙方 trace。 |
-| `response_id` | string | yes | NYCU 端產生的 response id，用於 debug、log 與問題追蹤。 |
-| `session_expires_at` | string | yes | demo session 的到期時間；超過後應視為 expired 或重新開始。 |
-| `session_state` | string | yes | session 狀態；可用值建議為 `active`、`summary_ready`、`expired`、`abandoned`、`error`。 |
-| `last_question_id` | string/null | yes | 最近已送出或已回答的 question id；第一題前可為 `null`。 |
-| `status` | string | yes | 此 response 類型；可為 `question` 或 `summary`，Endpoint 1 正常情況會是 `question`。 |
-| `workflow_mode` | string | yes | 回傳本 session 使用的 workflow mode；六月應為 `post_measurement_only`。 |
-| `measurement_state` | string | yes | 回傳目前 measurement state；六月應為 `complete`。 |
-| `vitals_ready` | boolean | yes | 回傳目前是否已有可使用的 vital payload；六月應為 `true`。 |
-| `question_phase` | string | yes | 目前問題階段；六月量測後問答使用 `post_measurement_intake`。 |
-| `phase_reason` | string | yes | 簡短說明為什麼此題可以在目前階段顯示。 |
-| `progress.current` | number | yes | 目前顯示到第幾題，用於 iMVS UI progress display。 |
-| `progress.expected_total` | number | yes | 預估總題數；動態流程可為估計值，但應維持在 demo 題數上限內。 |
-| `question` | object | yes when `status=question` | NYCU 回傳給 iMVS 顯示的 typed question object。 |
-| `demo_boundary` | string | yes | 明確標示此 response 的定位為 synthetic-data staff-review intake support。 |
+| 欄位 | 型別 | 必填 | 定義 | 備註 |
+| --- | --- | --- | --- | --- |
+| `session_key` | string | yes | NYCU 產生的 session key；iMVS 在 Endpoint 2 後續每次送 answer 時都要帶回。 | MVP 必要：維持 one-session question loop 的核心欄位。 |
+| `request_id` | string | yes | 回傳 iMVS 原本送出的 `request_id`，方便雙方 trace。 | MVP 必要：雙方 log 對帳需要。 |
+| `response_id` | string | yes | NYCU 端產生的 response id，用於 debug、log 與問題追蹤。 | MVP 建議：rehearsal debug 需要；完整 API 用於 audit trace。 |
+| `session_expires_at` | string | yes | demo session 的到期時間；超過後應視為 expired 或重新開始。 | MVP 建議：MVP 可用固定 expiry window；完整 API 用於 session lifecycle。 |
+| `session_state` | string | yes | session 狀態；可用值建議為 `active`、`summary_ready`、`expired`、`abandoned`、`error`。 | MVP 必要：iMVS 依此判斷繼續問答、顯示摘要或 fallback。 |
+| `last_question_id` | string/null | yes | 最近已送出或已回答的 question id；第一題前可為 `null`。 | MVP 建議：支援 debug 與 answer mismatch 檢查。 |
+| `status` | string | yes | 此 response 類型；可為 `question` 或 `summary`，Endpoint 1 正常情況會是 `question`。 | MVP 必要：iMVS 依此 render question 或 summary。 |
+| `workflow_mode` | string | yes | 回傳本 session 使用的 workflow mode；六月應為 `post_measurement_only`。 | MVP 必要：回傳確認目前流程模式。 |
+| `measurement_state` | string | yes | 回傳目前 measurement state；六月應為 `complete`。 | MVP 必要：回傳確認 measured-vitals flow。 |
+| `vitals_ready` | boolean | yes | 回傳目前是否已有可使用的 vital payload；六月應為 `true`。 | MVP 必要：回傳確認 vital payload 已進入 session。 |
+| `question_phase` | string | yes | 目前問題階段；六月量測後問答使用 `post_measurement_intake`。 | MVP 必要：iMVS 與 NYCU 對齊問答階段。 |
+| `phase_reason` | string | yes | 簡短說明為什麼此題可以在目前階段顯示。 | 完整 API：MVP 可先固定簡短文字；完整 API 用於 explainability / debug。 |
+| `progress.current` | number | yes | 目前顯示到第幾題，用於 iMVS UI progress display。 | MVP 建議：若 iMVS 顯示 progress，MVP 需要；否則可先 log-only。 |
+| `progress.expected_total` | number | yes | 預估總題數；動態流程可為估計值，但應維持在 demo 題數上限內。 | MVP 建議：用於 demo 節奏與畫面預期。 |
+| `question` | object | yes when `status=question` | NYCU 回傳給 iMVS 顯示的 typed question object。 | MVP 必要：Endpoint 1 的主要 response payload。 |
+| `demo_boundary` | string | yes | 明確標示此 response 的定位為 synthetic-data staff-review intake support。 | MVP 必要：對外 demo wording 與 operating scope 控制。 |
 
 Question object 最小欄位結構：
 
-| 欄位 | 型別 | 必填 | 定義 |
-| --- | --- | --- | --- |
-| `question.id` | string | yes | 穩定的 runtime question id；iMVS 回答時以此值作為 `question_id`。 |
-| `question.registry_refs` | array | yes | 對應到 NYCU 內部 question registry 的來源 id；用於 trace 問題來源與版本。 |
-| `question.source_refs` | array | yes | 支援此問題的來源或 review source id；可先使用待審核來源代碼。 |
-| `question.evidence_status` | string | yes | 此問題目前的 evidence / review 狀態；例如 `clinician-signoff-needed`。 |
-| `question.review_owner` | string | yes | 此題 wording / clinical review 的負責角色或待確認 owner。 |
-| `question.type` | string | yes | UI 題型；六月建議使用 `single_choice` 或 `multi_choice`。 |
-| `question.ui_template` | string | yes | iMVS 應使用的 UI template；通常與 `question.type` 相同。 |
-| `question.text` | string | yes | 顯示給使用者看的題目文字。 |
-| `question.options` | array | yes | 選項清單；每個 option 應包含穩定 `id` 與顯示 `label`。 |
-| `question.option_count` | number | yes | 此題實際選項數量；讓 iMVS 可驗證是否超過 UI 容量。 |
-| `question.none_option_id` | string/null | no | 若此題有互斥的「none / none of these」選項，填入該 option id；沒有則為 `null`。 |
-| `question.rendering_constraints.requires_no_scroll` | boolean | no | 是否要求此題盡量不需捲動即可顯示完整內容；六月 demo 建議為 `true`。 |
-| `question.rendering_constraints.max_visible_options_without_scroll` | number | no | iMVS 不捲動時可顯示的最大選項數；需要 imedtac 確認。 |
+| 欄位 | 型別 | 必填 | 定義 | 備註 |
+| --- | --- | --- | --- | --- |
+| `question.id` | string | yes | 穩定的 runtime question id；iMVS 回答時以此值作為 `question_id`。 | MVP 必要：answer request 必須帶回。 |
+| `question.registry_refs` | array | yes | 對應到 NYCU 內部 question registry 的來源 id；用於 trace 問題來源與版本。 | 完整 API：MVP 可先回 placeholder；完整 API 用於 question provenance。 |
+| `question.source_refs` | array | yes | 支援此問題的來源或 review source id；可先使用待審核來源代碼。 | 完整 API：MVP 可先回 `LOCAL-PROTOCOL-TBD`。 |
+| `question.evidence_status` | string | yes | 此問題目前的 evidence / review 狀態；例如 `clinician-signoff-needed`。 | 完整 API：MVP 可先固定 draft / review status。 |
+| `question.review_owner` | string | yes | 此題 wording / clinical review 的負責角色或待確認 owner。 | 完整 API：MVP 可先固定 `clinical_reviewer_tbd`。 |
+| `question.type` | string | yes | UI 題型；六月建議使用 `single_choice` 或 `multi_choice`。 | MVP 必要：iMVS 用來選擇可重用 UI template。 |
+| `question.ui_template` | string | yes | iMVS 應使用的 UI template；通常與 `question.type` 相同。 | MVP 必要：降低 hand-coded screen 需求。 |
+| `question.text` | string | yes | 顯示給使用者看的題目文字。 | MVP 必要：病人端題目顯示核心欄位。 |
+| `question.options` | array | yes | 選項清單；每個 option 應包含穩定 `id` 與顯示 `label`。 | MVP 必要：choice-based demo 核心欄位。 |
+| `question.option_count` | number | yes | 此題實際選項數量；讓 iMVS 可驗證是否超過 UI 容量。 | MVP 建議：支援 UI capacity check。 |
+| `question.none_option_id` | string/null | no | 若此題有互斥的「none / none of these」選項，填入該 option id；沒有則為 `null`。 | 完整 API：MVP 可在有 none 選項的題目才提供。 |
+| `question.rendering_constraints.requires_no_scroll` | boolean | no | 是否要求此題盡量不需捲動即可顯示完整內容；六月 demo 建議為 `true`。 | 需 imedtac 確認：MVP 可先固定 `true`。 |
+| `question.rendering_constraints.max_visible_options_without_scroll` | number | no | iMVS 首屏可顯示的最大選項數；需要 imedtac 確認。 | 需 imedtac 確認：MVP 可先採 4 個 options。 |
 
 ## Endpoint 2 Request
 
@@ -266,26 +283,30 @@ Content-Type: application/json
 
 必填 request 欄位：
 
-| 欄位 | 型別 | 必填 | 定義 |
-| --- | --- | --- | --- |
-| `api_version` | string | yes | 本次 API contract 的版本識別碼；需與 Endpoint 1 使用的版本相容。 |
-| `schema_version` | string | yes | request / response JSON schema 的版本識別碼；需與 Endpoint 1 使用的版本相容。 |
-| `flow_version` | string | yes | 目前 active demo flow 的版本；應與 Endpoint 1 啟動 session 時一致。 |
-| `case_id` | string | yes | synthetic demo case 的識別碼；應與 Endpoint 1 啟動 session 時一致。 |
-| `request_id` | string | yes | iMVS 端產生的單次 answer submission 追蹤識別碼。 |
-| `idempotency_key` | string | yes | 防止 retry 造成同一題答案被重複處理、導致 question flow 前進兩次的冪等鍵。 |
-| `session_key` | string | yes | Endpoint 1 回傳的 session key；用來讓 NYCU 找到對應 session state。 |
-| `workflow_mode` | string | yes | 此 session 使用的 workflow mode；六月應為 `post_measurement_only`。 |
-| `measurement_state` | string | yes | measurement state；六月送 answer 時應維持 `complete`。 |
-| `vitals_ready` | boolean | yes | 是否已有可使用的 vital payload；六月送 answer 時應維持 `true`。 |
-| `question_phase` | string | yes | 正在回答的問題階段；六月多數情況為 `post_measurement_intake`。 |
-| `question_id` | string | yes | 使用者正在回答的 question id；應等於 NYCU 前一個 response 的 `question.id`。 |
-| `answer.selected_option_ids` | array | yes for choice questions | 使用者選取的 option id 清單；單選題通常只有一個 id，複選題可有多個 id。 |
-| `answer.scale_value` | number/null | no | 若題型為 `scale`，填入使用者選擇的數值；choice 題型使用 `null`。 |
-| `client_event.input_mode` | string | yes | 使用者輸入模式；六月建議為 `touch`。 |
-| `client_event.answered_at` | string | no | 使用者完成回答的時間戳，建議使用 ISO 8601 格式。 |
+| 欄位 | 型別 | 必填 | 定義 | 備註 |
+| --- | --- | --- | --- | --- |
+| `api_version` | string | yes | 本次 API contract 的版本識別碼；需與 Endpoint 1 使用的版本相容。 | MVP 必要：與 Endpoint 1 contract 對齊。 |
+| `schema_version` | string | yes | request / response JSON schema 的版本識別碼；需與 Endpoint 1 使用的版本相容。 | MVP 必要：與 Endpoint 1 schema 對齊。 |
+| `flow_version` | string | yes | 目前 active demo flow 的版本；應與 Endpoint 1 啟動 session 時一致。 | MVP 必要：避免不同 demo lane 混用 session。 |
+| `case_id` | string | yes | synthetic demo case 的識別碼；應與 Endpoint 1 啟動 session 時一致。 | MVP 必要：對齊同一個 synthetic case。 |
+| `case_version` | string | no | synthetic case 內容版本；Endpoint 2 可 echo Endpoint 1 建立 session 時使用的版本。 | 完整 API：MVP 由 session state 持有；完整 API 可加入 request 以強化 audit trace。 |
+| `fixture_version` | string | no | demo fixture 版本；Endpoint 2 可 echo Endpoint 1 建立 session 時使用的 fixture 版本。 | 完整 API：MVP 由 session state 持有；完整 API 可加入 request 以強化 rehearsal 對帳。 |
+| `question_set_version` | string | no | 問題清單與 option mapping 版本；Endpoint 2 可 echo active session 的 question set。 | 完整 API：MVP 由 session state 持有；完整 API 可加入 request 以強化 answer provenance。 |
+| `wording_version` | string | no | `staff_review_summary` wording 與 scope-control wording 版本；Endpoint 2 可 echo active session 的 wording 版本。 | 完整 API：MVP 由 session state 持有；完整 API 可加入 request 以強化 summary provenance。 |
+| `request_id` | string | yes | iMVS 端產生的單次 answer submission 追蹤識別碼。 | MVP 必要：answer submission debug 需要。 |
+| `idempotency_key` | string | yes | 防止 retry 造成同一題答案被重複處理、導致 question flow 前進兩次的冪等鍵。 | MVP 必要：保護 question loop state。 |
+| `session_key` | string | yes | Endpoint 1 回傳的 session key；用來讓 NYCU 找到對應 session state。 | MVP 必要：Endpoint 2 的核心 routing key。 |
+| `workflow_mode` | string | yes | 此 session 使用的 workflow mode；六月應為 `post_measurement_only`。 | MVP 必要：回傳 answer 時維持相同 workflow。 |
+| `measurement_state` | string | yes | measurement state；六月送 answer 時應維持 `complete`。 | MVP 必要：回傳 answer 時維持 measured-vitals state。 |
+| `vitals_ready` | boolean | yes | 是否已有可使用的 vital payload；六月送 answer 時應維持 `true`。 | MVP 必要：回傳 answer 時維持 vital-ready state。 |
+| `question_phase` | string | yes | 正在回答的問題階段；六月多數情況為 `post_measurement_intake`。 | MVP 必要：讓 NYCU 驗證 answer 屬於正確階段。 |
+| `question_id` | string | yes | 使用者正在回答的 question id；應等於 NYCU 前一個 response 的 `question.id`。 | MVP 必要：答案與題目綁定。 |
+| `answer.selected_option_ids` | array | yes for choice questions | 使用者選取的 option id 清單；單選題通常只有一個 id，複選題可有多個 id。 | MVP 必要：六月選項題的核心 answer payload。 |
+| `answer.scale_value` | number/null | no | 若題型為 `scale`，填入使用者選擇的數值；choice 題型使用 `null`。 | 完整 API：MVP 固定為 `null`；`scale` 待 imedtac UI 確認。 |
+| `client_event.input_mode` | string | yes | 使用者輸入模式；六月建議為 `touch`。 | MVP 必要：六月固定 `touch`。 |
+| `client_event.answered_at` | string | no | 使用者完成回答的時間戳，建議使用 ISO 8601 格式。 | MVP 建議：rehearsal log 與 timing debug 需要。 |
 
-Endpoint 2 request 範例：
+Endpoint 2 request 範例（MVP 版本；完整 API 可依表格 echo 版本欄位）：
 
 ```json
 {
@@ -387,18 +408,18 @@ NYCU 會回傳兩種 response 類型之一。
 
 Staff-review summary 欄位定義：
 
-| 欄位 | 型別 | 必填 | 定義 |
-| --- | --- | --- | --- |
-| `summary_visibility` | string | yes | 摘要可見範圍；六月 demo 建議為 `staff_only`，表示給 staff / doctor / customer preview。若需要 patient-facing copy，建議另行設計 patient-safe wording。 |
-| `handoff_required` | boolean | yes | 是否需要 human review / staff handoff；demo case 若有需要人工確認的 vital 或 symptom context，應為 `true`。 |
-| `handoff_reason_codes` | array | yes | 需要人工 review 的機器可讀理由代碼，例如 `vital_review`、`reported_symptoms_review`。 |
-| `staff_review_summary.format` | string | yes | 摘要格式版本或格式名稱；目前建議為 `review_summary_demo`。 |
-| `staff_review_summary.subjective` | array | yes | 使用者回報的主觀資訊，例如主訴、症狀、使用者選項。 |
-| `staff_review_summary.objective` | array | yes | iMVS 量測到的客觀資訊，例如 heart rate、SpO2、temperature 等 vital payload 摘要。 |
-| `staff_review_summary.review_basis` | array | yes | 支援 staff review 的資訊依據；欄位語意維持在 review context。 |
-| `staff_review_summary.review_action` | array | yes | 給 staff 的 review reminder 與 workflow cue。 |
-| `staff_review_summary.staff_handoff_note` | string | yes | 給 staff / doctor preview 的短句，提醒檢視量測數值與使用者回報症狀。 |
-| `staff_review_summary.scope_controls` | array | yes | 以正向語氣列出本 demo 的 operating scope，例如 staff-review intake support、human review workflow、synthetic-data demo context 與 separate validation path。 |
+| 欄位 | 型別 | 必填 | 定義 | 備註 |
+| --- | --- | --- | --- | --- |
+| `summary_visibility` | string | yes | 摘要可見範圍；六月 demo 建議為 `staff_only`，表示給 staff / doctor / customer preview。若需要 patient-facing copy，建議另行設計 patient-safe wording。 | MVP 必要：控制 summary 顯示對象。 |
+| `handoff_required` | boolean | yes | 是否需要 human review / staff handoff；demo case 若有需要人工確認的 vital 或 symptom context，應為 `true`。 | MVP 必要：demo summary 明確進入 staff-review workflow。 |
+| `handoff_reason_codes` | array | yes | 需要人工 review 的機器可讀理由代碼，例如 `vital_review`、`reported_symptoms_review`。 | MVP 建議：MVP 可先使用少數固定 codes；完整 API 用於 routing / analytics。 |
+| `staff_review_summary.format` | string | yes | 摘要格式版本或格式名稱；目前建議為 `review_summary_demo`。 | MVP 建議：MVP 可固定；完整 API 用於多 summary template。 |
+| `staff_review_summary.subjective` | array | yes | 使用者回報的主觀資訊，例如主訴、症狀、使用者選項。 | MVP 必要：staff summary 的核心內容。 |
+| `staff_review_summary.objective` | array | yes | iMVS 量測到的客觀資訊，例如 heart rate、SpO2、temperature 等 vital payload 摘要。 | MVP 必要：vital-aware demo 的核心內容。 |
+| `staff_review_summary.review_basis` | array | yes | 支援 staff review 的資訊依據；欄位語意維持在 review context。 | MVP 必要：整理 vital + answer 的 review basis。 |
+| `staff_review_summary.review_action` | array | yes | 給 staff 的 review reminder 與 workflow cue。 | MVP 必要：提供 staff-review workflow cue。 |
+| `staff_review_summary.staff_handoff_note` | string | yes | 給 staff / doctor preview 的短句，提醒檢視量測數值與使用者回報症狀。 | MVP 必要：demo preview 可直接顯示的短句。 |
+| `staff_review_summary.scope_controls` | array | yes | 以正向語氣列出本 demo 的 operating scope，例如 staff-review intake support、human review workflow、synthetic-data demo context 與 separate validation path。 | MVP 必要：對外 demo 文件與 API payload 的 scope-control 欄位。 |
 
 ## Retry 與 Idempotency
 
@@ -423,14 +444,14 @@ Local Scripted Demo Mode。
 
 建議 error 欄位：
 
-| 欄位 | 定義 |
-| --- | --- |
-| `status` | response 類型；error response 固定為 `error`。 |
-| `error.code` | 穩定的 machine-readable error code，供 iMVS 判斷錯誤類型。 |
-| `error.message` | 短的工程可讀錯誤訊息，供 debug 或 UI fallback 使用。 |
-| `error.retryable` | 此錯誤是否建議 retry；`true` 表示可安全重試，`false` 表示建議轉入 fallback 或人工流程。 |
-| `fallback.recommended_mode` | 建議 fallback 模式；可為 `standard_staff_workflow`、`local_scripted_demo` 或 `retry_remote_api`。 |
-| `demo_boundary` | 說明此 error / fallback 的定位為 demo-only workflow support。 |
+| 欄位 | 定義 | 備註 |
+| --- | --- | --- |
+| `status` | response 類型；error response 固定為 `error`。 | MVP 必要：iMVS 依此進入 error / fallback handling。 |
+| `error.code` | 穩定的 machine-readable error code，供 iMVS 判斷錯誤類型。 | MVP 必要：最小 error contract。 |
+| `error.message` | 短的工程可讀錯誤訊息，供 debug 或 UI fallback 使用。 | MVP 必要：rehearsal debug 與 fallback 顯示需要。 |
+| `error.retryable` | 此錯誤是否建議 retry；`true` 表示可安全重試，`false` 表示建議轉入 fallback 或人工流程。 | MVP 建議：MVP 可先固定常見 error 的 retry rule。 |
+| `fallback.recommended_mode` | 建議 fallback 模式；可為 `standard_staff_workflow`、`local_scripted_demo` 或 `retry_remote_api`。 | MVP 必要：demo continuity 需要。 |
+| `demo_boundary` | 說明此 error / fallback 的定位為 demo-only workflow support。 | MVP 必要：fallback 時仍維持相同 operating scope。 |
 
 若 rehearsal 或 customer demo 時 NYCU remote API 進入 fallback condition，
 imedtac UI 可切換到 Local Scripted Demo Mode 以維持 demo continuity。此模式需
