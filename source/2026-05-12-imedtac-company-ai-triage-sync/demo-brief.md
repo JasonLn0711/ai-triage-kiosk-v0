@@ -7,7 +7,7 @@ topic: personal
 subtopic: sources
 type: interpretation-brief
 source: user-provided-synthesis
-keywords: [imedtac, imedtac, ai-triage, kiosk, web-service, market-demo, vital-signs, asr, fhir, his, emr]
+keywords: [imedtac, ai-triage, kiosk, web-service, market-demo, vital-signs, asr, fhir, his, emr]
 status: active
 ---
 

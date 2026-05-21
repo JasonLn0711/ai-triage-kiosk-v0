@@ -8,7 +8,7 @@ subtopic: sources
 type: source-bundle
 source: user-provided-transcript
 course: ""
-keywords: [imedtac, imedtac, ai-triage, urgent-care, vital-sign-kiosk, asr, llm, fhir, his, emr, urology-previsit, product-sync]
+keywords: [imedtac, ai-triage, urgent-care, vital-sign-kiosk, asr, llm, fhir, his, emr, urology-previsit, product-sync]
 status: active
 participants:
   - Jason Miao

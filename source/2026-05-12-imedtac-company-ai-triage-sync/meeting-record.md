@@ -8,7 +8,7 @@ subtopic: sources
 type: meeting-record
 source: user-provided-transcript
 course: ""
-keywords: [imedtac, imedtac, ai-triage, urgent-care, vital-sign-kiosk, asr, llm, fhir, his, emr, product-demo]
+keywords: [imedtac, ai-triage, urgent-care, vital-sign-kiosk, asr, llm, fhir, his, emr, product-demo]
 status: active
 ---
 

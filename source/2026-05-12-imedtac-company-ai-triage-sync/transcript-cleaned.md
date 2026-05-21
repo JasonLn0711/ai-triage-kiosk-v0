@@ -9,7 +9,7 @@ type: transcript
 source: user-provided-transcript
 status: active
 privacy: private-meeting-evidence
-keywords: [imedtac, imedtac, ai-triage, urgent-care, vital-sign-kiosk, asr, llm, fhir, his, emr, transcript]
+keywords: [imedtac, ai-triage, urgent-care, vital-sign-kiosk, asr, llm, fhir, his, emr, transcript]
 ---
 
 # Cleaned Transcript
