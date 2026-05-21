@@ -32,6 +32,7 @@ Current detailed discussion artifacts:
 - `handoff/2026-05-21-imedtac-engineering-sync-closeout.md`
 - `handoff/2026-05-21-imvs-nycu-api-design-v0.2-draft.md`
 - `handoff/2026-05-21-imedtac-two-endpoint-api-reply.md`
+- `handoff/2026-05-21-imedtac-engineering-open-issues-checklist.md`
 - `handoff/2026-05-21-to-2026-05-25-imedtac-response-plan.md`
 - `handoff/2026-05-21-decision-defaults-and-owner-matrix.md`
 - `handoff/2026-05-22-api-v0.2-requirements-from-expert-review.md`
@@ -78,6 +79,10 @@ Post-sync `2026-05-21` update:
 - Johnny's post-meeting Gmail record confirms imedtac's preference to lead the
   US customer demo with a tachycardia / chest-tightness live-performance lane,
   while keeping the same two-endpoint API shape.
+- The engineering open-issues checklist tracks items not fully settled by the
+  API table itself: change-control, session lifecycle, idempotency, fallback UI,
+  field dictionary, UI rendering limits, mock / contract test needs,
+  observability, and rehearsal acceptance criteria.
 
 Post-Duobao internal sync update:
 

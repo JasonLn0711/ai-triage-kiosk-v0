@@ -67,6 +67,7 @@ go-to-market 與美國客戶展示，還不是正式醫療決策產品。
 | `docs/2026-05-20-duobao-demo-design-consistency-review.md` | Review of 多寶's structured cases/question design against current demo, API, and claim-boundary decisions |
 | `decisions/2026-05-20-june-demo-question-budget.md` | Decision that June case flows follow the 慧誠 / iMVS product-spec cap of fewer than 8 visible patient-facing questions |
 | `handoff/2026-05-21-imedtac-two-endpoint-api-reply.md` | External-ready two-endpoint API reply for imedtac engineering |
+| `handoff/2026-05-21-imedtac-engineering-open-issues-checklist.md` | Engineering integration checklist for open issues not fully captured by the API field tables |
 | `handoff/2026-05-21-to-2026-05-25-imedtac-response-plan.md` | Internal response plan for API, question templates, and skip-behavior answer before Monday `2026-05-25` |
 | `docs/writing-method-policy.md` | Repo-wide confident, affirmative, non-defensive writing policy for articles, handoff notes, pre-reads, meeting packets, and company-facing artifacts |
 | `docs/version-control-policy.md` | Automated version-control policy for SemVer runtime, API/schema/flow versions, and demo-readiness checks |
@@ -232,31 +233,36 @@ docs/repo-organization.md
 4. Use `handoff/2026-05-21-imedtac-two-endpoint-api-reply.md` as the API response
    draft and `handoff/2026-05-21-to-2026-05-25-imedtac-response-plan.md` as the
    internal Monday response plan.
-5. Ask 慧誠 for the smallest technical packet needed to wire the demo:
+5. Use `handoff/2026-05-21-imedtac-engineering-open-issues-checklist.md` to
+   track the engineering issues that are not solved by API field tables:
+   change-control, session lifecycle, timeout / retry / idempotency, error /
+   fallback UI, mock / contract test needs, observability, and rehearsal
+   acceptance criteria.
+6. Ask 慧誠 for the smallest technical packet needed to wire the demo:
    kiosk UI insertion point, vital payload field names / example payload,
    session-key expectation, demo room network, output display format, and
    software-team contact.
-6. Ask Ben / engineering whether imedtac can render generic question templates:
+7. Ask Ben / engineering whether imedtac can render generic question templates:
    `single_choice`, `multi_choice`, numeric / scale input, variable option
    counts, and no-scroll limits.
-7. Schedule an actual iMVS machine review with 多寶 / 許醫師 next week.
-8. Prepare the AI-Triage patent-protection brief for Prof. Wu / Tomi before
+8. Schedule an actual iMVS machine review with 多寶 / 許醫師 next week.
+9. Prepare the AI-Triage patent-protection brief for Prof. Wu / Tomi before
    sharing deeper reusable method details with imedtac.
-9. Add idea-attribution labels to high-value meeting records before the next
+10. Add idea-attribution labels to high-value meeting records before the next
    deep imedtac technical handoff.
-10. Decide whether the first customer-visible case is respiratory synthetic,
+11. Decide whether the first customer-visible case is respiratory synthetic,
    tachycardia live-performance, or a healthy/unhealthy contrast script.
-11. Prepare Remote REST API Mode plus clearly labeled Local Scripted Demo Mode.
-12. Adapt the runnable respiratory flow or API examples to the post-sync
+12. Prepare Remote REST API Mode plus clearly labeled Local Scripted Demo Mode.
+13. Adapt the runnable respiratory flow or API examples to the post-sync
    post-measurement default before the next imedtac rehearsal.
-13. Turn the `2026-05-15` second-sync decision into a June demo case pack:
+14. Turn the `2026-05-15` second-sync decision into a June demo case pack:
    `3-5` synthetic urgent-care intake cases with vital signs, short question
    paths, and clinician-review summaries.
-14. Keep the runtime pragmatic for June: networked / external compute is allowed
+15. Keep the runtime pragmatic for June: networked / external compute is allowed
    for demo if local CPU-only ASR / LLM behavior is too slow or hot.
-15. Keep ASR / free-text capture outside this clickable demo until the
+16. Keep ASR / free-text capture outside this clickable demo until the
    workflow, privacy, and clinical-review boundary are explicitly cleared.
-16. Use `docs/literature-matrix-workflow.md` for the next AI-triage paper /
+17. Use `docs/literature-matrix-workflow.md` for the next AI-triage paper /
    guideline sprint so literature work produces source-backed decisions and
    gaps, not isolated summaries.
-17. Keep planning updated with status, blockers, and capacity impact only.
+18. Keep planning updated with status, blockers, and capacity impact only.

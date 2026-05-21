@@ -90,6 +90,32 @@ Authorization: Bearer <demo token, if enabled>
 雙方未來重新開啟「量測中先問 Phase 1、量測完成後再問 Phase 2」的 two-phase
 workflow，該 endpoint 可以作為 future optimized mode 再納入。
 
+## 問答集變更與 API Contract Change-Control
+
+NYCU 建議六月先 freeze 兩個 endpoint 的 shape。多寶 / 許醫師後續若調整題目、
+選項、題目順序、必答規則或 `staff_review_summary` wording，會透過下列版本欄位
+管理，不會要求 imedtac 重新串接 endpoint：
+
+- `flow_version`
+- `case_version`
+- `fixture_version`
+- `question_set_version`
+- `wording_version`
+
+真正需要更新 API schema 的情況，主要是：
+
+- 新增目前未支援的題型，例如 free text、voice input 或尚未確認的 `scale`；
+- 改變 answer payload，例如需要 explicit skip button、`skip_reason` 或其他
+  answer metadata；
+- 新增 early handoff / stop behavior，需要更明確的 `handoff_required`、
+  `handoff_reason_codes`、`session_state` 或 `next_action`；
+- imedtac UI template 能力與目前假設不同，例如固定 option count、無法顯示
+  progress，或單題選項 / label 長度限制更嚴格；
+- vital payload field dictionary 與目前 draft shape 不相容。
+
+因此，題庫與 wording 可以持續臨床審查；endpoint 串接則可先依照本文兩個
+endpoint 進行。
+
 ## Endpoint 1 Request
 
 必填 request 欄位：

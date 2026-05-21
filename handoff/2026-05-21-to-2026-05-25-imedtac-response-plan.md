@@ -12,6 +12,7 @@ source:
   - ../source/2026-05-21-imedtac-teams-api-followup/source.md
   - ../source/2026-05-21-duobao-post-imedtac-internal-sync/meeting-record.md
   - ./2026-05-21-imedtac-two-endpoint-api-reply.md
+  - ./2026-05-21-imedtac-engineering-open-issues-checklist.md
 ---
 
 # imedtac Response Plan Through 2026-05-25
@@ -69,6 +70,7 @@ imedtac asked:
 | Thu `2026-05-21` night | Discuss Johnny's two Teams questions with 多寶. | Jason + 多寶 | pending | Focus on question template timing and skip behavior. |
 | Thu `2026-05-21` night or Fri `2026-05-22` morning | Send holding reply in Teams. | Jason | ready | Acknowledge two-endpoint API document; say question template and skip behavior will be confirmed after internal clinical review. |
 | Fri `2026-05-22` | Send two-endpoint API document draft. | Jason / NYCU | ready as draft | Use `handoff/2026-05-21-imedtac-two-endpoint-api-reply.md`. |
+| Fri `2026-05-22` | Track engineering open issues and change-control. | Jason | ready as checklist | Use `handoff/2026-05-21-imedtac-engineering-open-issues-checklist.md`; send selected P0/P1 asks to imedtac. |
 | Fri `2026-05-22` | Draft preset question / option template. | Jason | pending | Use single-choice / multi-choice only; include `Not sure` / `Unable to answer` where clinically safer than silent skip. |
 | Fri `2026-05-22` | Ask imedtac for missing field dictionary and UI limits. | Jason | pending | Required to freeze exact payload names and rendering constraints. |
 | Sat-Sun `2026-05-23` to `2026-05-24` | Refine tachycardia live-performance lane and respiratory synthetic fallback lane. | Jason + 多寶 / 許醫師 if available | pending | Avoid diagnosis, final triage level, treatment, disposition, or department recommendation. |
@@ -148,6 +150,8 @@ Can deliver by Monday:
 
 - two-endpoint API contract;
 - JSON examples;
+- API change-control note: question wording and option changes are versioned
+  through `question_set_version` / `wording_version`, not endpoint churn;
 - question template for first demo lane;
 - skip-behavior policy;
 - imedtac input checklist;
@@ -169,9 +173,25 @@ Need from imedtac to freeze engineering details:
 
 - actual Vital Upload API field dictionary;
 - example payload;
+- session lifecycle expectations: expiry, refresh/recovery, abandoned sessions,
+  and whether summary-ready sessions can accept more answers;
+- timeout / retry / idempotency expectations;
 - UI insertion point after measurement report;
 - question template limits: max options, max label length, no-scroll behavior;
 - whether `Not sure` / `Unable to answer` options are acceptable in UI;
 - where `staff_review_summary` appears and whether patient-facing UI hides it;
 - demo environment, API base URL constraints, CORS / firewall constraints;
 - whether a local scripted fallback is acceptable and how it should be labeled.
+
+## Engineering Open Issues Tracker
+
+Canonical tracker:
+
+```text
+handoff/2026-05-21-imedtac-engineering-open-issues-checklist.md
+```
+
+Use that file to keep the P0 / P1 / P2 issues separate from the external API
+contract. The external API file should stay concise; the checklist owns
+session lifecycle, fallback, mock server, observability, acceptance criteria,
+and safety / product-boundary follow-up.
