@@ -69,6 +69,9 @@ Current v0.2 freeze-gate additions:
 - examples carry `case_version`, `fixture_version`, `question_set_version`, and
   `wording_version`;
 - staff summary uses `review_basis` rather than `assessment_support`;
+- the answer contract uses explicit `not_sure`-style option IDs instead of a
+  generic skip interaction, because `skip` is a result rather than an
+  interpretable reason;
 - error examples fall back to standard staff workflow and do not include
   generated summaries.
 

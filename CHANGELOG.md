@@ -22,6 +22,8 @@
 - Added call-derived rules for lab API as know-how boundary, meeting-note idea
   attribution, product co-development contract questions, postdoc runway, and
   June deep-cultivation proposal timing.
+- Updated the two-endpoint API reply to use external-facing `貴司` language and
+  explicit `not_sure` answer behavior instead of a generic skip interaction.
 
 ## v0.2.0 - 2026-05-19
 

@@ -5,7 +5,7 @@ date: 2026-05-21
 topic: ai-triage
 type: handoff
 status: external-ready-draft
-audience: Ben Siu, Lauren Wang, Johnny Fang, and imedtac engineering team
+audience: Ben Siu, Lauren Wang, Johnny Fang, and 貴司 engineering team
 source:
   - ../docs/2026-05-12-imvs-hardware-and-vital-units-baseline.md
   - ../source/2026-05-12-imedtac-company-ai-triage-sync/source.md
@@ -21,27 +21,11 @@ source:
 
 Ben、Lauren、Johnny 大家好：
 
-依照今天會議後確認的方向，NYCU 端建議六月 customer demo 第一版採用
-`post_measurement_only` 的兩個 endpoint API contract。這個版本的目標是讓
-慧誠智醫（imedtac Co., Ltd.）的 iMVS 先完成 vital-sign measurement，再把
-measured vital payload 傳給 NYCU API，由 NYCU 回傳結構化問題與
-`staff_review_summary`，供 demo preview / staff-review workflow 使用。
+依照 0521 會議後確認的方向，NYCU 端建議六月 customer demo 第一版採用 `post_measurement_only` 的兩個 endpoint API contract。這個版本的目標是讓貴司的 iMVS 先完成 vital-sign measurement，再把 measured vital payload 傳給 NYCU API，由 NYCU 回傳結構化問題與 `staff_review_summary`，供 demo preview / staff-review workflow 使用。
 
-本文正文以台灣使用的繁體中文書寫；API 欄位名稱、HTTP method、URL path、
-JSON key、enum value 與範例 payload 會保留英文，確保工程串接時欄位語意
-一致。
+本版同時把 `2026-05-12` 貴司已提供的 iMVS Product Spec `V2.0.4` 與 iMVS API Definition `V1.4` 納入設計 baseline。 NYCU 端會先以既有 Vital Sign Upload API 的欄位與單位作為 adapter 起點，再請貴司工程團隊確認目前 demo machine / GitHub 格式是否有欄位名稱、optional/required 或 missing/failure semantics 的更新。
 
-本版同時把 `2026-05-12` 慧誠已提供的 iMVS Product Spec `V2.0.4` 與
-iMVS API Definition `V1.4` 納入設計 baseline。也就是說，NYCU 端會先以既有
-Vital Sign Upload API 的欄位與單位作為 adapter 起點，再請 imedtac 工程團隊
-確認目前 demo machine / GitHub 格式是否有欄位名稱、optional/required 或
-missing/failure semantics 的更新。
-
-此 API contract 定位為 synthetic-data demo / product capability demo 的工程整合
-文件。輸出聚焦在 vital-aware intake support、typed-question workflow、
-staff-review summary 與 demo preview；正式臨床決策、production HIS / EMR /
-FHIR integration、real patient-data flow 與產品化驗證由後續 governance path
-管理。
+此 API contract 定位為 synthetic-data demo / product capability demo 的工程整合文件。輸出聚焦在 vital-aware intake support、typed-question workflow、staff-review summary 與 demo preview；正式臨床決策、production HIS / EMR / FHIR integration、real patient-data flow 與產品化驗證由後續 governance path 管理。
 
 ## 六月 Demo 確認流程
 
@@ -53,7 +37,7 @@ iMVS 使用者登入 / demo case 開始
 -> iMVS 顯示 single-choice / multi-choice question
 -> iMVS 呼叫 NYCU Endpoint 2，送出 session_key + answer
 -> NYCU 回傳下一題 question object 或 staff_review_summary
--> imedtac UI 顯示 staff / doctor / customer demo preview
+-> 貴司 UI 顯示 staff / doctor / customer demo preview
 ```
 
 六月預設值：
@@ -65,7 +49,7 @@ iMVS 使用者登入 / demo case 開始
 | `vitals_ready` | `true` | 表示 request 內已包含可供 demo 問答流程使用的 vital payload。 | 範例：`true`；代表 heart rate、SpO2 等量測資料已進入本次 session。 |
 | `question_phase` | 問題回覆用 `post_measurement_intake`；最終摘要用 `summary` | 標示目前回覆屬於量測後問答階段，或已經進入摘要階段。 | 範例：`post_measurement_intake`；iMVS 顯示下一題。範例：`summary`；iMVS 顯示 staff preview。 |
 | `voice_input` | `false` | 表示六月 critical path 聚焦觸控選項題；語音輸入列為後續擴充能力。 | 範例：`false`；iMVS 使用 touch choice UI 送出答案。 |
-| `question.type` | `single_choice`、`multi_choice`；`scale` 需待 imedtac UI 確認 | 定義 iMVS 需要使用哪一種 UI template 顯示問題。 | 範例：`single_choice`；iMVS 顯示單選題模板。範例：`multi_choice`；iMVS 顯示複選題模板。 |
+| `question.type` | `single_choice`、`multi_choice`；`scale` 需待貴司 UI 確認 | 定義 iMVS 需要使用哪一種 UI template 顯示問題。 | 範例：`single_choice`；iMVS 顯示單選題模板。範例：`multi_choice`；iMVS 顯示複選題模板。 |
 
 ## Endpoint 清單
 
@@ -94,19 +78,13 @@ Authorization: Bearer <demo token, if enabled>
 用途：
 
 - iMVS 對同一個 active session 送出單題答案。
-- NYCU 回傳下一題 question object，或在問答完成後回傳最終
-  `staff_review_summary`。
+- NYCU 回傳下一題 question object，或在問答完成後回傳最終 `staff_review_summary`。
 
-六月 integration 以兩個 endpoint 作為主要路徑。獨立 vitals-ready endpoint
-保留為 future optimized mode；雙方未來若重新開啟「量測中先問 Phase 1、
-量測完成後再問 Phase 2」的 two-phase workflow，可將該 endpoint 納入下一版
-schema。
+六月 integration 以兩個 endpoint 作為主要路徑。獨立 vitals-ready endpoint 保留為 future optimized mode；雙方未來若重新開啟「量測中先問 Phase 1、量測完成後再問 Phase 2」的 two-phase workflow，可將該 endpoint 納入下一版 schema。
 
 ## 問答集變更與 API Contract Change-Control
 
-NYCU 建議六月先 freeze 兩個 endpoint 的 shape。多寶 / 許醫師後續若調整題目、
-選項、題目順序、必答規則或 `staff_review_summary` wording，會透過下列版本欄位
-管理；imedtac 的 endpoint 串接可維持穩定：
+NYCU 建議六月先 freeze 兩個 endpoint 的 shape。許醫師後續若調整題目、選項、題目順序、必答規則或 `staff_review_summary` wording，會透過下列版本欄位管理；貴司的 endpoint 串接可維持穩定：
 
 - `flow_version`
 - `case_version`
@@ -116,18 +94,13 @@ NYCU 建議六月先 freeze 兩個 endpoint 的 shape。多寶 / 許醫師後續
 
 下列情境會啟動 API schema revision：
 
-- 新增超出目前六月 scope 的題型，例如 free text、voice input 或待 imedtac UI
-  確認的 `scale`；
-- 改變 answer payload，例如需要 explicit skip button、`skip_reason` 或其他
-  answer metadata；
-- 新增 early handoff / stop behavior，需要更明確的 `handoff_required`、
-  `handoff_reason_codes`、`session_state` 或 `next_action`；
-- imedtac UI template constraints 比目前假設更嚴格，例如固定 option count、
-  progress display constraints，或單題選項 / label 長度限制更嚴格；
+- 新增超出目前六月 scope 的題型，例如 free text、voice input 或待貴司 UI 確認的 `scale`；
+- 改變 answer payload，例如需要 question-specific `not_sure` option ids 或其他 answer metadata；
+- 新增 early handoff / stop behavior，需要更明確的 `handoff_required`、`handoff_reason_codes`、`session_state` 或 `next_action`；
+- 貴司 UI template constraints 比目前假設更嚴格，例如固定 option count、progress display constraints，或單題選項 / label 長度限制更嚴格；
 - vital payload field dictionary 需要 adapter 或 schema 對齊。
 
-因此，題庫與 wording 可以持續臨床審查；endpoint 串接則可先依照本文兩個
-endpoint 進行。
+因此，題庫與 wording 可以持續臨床審查；endpoint 串接則可先依照本文兩個 endpoint 進行。
 
 第一版 preset question / option template 建議採用 tachycardia live lane：
 
@@ -135,15 +108,11 @@ endpoint 進行。
 handoff/2026-05-21-duobao-style-tachycardia-live-demo-question-set.md
 ```
 
-這份題組使用 `single_choice` / `multi_choice`，以
-`demo-tachycardia-live-001`、`tachycardia-live-demo-flow-v0.2-draft`、以及
-`tachycardia-question-set-v0.2-draft` 管理版本。Respiratory low-SpO2 lane
-保留為 synthetic fallback / evidence demo lane。
+這份題組使用 `single_choice` / `multi_choice`，以 `demo-tachycardia-live-001`、`tachycardia-live-demo-flow-v0.2-draft`、以及 `tachycardia-question-set-v0.2-draft` 管理版本。Respiratory low-SpO2 lane 保留為 synthetic fallback / evidence demo lane。
 
 ## 已有 iMVS Vital Upload Baseline
 
-慧誠在 `2026-05-12` 提供的 iMVS API `V1.4` 已包含 Vital Sign Upload 的 nested
-payload 與 sample units。NYCU 端會把這份文件當成六月 adapter baseline：
+貴司在 `2026-05-12` 提供的 iMVS API `V1.4` 已包含 Vital Sign Upload 的 nested payload 與 sample units。NYCU 端會把這份文件當成六月 adapter baseline：
 
 | iMVS V1.4 object | iMVS value field(s) | iMVS unit sample | NYCU normalized field(s) |
 | --- | --- | --- | --- |
@@ -157,45 +126,31 @@ payload 與 sample units。NYCU 端會把這份文件當成六月 adapter baseli
 
 設計控制：
 
-- V1.4 文件中的 measurement values 型別是 string；NYCU runtime 會解析成 number，
-  但保留明確 `unit` 供 UI、log 與 summary 對齊。
-- V1.4 表格中的 HR unit 有 `bmp` typo-like 寫法，但 JSON sample 使用 `bpm`；
-  本文件以 `bpm` 作為 heart rate 的標準單位。
-- `Respiratory rate` 不在 5/12 V1.4 Vital Upload 欄位中；若六月 demo 要使用，
-  需由 imedtac 確認它是量測值、手動輸入值，或僅是 synthetic demo fixture。
-- `BMI` 是 report / derived context；V1.4 sample 未把 BMI 列為 upload 欄位，
-  因此只在 height + weight 可用且顯示範圍確認後衍生。
-- Product spec 中 SpO2 與 glucose 硬體在部分 variant 標為 optional；Endpoint
-  可以支援這兩個欄位，但是否列為 guaranteed field 需以 target SKU 為準。
+- V1.4 文件中的 measurement values 型別是 string；NYCU runtime 會解析成 number，但保留明確 `unit` 供 UI、log 與 summary 對齊。
+- V1.4 表格中的 HR unit 有 `bmp` typo-like 寫法，但 JSON sample 使用 `bpm`；本文件以 `bpm` 作為 heart rate 的標準單位。
+- `Respiratory rate` 不在 5/12 V1.4 Vital Upload 欄位中；若六月 demo 要使用，需由貴司確認它是量測值、手動輸入值，或僅是 synthetic demo fixture。
+- `BMI` 是 report / derived context；V1.4 sample 未把 BMI 列為 upload 欄位，因此只在 height + weight 可用且顯示範圍確認後衍生。
+- Product spec 中 SpO2 與 glucose 硬體在部分 variant 標為 optional；Endpoint 可以支援這兩個欄位，但是否列為 guaranteed field 需以 target SKU 為準。
 
 ## 欄位範例說明
 
-下列表格最後一欄提供每個 field 的實際 demo JSON 範例與簡短說明。範例值統一使用
-六月第一 live-performance lane：`demo-tachycardia-live-001`，也就是多寶 case
-設計轉換後的 palpitation / chest-tightness with elevated heart-rate cue demo
-case。Respiratory low-SpO2 lane 保留為 fallback / second-lane 設計，不再作為本
-文件主要 JSON example。
+下列表格最後一欄提供每個 field 的實際 demo JSON 範例與簡短說明。範例值統一使用六月第一 live-performance lane：`demo-tachycardia-live-001`，也就是許醫師 case 設計轉換後的 palpitation / chest-tightness with elevated heart-rate cue demo case。Respiratory low-SpO2 lane 保留為 fallback / second-lane 設計，不再作為本文件主要 JSON example。
 
 ## API 欄位分層建議
 
-目前欄位集合是完整 trace-friendly contract，但若把所有欄位都要求 imedtac UI
-手動提供，會偏重。建議六月 MVP 分三層：
+目前欄位集合是完整 trace-friendly contract，但若把所有欄位都要求貴司 UI 手動提供，會偏重。建議六月 MVP 分三層：
 
 | 層級 | 欄位 | 建議 |
 | --- | --- | --- |
 | iMVS 必須送出 | `api_version`, `request_id`, `idempotency_key`, `workflow_mode`, `measurement_state`, `vitals_ready`, `case_id`, `client.locale`, `patient_context.demo_patient_id`, `vitals`, `capabilities.question_types`, `capabilities.max_questions` | 這些支撐 session 建立、重試安全、case selection、語系、量測資料與 UI 能力。 |
-| NYCU 可推導 / 回傳 echo | `schema_version`, `flow_version`, `case_version`, `fixture_version`, `question_set_version`, `wording_version` | 若 imedtac 覺得 request 太重，這些可由 NYCU 根據 `case_id` 與 API 版本決定，並在 response 中回傳供 log 對帳。 |
-| 需等 UI 確認 | `capabilities.max_options_per_question`, `capabilities.max_option_label_length`, `capabilities.variable_option_count`, `question.required`, `question.allow_skip`, `question.max_selections`, `question.none_option_id` | 這些不是 clinical logic，而是畫面 / answer validation contract；確認後可保留，否則先用 server default。 |
+| NYCU 可推導 / 回傳 echo | `schema_version`, `flow_version`, `case_version`, `fixture_version`, `question_set_version`, `wording_version` | 若貴司覺得 request 太重，這些可由 NYCU 根據 `case_id` 與 API 版本決定，並在 response 中回傳供 log 對帳。 |
+| 需等 UI 確認 | `capabilities.max_options_per_question`, `capabilities.max_option_label_length`, `capabilities.variable_option_count`, `question.required`, `question.allow_not_sure`, `question.not_sure_option_id`, `question.max_selections`, `question.none_option_id` | 這些不是 clinical logic，而是畫面 / answer validation contract；確認後可保留，否則先用 server default。 |
 
-因此，下面的 JSON example 是「完整 trace example」。實際 MVP 串接時，可以把 NYCU
-可推導欄位改成 optional / server-managed，不需要讓 imedtac 每次 request 都手動組
-全部版本欄位。
+因此，下面的 JSON example 是「完整 trace example」。實際 MVP 串接時，可以把 NYCU 可推導欄位改成 optional / server-managed，不需要讓貴司每次 request 都手動組全部版本欄位。
 
 ## JSON Value 固定規則
 
-JSON key 已在本文各 endpoint table 中固定；value 需要再分成四類管理。工程串接
-原則是：前端 / 狀態機 / fallback / log 不解析自然語言文字，只讀固定 code、
-enum、boolean、number 與 object structure。
+JSON key 已在本文各 endpoint table 中固定；value 需要再分成四類管理。工程串接原則是：前端 / 狀態機 / fallback / log 不解析自然語言文字，只讀固定 code、enum、boolean、number 與 object structure。
 
 | 類別 | 是否需要列出所有情況 | API 文件規則 | 範例 |
 | --- | --- | --- | --- |
@@ -214,7 +169,7 @@ June v0.2 建議先固定下列 machine-readable values：
 | `measurement_state` | June normal: `complete`; failure / future states: `failed`, `missing`, `in_progress` |
 | `question_phase` | June: `post_measurement_intake`, `summary`; future optimized: `pre_vital_intake`, `post_vital_followup` |
 | `question.type` | June: `single_choice`, `multi_choice`; future only after UI confirmation: `scale` |
-| `question.ui_template` | Same as `question.type` unless imedtac defines a separate UI-template enum. |
+| `question.ui_template` | Same as `question.type` unless 貴司 defines a separate UI-template enum. |
 | `vitals.<field>.measurement_status` | `measured`, `missing`, `failed`, `manual_entry`, `not_available` |
 | `vitals.<field>.quality_flag` | `ok`, `needs_review`, `device_error`, `out_of_range_demo`, `unknown` |
 | `summary_visibility` | June: `staff_only` |
@@ -222,16 +177,9 @@ June v0.2 建議先固定下列 machine-readable values：
 | `fallback.recommended_mode` | `standard_staff_workflow`, `local_scripted_demo`, `retry_remote_api` |
 | `error.code` | `api_timeout`, `invalid_session`, `measurement_quality_unavailable`, `missing_required_field`, `unsupported_question_type`, `idempotency_conflict` |
 
-For `answer.selected_option_ids`, the allowed values are not global. They are
-the `id` values returned inside the immediately preceding `question.options`.
-For example, if NYCU returns option id `heart_racing`, iMVS submits
-`"selected_option_ids": ["heart_racing"]`; iMVS should not submit the display
-label `Heart racing / palpitations`.
+For `answer.selected_option_ids`, the allowed values are not global. They are the `id` values returned inside the immediately preceding `question.options`. For example, if NYCU returns option id `heart_racing`, iMVS submits `"selected_option_ids": ["heart_racing"]`; iMVS should not submit the display label `Heart racing / palpitations`.
 
-For `staff_review_summary` and patient / staff display strings, NYCU will keep
-scope-control wording versioned through `wording_version`. imedtac UI should
-display these strings as provided and use `status`, `summary_visibility`,
-`handoff_required`, and `handoff_reason_codes` for workflow behavior.
+For `staff_review_summary` and patient / staff display strings, NYCU will keep scope-control wording versioned through `wording_version`. 貴司 UI should display these strings as provided and use `status`, `summary_visibility`, `handoff_required`, and `handoff_reason_codes` for workflow behavior.
 
 ## Endpoint 1 Request
 
@@ -260,9 +208,9 @@ display these strings as provided and use `status`, `summary_visibility`,
 | `vitals` | object | yes | iMVS 量測完成後送給 NYCU 的 measured 或 synthetic vital payload。 | 範例：`{"heart_rate_bpm":{"value":150,"unit":"bpm"}}`；NYCU 用此 object 產生 vital-aware 問題。 |
 | `capabilities.question_types` | array | yes | iMVS UI 支援的題型清單；六月建議先使用 `["single_choice", "multi_choice"]`。 | 範例：`["single_choice","multi_choice"]`；NYCU 回傳 iMVS 可 render 的題型。 |
 | `capabilities.max_questions` | number | yes | 此 session 最多可顯示的病人端問題數；六月建議 hard cap 為 `7` 題以內。 | 範例：`7`；NYCU 將問答控制在 demo 節奏內。 |
-| `capabilities.max_options_per_question` | number | ask imedtac | iMVS 單題最多可清楚顯示幾個選項；需要 imedtac 確認以維持 kiosk 畫面清楚。 | 範例：`4`；NYCU 產生每題最多四個選項的 question object。 |
-| `capabilities.max_option_label_length` | number | ask imedtac | 單一選項 label 最長可接受字元數；需要 imedtac 確認以維持 kiosk 排版穩定。 | 範例：`48`；NYCU 控制 option label 長度以配合 kiosk UI。 |
-| `capabilities.variable_option_count` | boolean | ask imedtac | iMVS 是否支援每一題有不同選項數量；若 iMVS 使用固定 template，NYCU 會依 template 固定 option count。 | 範例：`true`；代表不同題目可回傳不同選項數。 |
+| `capabilities.max_options_per_question` | number | 請貴司確認 | iMVS 單題最多可清楚顯示幾個選項；需要貴司確認以維持 kiosk 畫面清楚。 | 範例：`4`；NYCU 產生每題最多四個選項的 question object。 |
+| `capabilities.max_option_label_length` | number | 請貴司確認 | 單一選項 label 最長可接受字元數；需要貴司確認以維持 kiosk 排版穩定。 | 範例：`48`；NYCU 控制 option label 長度以配合 kiosk UI。 |
+| `capabilities.variable_option_count` | boolean | 請貴司確認 | iMVS 是否支援每一題有不同選項數量；若 iMVS 使用固定 template，NYCU 會依 template 固定 option count。 | 範例：`true`；代表不同題目可回傳不同選項數。 |
 | `capabilities.voice_input` | boolean | yes | 本次 session 是否支援語音輸入；六月 critical path 建議固定為 `false`。 | 範例：`false`；代表本次 demo 使用 touch answer flow。 |
 
 Vital payload 最小欄位結構：
@@ -405,14 +353,14 @@ Question object 最小欄位結構：
 | `question.options` | array | yes | 選項清單；每個 option 應包含穩定 `id` 與顯示 `label`。 | 範例：`[{"id":"heart_racing","label":"Heart racing / palpitations"}]`；iMVS 用 `label` 顯示、用 `id` 回傳答案。 |
 | `question.option_count` | number | yes | 此題實際選項數量；讓 iMVS 可驗證是否超過 UI 容量。 | 範例：`4`；代表此題有四個可點選 options。 |
 | `question.none_option_id` | string/null | no | 若此題有互斥的「none / none of these」選項，填入該 option id；沒有則為 `null`。 | 範例：`none_of_these`；iMVS 可用此值處理互斥選項。 |
-| `question.required` | boolean | no | 表示此題是否為本 flow 的必答題；tachycardia live lane 建議 Q1-Q5 為 `true`。 | 範例：`true`；iMVS 不顯示 silent skip，只顯示 `Not sure` 或 staff-confirmation option。 |
-| `question.allow_not_sure` | boolean | no | 表示此題是否內建 `Not sure` / `Unable to answer` / `Staff should confirm` 選項。 | 範例：`true`；使用者不確定時仍回傳明確 option id。 |
-| `question.allow_skip` | boolean | no | 若 imedtac UI 需要 skip button，用此欄位控制；required safety questions 建議為 `false`。 | 範例：`false`；代表本題不允許 silent skip。 |
+| `question.required` | boolean | no | 表示此題是否為本 flow 的必答題；tachycardia live lane 建議 Q1-Q5 為 `true`。 | 範例：`true`；iMVS 不提供無原因略過路徑，只顯示 `Not sure` 或 staff-confirmation option。 |
+| `question.allow_not_sure` | boolean | no | 表示此題是否內建 `Not sure` 選項。 | 範例：`true`；使用者不確定時仍回傳明確 option id。 |
+| `question.not_sure_option_id` | string/null | no | 若此題提供 `Not sure` 選項，填入對應 option id。 | 範例：`more_than_1_day_or_not_sure`；iMVS 以此把不確定狀態當成明確回答，而不是無原因略過。 |
 | `question.max_selections` | number/null | no | `multi_choice` 題的最大可選數；單選題可為 `1`。 | 範例：`3`；iMVS 可限制同題選取數。 |
 | `question.trigger_reason_codes` | array | no | 說明此題出現的 reason code，供 log / debug / demo trace 使用。 | 範例：`["measured_elevated_heart_rate_demo"]`；代表此題由 heart-rate cue 觸發。 |
 | `question.summary_effect` | string/null | no | 說明此題答案如何進入 `staff_review_summary`。 | 範例：`Adds current heart-racing status to staff review summary.` |
 | `question.rendering_constraints.requires_no_scroll` | boolean | no | 是否要求此題盡量不需捲動即可顯示完整內容；六月 demo 建議為 `true`。 | 範例：`true`；代表題目文字與選項以首屏完整顯示為設計目標。 |
-| `question.rendering_constraints.max_visible_options_without_scroll` | number | no | iMVS 首屏可顯示的最大選項數；需要 imedtac 確認。 | 範例：`4`；NYCU 以四個選項作為 kiosk 首屏容量假設。 |
+| `question.rendering_constraints.max_visible_options_without_scroll` | number | no | iMVS 首屏可顯示的最大選項數；需要貴司確認。 | 範例：`4`；NYCU 以四個選項作為 kiosk 首屏容量假設。 |
 
 ## Endpoint 2 Request
 
@@ -495,7 +443,7 @@ NYCU 會回傳兩種 response 類型之一。
   "question": {
     "id": "tachy-onset",
     "registry_refs": ["TACHY-002"],
-    "source_refs": ["DUOBAO-DEMO-DESIGN-20260520", "LOCAL-PROTOCOL-TBD"],
+    "source_refs": ["CLINICAL-DEMO-DESIGN-20260520", "LOCAL-PROTOCOL-TBD"],
     "evidence_status": "clinical-review-needed",
     "review_owner": "clinical_reviewer_tbd",
     "type": "single_choice",
@@ -511,7 +459,7 @@ NYCU 會回傳兩種 response 類型之一。
     "none_option_id": null,
     "required": true,
     "allow_not_sure": true,
-    "allow_skip": false,
+    "not_sure_option_id": "more_than_1_day_or_not_sure",
     "max_selections": 1,
     "trigger_reason_codes": ["reported_palpitations"],
     "summary_effect": "Adds onset and duration context to the staff-review summary."
@@ -595,14 +543,11 @@ request body -> return the same result and keep the question flow at the same
 state.
 ```
 
-若相同 `idempotency_key` 搭配實質不同 request body，NYCU 應回傳
-`error.code = "idempotency_conflict"`，並維持原 session state。
+若相同 `idempotency_key` 搭配實質不同 request body，NYCU 應回傳 `error.code = "idempotency_conflict"`，並維持原 session state。
 
 ## Error 與 Fallback 行為
 
-Error response 使用 structured fallback contract：NYCU 回傳穩定 error code、
-retryability 與建議 fallback mode，讓 iMVS 維持標準 staff workflow 或
-Local Scripted Demo Mode。
+Error response 使用 structured fallback contract：NYCU 回傳穩定 error code、retryability 與建議 fallback mode，讓 iMVS 維持標準 staff workflow 或 Local Scripted Demo Mode。
 
 建議 error 欄位：
 
@@ -615,44 +560,36 @@ Local Scripted Demo Mode。
 | `fallback.recommended_mode` | 建議 fallback 模式；可為 `standard_staff_workflow`、`local_scripted_demo` 或 `retry_remote_api`。 | 範例：`local_scripted_demo`；代表 customer demo 可切換到 local scripted run。 |
 | `demo_boundary` | 說明此 error / fallback 的定位為 demo-only workflow support。 | 範例：`Demo workflow support fallback.`；fallback response 仍維持相同 operating scope。 |
 
-若 rehearsal 或 customer demo 時 NYCU remote API 進入 fallback condition，
-imedtac UI 可切換到 Local Scripted Demo Mode 以維持 demo continuity。此模式需
-在內部與必要畫面上清楚標示為 local scripted run mode，方便 demo operator 與
-工程團隊辨識目前執行模式。
+若 rehearsal 或 customer demo 時 NYCU remote API 進入 fallback condition，貴司 UI 可切換到 Local Scripted Demo Mode 以維持 demo continuity。此模式需在內部與必要畫面上清楚標示為 local scripted run mode，方便 demo operator 與工程團隊辨識目前執行模式。
 
-## 使用者答不出來 / Skip 行為
+## 使用者答不出來 / Not Sure 行為
 
 此點由 NYCU 與臨床 reviewer 完成確認後定版。
 
 目前工程建議如下：
 
 - 對 required safety 或 handoff 問題，使用明確 answer option 或 staff-confirmation path。
-- 若使用者可能不知道答案，建議在選項中明確提供 `Not sure` 或
-  `Unable to answer`。
-- 若 imedtac UI 需要對非 critical 問題提供真正的 skip interaction，API 應明確
-  表示該題被 skip，並附上 `skip_reason`：
+- 本次 demo 不建議提供無原因的略過按鈕，因為略過是結果，不是原因；如果只記錄使用者略過，NYCU 與貴司都無法判斷使用者是不理解問題、不知道怎麼回答，或知道問題但忘記 / 不確定答案。
+- 若使用者可能不知道答案，建議在選項中明確提供 `Not sure`，並讓 iMVS 回傳穩定 option id。
+- 對非 critical 問題若需要保留不確定狀態，本次 demo 建議使用 `not_sure` 類 option id，而不是無原因略過：
 
 ```json
 {
   "answer": {
-    "selected_option_ids": [],
-    "scale_value": null,
-    "skipped": true,
-    "skip_reason": "user_unable_to_answer"
+    "selected_option_ids": ["not_sure"],
+    "scale_value": null
   }
 }
 ```
 
-NYCU 會在與多寶 / 許醫師討論後，確認哪些題目必答、哪些題目可以提供
-`Not sure` / `Unable to answer`，以及哪些題目可以允許真正 skip。
+NYCU 會在與許醫師討論後，確認哪些題目必答、哪些題目可以提供 `Not sure`，以及各題對應的 `not_sure` option id。
 
-## 需要 imedtac 提供的資訊
+## 需要貴司提供的資訊
 
-為了 freeze API examples 並精準對齊欄位名稱，NYCU 需要 imedtac 提供以下資訊。
+為了 freeze API examples 並精準對齊欄位名稱，NYCU 需要貴司提供以下資訊。
 
 1. Vital Upload API field dictionary
-   - 目前 demo machine / GitHub 格式是否仍沿用 V1.4 的 `NBP`、`SPO2`、`HR`、
-     `Temp`、`Glucose`、`Height`、`Weight`；
+   - 目前 demo machine / GitHub 格式是否仍沿用 V1.4 的 `NBP`、`SPO2`、`HR`、`Temp`、`Glucose`、`Height`、`Weight`；
    - 若 units 與 V1.4 baseline 不同，請提供 current units；
    - required / optional 狀態；
    - missing / failed / poor-quality value 的表示方式；
@@ -668,7 +605,7 @@ NYCU 會在與多寶 / 許醫師討論後，確認哪些題目必答、哪些題
 
 3. Demo environment
    - NYCU API 預期 base URL / deployment path；
-   - iMVS browser UI 是直接呼叫 NYCU API，或透過 imedtac backend 呼叫；
+   - iMVS browser UI 是直接呼叫 NYCU API，或透過貴司 backend 呼叫；
    - CORS / firewall / VPN 限制；
    - demo bearer token 或 shared token 是否可接受。
 
@@ -682,11 +619,8 @@ NYCU 會在與多寶 / 許醫師討論後，確認哪些題目必答、哪些題
 NYCU 可先提供：
 
 - 本兩個 endpoint API 文件；
-- start-session、answer submission、next-question、summary、error response
-  的 JSON examples；
-- 多寶 / 許醫師 wording review 後的第一版 preset question / option template；
-- 臨床 review 後的 skip-behavior 建議。
+- start-session、answer submission、next-question、summary、error response 的 JSON examples；
+- 許醫師 wording review 後的第一版 preset question / option template；
+- 臨床 review 後的 `not_sure` / staff-confirmation answer behavior 建議。
 
-此 API schema 不綁定單一 case。相同兩個 endpoints 可以支援 tachycardia
-live-performance lane 與 respiratory synthetic lane；需要替換的是 `flow_version`、
-`case_id`、question set 與 summary wording。
+此 API schema 不綁定單一 case。相同兩個 endpoints 可以支援 tachycardia live-performance lane 與 respiratory synthetic lane；需要替換的是 `flow_version`、`case_id`、question set 與 summary wording。
