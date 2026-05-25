@@ -77,7 +77,7 @@ manual deploy of GitHub commit `c190240`.
 | Health Check Path | `/healthz` |
 | Root Directory | leave blank |
 | Auto-Deploy | `On Commit` is acceptable for rehearsal |
-| Environment Variables | none required for the first rehearsal |
+| Environment Variables | `DEMO_BEARER_TOKEN` is configured in Render for token-required rehearsal; the actual value is not stored in repo files |
 
 The repo now defines:
 
@@ -117,6 +117,49 @@ Public verification passed on `2026-05-25 17:50 GMT+8`:
 | `POST /api/triage-demo/sessions/demo-session-tachy-001/answers` | HTTP success / JSON `status="question"` | Returned next question `tachy-onset` and `progress.expected_total=7`. |
 
 The public Render service is now ready for first browser-callable rehearsal.
+
+## Demo Bearer Token Gate
+
+The API runtime now supports a simple bearer-token gate without storing the
+token in repo files:
+
+```text
+DEMO_BEARER_TOKEN=<shared-demo-token>
+```
+
+When that environment variable is set in Render, both POST endpoints require:
+
+```http
+Authorization: Bearer <demo token>
+```
+
+`GET /healthz` and `OPTIONS` preflight remain unauthenticated so browser
+preflight and health checks continue to work. If `DEMO_BEARER_TOKEN` is unset,
+the service accepts POST requests without a token for local rehearsal.
+
+Set the actual token only in Render environment variables and share it with
+imedtac through the agreed private channel. Do not paste the token into
+Markdown, screenshots, logs, Git history, or command history.
+
+Jason configured `DEMO_BEARER_TOKEN` in the Render Environment page on
+`2026-05-25`. The value is intentionally not recorded here. Token-required
+runtime behavior becomes effective after the token-gate code is published to
+GitHub `main` and Render rebuilds/redeploys the service.
+
+## CORS Origin Boundary
+
+The current API code allowlists these browser origins:
+
+```text
+http://localhost
+http://localhost:5174
+```
+
+These are the origins of the frontend page running on the imedtac/iMVS test
+machine. They are not Render localhost and they are not network/firewall
+allowlist entries. If imedtac tests from `http://127.0.0.1:5174`, a LAN IP,
+another port, an HTTPS domain, or a WebView custom origin, add that exact
+Origin value to `ALLOWED_ORIGINS` after confirmation.
 
 ## Deployment Sequence
 
@@ -189,6 +232,7 @@ Access-Control-Allow-Headers: Content-Type, Authorization
 curl -sS -X POST "$API_BASE/api/triage-demo/sessions" \
   -H "Content-Type: application/json" \
   -H "Origin: http://localhost:5174" \
+  -H "Authorization: Bearer $DEMO_BEARER_TOKEN" \
   --data @handoff/api-examples/2026-05-21-start-session-request-demo-tachycardia.json | jq .
 ```
 
@@ -209,6 +253,7 @@ SESSION_KEY="<returned session_key>"
 curl -sS -X POST "$API_BASE/api/triage-demo/sessions/$SESSION_KEY/answers" \
   -H "Content-Type: application/json" \
   -H "Origin: http://localhost:5174" \
+  -H "Authorization: Bearer $DEMO_BEARER_TOKEN" \
   --data @handoff/api-examples/2026-05-21-submit-answer-request-demo-tachycardia.json | jq .
 ```
 

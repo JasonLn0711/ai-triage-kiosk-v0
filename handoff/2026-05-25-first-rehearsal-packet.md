@@ -94,6 +94,12 @@ http://localhost
 http://localhost:5174
 ```
 
+These values are browser `Origin` values for a frontend served on the
+imedtac/iMVS test machine. They are not Render-localhost settings. If the actual
+frontend origin is `127.0.0.1`, a LAN IP, another port, an HTTPS domain, or a
+WebView custom origin, NYCU should add that exact origin after imedtac confirms
+it.
+
 Supported preflight:
 
 ```http
@@ -110,9 +116,21 @@ Bearer token format if enabled:
 Authorization: Bearer <demo token>
 ```
 
-The actual token is not stored in this repo, Markdown, screenshots, or logs.
-The local mock accepts requests without a token so UI rehearsal can start before
-credential distribution.
+NYCU runtime behavior:
+
+- If `DEMO_BEARER_TOKEN` is unset, the mock accepts POST requests without a
+  token so local UI rehearsal can start before credential distribution.
+- If `DEMO_BEARER_TOKEN` is set in Render or local shell, both POST endpoints
+  require the exact header above.
+- `GET /healthz` and `OPTIONS` preflight do not require the bearer token.
+
+The actual token is not stored in this repo, Markdown, screenshots, or logs; it
+should be shared only through the agreed private channel.
+
+Jason has configured `DEMO_BEARER_TOKEN` in Render for token-required rehearsal;
+the value is intentionally not recorded in this packet. Token-required behavior
+becomes live after the token-gate code is published to GitHub `main` and Render
+rebuilds/redeploys.
 
 ## Start Session Request
 

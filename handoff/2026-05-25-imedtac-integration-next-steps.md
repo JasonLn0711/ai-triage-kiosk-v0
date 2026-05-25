@@ -45,7 +45,8 @@ Frozen for the first integration rehearsal:
 | API shape | Two endpoints only: `POST /api/triage-demo/sessions` and `POST /api/triage-demo/sessions/{session_key}/answers`. |
 | Workflow | `post_measurement_only`: iMVS completes measurement first, then starts the NYCU question loop. |
 | Deployment target | NYCU-hosted Render rehearsal API: `https://nycu-imedtac-triage-demo-api.onrender.com/api/triage-demo`. |
-| CORS | Allow `http://localhost` and `http://localhost:5174` for first rehearsal. |
+| CORS | Allow browser origins `http://localhost` and `http://localhost:5174` for first rehearsal. These origins refer to the iMVS/frontend machine's browser page, not Render's localhost. |
+| Demo auth | Simple bearer-token gate controlled by Render environment variable `DEMO_BEARER_TOKEN`; if set, POST endpoints require `Authorization: Bearer <demo token>`. |
 | Progress display | iMVS uses `progress.expected_total` for `Question X of Y`; `capabilities.max_questions` is only a UI capacity cap. |
 | Retry/idempotency | Same logical operation retries with the same body/key; changed body with same key returns `idempotency_conflict`. |
 | Conflict recovery | `idempotency_conflict` recovery is restart demo session or clearly labeled fallback, not answer revision. |
@@ -177,11 +178,26 @@ NYCU implementation checklist:
 - Allow CORS origins:
   - `http://localhost`
   - `http://localhost:5174`
+  - These are browser `Origin` values for a locally served imedtac/iMVS
+    frontend. If imedtac tests from `127.0.0.1`, a LAN IP, another port, an
+    HTTPS domain, or a WebView custom origin, NYCU should add that exact Origin
+    value to the allowlist after confirmation.
 - Support `OPTIONS` preflight for:
   - `Content-Type: application/json`
-  - `Authorization: Bearer <demo token>` if enabled
-- Decide whether bearer token is required for the first rehearsal.
+  - `Authorization: Bearer <demo token>`
+- Runtime supports an environment-controlled simple bearer-token gate:
+  - If `DEMO_BEARER_TOKEN` is unset, POST endpoints accept requests without a
+    token for local UI rehearsal.
+  - If `DEMO_BEARER_TOKEN` is set in Render, both POST endpoints require:
+    `Authorization: Bearer <demo token>`.
+  - `GET /healthz` and `OPTIONS` preflight remain available without a token.
+- Before enabling token-required rehearsal, set `DEMO_BEARER_TOKEN` in Render
+  and share the actual token only through the agreed private channel.
 - Keep tokens out of repo docs and screenshots.
+- Render Environment now has a `DEMO_BEARER_TOKEN` value configured by Jason for
+  token-required rehearsal; the value is intentionally not stored in this repo.
+  Token-required behavior becomes live after this token-gate code is published
+  to GitHub `main` and Render rebuilds/redeploys.
 - Render settings for the API service must use:
   - Build Command: `npm install && npm run render:build`
   - Start Command: `npm run render:start`
@@ -189,7 +205,8 @@ NYCU implementation checklist:
 - The first Render deploy accidentally used `yarn start`, which runs the static
   frontend server. This has been corrected: Render now runs
   `node scripts/mock-api-server.js` through `npm run render:start`.
-- Public verification passed on `2026-05-25 17:50 GMT+8`:
+- Public verification with no token requirement enabled passed on
+  `2026-05-25 17:50 GMT+8`:
   - `GET /healthz` returned HTTP `200`.
   - CORS preflight from `http://localhost:5174` returned HTTP `204`.
   - `POST /api/triage-demo/sessions` returned `status="question"`,
@@ -258,7 +275,13 @@ https://nycu-imedtac-triage-demo-api.onrender.com/api/triage-demo
 POST https://nycu-imedtac-triage-demo-api.onrender.com/api/triage-demo/sessions
 POST https://nycu-imedtac-triage-demo-api.onrender.com/api/triage-demo/sessions/{session_key}/answers
 
-我們會把 http://localhost 與 http://localhost:5174 加入 CORS allowlist。Demo bearer token 我們會用一個簡單的 demo token 做法，之後提供實際 header 格式；實際 token 不會寫入文件或截圖。
+若貴司前端是以 browser direct call 方式在本機開發環境測試，我們目前已 allowlist http://localhost 與 http://localhost:5174。這裡的 localhost 是瀏覽器載入前端頁面的 Origin，不是 Render 的 localhost；如果實際 demo frontend origin 是 127.0.0.1、內網 IP、其他 port、https domain 或 WebView custom origin，請提供實際 Origin header，我們會加入 allowlist。
+
+Demo auth 我們會用一個簡單的 bearer-token gate。Header 格式如下：
+
+Authorization: Bearer <demo token>
+
+實際 demo token 不會放在群組訊息、文件、GitHub、截圖或 log 裡，會另外透過私下通道提供給貴司工程端。GET /healthz 與 OPTIONS preflight 不需要 token；兩個 POST endpoints 會在 token-required mode 啟用後要求 bearer token。
 
 另外，Render dashboard 上看到的 Outbound IP Addresses 是 NYCU Render service 主動往外呼叫其他外部系統時會使用的來源 IP 範圍，不是 iMVS browser 呼叫 NYCU API 時需要設定的值。這次 browser direct call 只需要 base URL、CORS origin 與 header 規則即可。若之後需要 NYCU Render service 主動呼叫你們的後端、webhook 或需要通過你們 firewall allowlist 的系統，我們再提供目前 Render 顯示的 outbound IP ranges 讓你們加入 allowlist。
 
