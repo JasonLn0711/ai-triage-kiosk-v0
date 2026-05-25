@@ -3,7 +3,9 @@
 const http = require("node:http");
 const {
   createSession,
+  demoBearerAuthChallenge,
   errorResult,
+  requireDemoBearerAuth,
   sendResult,
   setCorsHeaders,
   submitAnswer
@@ -56,12 +58,24 @@ const server = http.createServer(async (req, res) => {
 
   try {
     if (req.method === "POST" && req.url === "/api/triage-demo/sessions") {
+      const authError = requireDemoBearerAuth(req);
+      if (authError) {
+        res.setHeader("WWW-Authenticate", demoBearerAuthChallenge());
+        sendResult(res, authError);
+        return;
+      }
       sendResult(res, createSession(await readJsonBody(req)));
       return;
     }
 
     const answerMatch = String(req.url || "").match(/^\/api\/triage-demo\/sessions\/([^/?#]+)\/answers$/);
     if (req.method === "POST" && answerMatch) {
+      const authError = requireDemoBearerAuth(req);
+      if (authError) {
+        res.setHeader("WWW-Authenticate", demoBearerAuthChallenge());
+        sendResult(res, authError);
+        return;
+      }
       sendResult(res, submitAnswer(decodeURIComponent(answerMatch[1]), await readJsonBody(req)));
       return;
     }

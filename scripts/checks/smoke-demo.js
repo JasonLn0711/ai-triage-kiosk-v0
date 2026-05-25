@@ -39,6 +39,7 @@ const html = read("app/triage-kiosk/index.html");
 const script = read("app/triage-kiosk/triage-kiosk.js");
 const packageJson = JSON.parse(read("package.json"));
 const mockApiServer = read("scripts/mock-api-server.js");
+const contractSource = read("api/lib/triage-demo-contract.js");
 const engine = require(path.join(ROOT, "core/triage_engine/index.js"));
 const contract = require(path.join(ROOT, "api/lib/triage-demo-contract.js"));
 
@@ -60,6 +61,8 @@ assert(packageJson.scripts["render:start"] === "node scripts/mock-api-server.js"
 assert(packageJson.scripts["render:build"].includes("npm test"), "Render build script should run contract tests before deploy.");
 assert(mockApiServer.includes('req.method === "GET" && req.url === "/healthz"'), "Render API server should expose GET /healthz for HTTP health checks.");
 assert(mockApiServer.includes("process.env.PORT"), "Render API server should bind to the PORT environment variable.");
+assert(contractSource.includes("DEMO_BEARER_TOKEN"), "Contract API should support env-controlled demo bearer token auth.");
+assert(mockApiServer.includes("requireDemoBearerAuth"), "Render API server should enforce demo bearer token auth when configured.");
 assert(engine.CASES.every((demoCase) => !demoCase.questionLimit || demoCase.questionLimit <= 7), "June demo cases should keep visible questions under 8.");
 assert(!html.includes("<textarea"), "Demo runtime should stay choice-only and not expose free-text input.");
 assert(engine.QUESTION_BANK.every((question) => question.type !== "text"), "Question bank should not include free-text questions.");

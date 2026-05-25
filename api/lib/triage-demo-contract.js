@@ -157,6 +157,52 @@ function hashBody(body) {
   return crypto.createHash("sha256").update(stableStringify(idempotencyComparableBody(body))).digest("hex");
 }
 
+function configuredDemoBearerToken() {
+  const token = process.env.DEMO_BEARER_TOKEN;
+  return typeof token === "string" && token.trim() ? token.trim() : null;
+}
+
+function headerValue(req, name) {
+  const headers = (req && req.headers) || {};
+  if (typeof headers.get === "function") return headers.get(name);
+
+  const value = headers[name] || headers[name.toLowerCase()] || headers[name.toUpperCase()];
+  return Array.isArray(value) ? value[0] : value;
+}
+
+function bearerTokenFromHeader(value) {
+  if (!value) return null;
+  const match = String(value).match(/^Bearer\s+(.+)$/i);
+  return match ? match[1].trim() : null;
+}
+
+function safeTokenEquals(receivedToken, expectedToken) {
+  const received = Buffer.from(String(receivedToken || ""), "utf8");
+  const expected = Buffer.from(String(expectedToken || ""), "utf8");
+  if (received.length !== expected.length) return false;
+  return crypto.timingSafeEqual(received, expected);
+}
+
+function demoBearerAuthChallenge() {
+  return 'Bearer realm="nycu-imedtac-triage-demo"';
+}
+
+function requireDemoBearerAuth(req) {
+  const expectedToken = configuredDemoBearerToken();
+  if (!expectedToken) return null;
+
+  const receivedToken = bearerTokenFromHeader(headerValue(req, "authorization"));
+  if (receivedToken && safeTokenEquals(receivedToken, expectedToken)) return null;
+
+  return errorResult(401, {}, "demo_bearer_token_required", "A valid demo bearer token is required for this rehearsal API.", {
+    retryable: false,
+    details: {
+      required_header: "Authorization: Bearer <demo token>",
+      token_storage: "Set DEMO_BEARER_TOKEN in the deployment environment; do not store tokens in repo files."
+    }
+  });
+}
+
 function nextResponseId(kind) {
   responseCounter += 1;
   return `resp-demo-tachy-${kind}-${String(responseCounter).padStart(3, "0")}`;
@@ -444,10 +490,12 @@ module.exports = {
   ALLOWED_ORIGINS,
   DEMO_BOUNDARY,
   contractFields,
+  demoBearerAuthChallenge,
   expectedTotal,
   fixture,
   questionSequence,
   createSession,
+  requireDemoBearerAuth,
   submitAnswer,
   errorResult,
   setCorsHeaders,

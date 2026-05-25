@@ -1,4 +1,11 @@
-const { errorResult, sendResult, setCorsHeaders, submitAnswer } = require("../../../lib/triage-demo-contract");
+const {
+  demoBearerAuthChallenge,
+  errorResult,
+  requireDemoBearerAuth,
+  sendResult,
+  setCorsHeaders,
+  submitAnswer
+} = require("../../../lib/triage-demo-contract");
 
 async function readJsonBody(req) {
   if (req.body && typeof req.body === "object") return req.body;
@@ -25,6 +32,13 @@ module.exports = async function handler(req, res) {
   }
   if (req.method !== "POST") {
     sendResult(res, errorResult(405, {}, "method_not_allowed", "Use POST /api/triage-demo/sessions/{session_key}/answers.", { retryable: false }));
+    return;
+  }
+
+  const authError = requireDemoBearerAuth(req);
+  if (authError) {
+    res.setHeader("WWW-Authenticate", demoBearerAuthChallenge());
+    sendResult(res, authError);
     return;
   }
 

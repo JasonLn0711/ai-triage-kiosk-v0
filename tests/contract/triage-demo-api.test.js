@@ -54,6 +54,47 @@ function firstOptionIds(question) {
   return [question.options[0].id];
 }
 
+function withDemoBearerToken(token, callback) {
+  const previous = process.env.DEMO_BEARER_TOKEN;
+  if (token === null) {
+    delete process.env.DEMO_BEARER_TOKEN;
+  } else {
+    process.env.DEMO_BEARER_TOKEN = token;
+  }
+
+  try {
+    callback();
+  } finally {
+    if (previous === undefined) {
+      delete process.env.DEMO_BEARER_TOKEN;
+    } else {
+      process.env.DEMO_BEARER_TOKEN = previous;
+    }
+  }
+}
+
+test("demo bearer token gate is disabled until DEMO_BEARER_TOKEN is configured", () => {
+  withDemoBearerToken(null, () => {
+    const result = contract.requireDemoBearerAuth({ headers: {} });
+    assert.equal(result, null);
+  });
+});
+
+test("demo bearer token gate accepts only the configured Authorization header", () => {
+  withDemoBearerToken("unit-test-demo-token", () => {
+    const missing = contract.requireDemoBearerAuth({ headers: {} });
+    const invalid = contract.requireDemoBearerAuth({ headers: { authorization: "Bearer wrong-token" } });
+    const valid = contract.requireDemoBearerAuth({ headers: { authorization: "Bearer unit-test-demo-token" } });
+
+    assert.equal(missing.statusCode, 401);
+    assert.equal(missing.body.status, "error");
+    assert.equal(missing.body.error.code, "demo_bearer_token_required");
+    assert.equal(missing.body.error.details.required_header, "Authorization: Bearer <demo token>");
+    assert.equal(invalid.statusCode, 401);
+    assert.equal(valid, null);
+  });
+});
+
 test("start session returns first question and progress.expected_total independent of max_questions", () => {
   contract.resetMockState();
   const result = contract.createSession(startBody({ max_questions: 99 }));
