@@ -43,8 +43,10 @@ integration.
   progress denominator.
 - Same `idempotency_key` retry returns the same response without advancing the
   flow.
-- iMVS locks answer-related controls immediately after answer submit, then
-  unlocks only after NYCU returns the next question or summary.
+- iMVS enters pending answer state immediately after answer submit:
+  answer-related controls are disabled / readonly, timeout retry uses the same
+  answer body and `idempotency_key`, and the next screen's answer controls
+  unlock only after NYCU returns the next question or summary.
 - Same `idempotency_key` with a different body returns `idempotency_conflict`
   with `recovery.safe_next_action=restart_demo_session`.
 - Invalid `session_key` returns stable `status=error`.

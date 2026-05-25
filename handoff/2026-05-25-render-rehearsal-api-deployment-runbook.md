@@ -268,6 +268,10 @@ Reference:
   rehearsal. If the instance restarts, restart the demo session.
 - Do not store real patient data, credentials, live hospital identifiers, or
   production endpoint details in Render logs or repo files.
+- During answer submission, iMVS should enter pending answer state: freeze the
+  current answer body and `idempotency_key`, disable / mark readonly all
+  answer-related controls, and retry only the same body/key after timeout until
+  NYCU returns the next question, summary, or structured error.
 - If `idempotency_conflict` occurs, the recovery remains restart demo session
   or clearly labeled `local_scripted_demo`; do not add an answer-revision flow.
 

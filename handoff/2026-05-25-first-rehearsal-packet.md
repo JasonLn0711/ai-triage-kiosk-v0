@@ -242,10 +242,17 @@ iMVS UI behavior during answer submission:
 ```text
 user submits answer
 -> iMVS freezes the answer body and idempotency_key
--> iMVS locks all answer-related buttons/options
+-> iMVS disables / marks readonly all answer-related controls
 -> if a timeout occurs, retry only the same body with the same idempotency_key
--> unlock answer controls only after NYCU returns the next question or summary
+-> keep non-answer controls such as help, restart demo, or operator fallback if desired
+-> unlock the next screen's answer controls only after NYCU returns the next question or summary
 ```
+
+For rehearsal, `answer-related controls` means any control that can change or
+resubmit the current answer: option buttons, submit, back-to-edit,
+change-answer, next-answer, and equivalent UI affordances. This pending state is
+a front-end duplicate-submit / race-condition control; it does not change the
+API schema.
 
 If `idempotency_conflict` occurs, the first rehearsal rule is restart demo
 session. Do not auto-generate a new `idempotency_key` for the changed answer,
@@ -335,8 +342,10 @@ Acceptance check:
 - `capabilities.max_questions` is treated as a cap; UI progress uses
   `progress.expected_total`.
 - Same `idempotency_key` retry returns the same response without advancing.
-- After submit, iMVS locks answer-related controls until the NYCU next-question
-  or summary response arrives.
+- After submit, iMVS enters pending answer state: answer-related controls are
+  disabled / readonly, retry uses the same body/key, and the next screen's
+  answer controls unlock only after the NYCU next-question or summary response
+  arrives.
 - Same `idempotency_key` with a different body returns `idempotency_conflict`
   and `recovery.safe_next_action=restart_demo_session`.
 - Seventh answer returns `status=summary` and `staff_review_summary`.

@@ -81,8 +81,10 @@ Current v0.2 freeze-gate additions:
 - staff summary uses `review_basis` rather than `assessment_support`;
 - error examples fall back to standard staff workflow and do not include
   generated summaries.
-- answer-submit UI behavior is fixed for rehearsal: iMVS locks answer-related
-  controls immediately after submit and unlocks only after NYCU returns the next
+- answer-submit UI behavior is fixed for rehearsal: iMVS enters pending answer
+  state immediately after submit, disables / marks readonly all current-question
+  answer-related controls, retries only the same body/key after timeout, and
+  unlocks the next screen's answer controls only after NYCU returns the next
   question or `staff_review_summary`;
 - `idempotency_conflict` recovery is fixed as `restart_demo_session` for the
   June demo, not answer revision or a GET current-question recovery path.
