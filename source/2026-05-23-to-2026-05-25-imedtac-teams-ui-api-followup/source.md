@@ -21,12 +21,20 @@ related:
 
 This note preserves the visible Microsoft Teams conversation screenshots
 provided by Jason on `2026-05-25`. It covers the follow-up after the two-endpoint
-API email, 多寶's Case Tachy handoff, Ben's API questions, and Johnny / UI-team
-signals on option capacity and skip behavior.
+API email, 多寶's Case Tachy handoff, Ben's API questions, Johnny / UI-team
+signals on option capacity and skip behavior, Jason's `2026-05-25 20:09`
+engineering reply in the Teams group, and Jason's `2026-05-25 20:13` private
+bearer-token handoff to Ben.
 
 Treat this as engineering coordination and task-routing evidence. It is not a
 clinical source, regulatory source, production integration approval, real
 patient-data approval, final clinical validation, or final API acceptance.
+
+Credential boundary: the screenshots show that Jason privately shared an actual
+demo bearer token with Ben. The token value is intentionally not transcribed in
+this repository. Tracked files may record the fact of token handoff, the header
+format, the recipient, and the change-control obligation, but must not record
+the credential itself.
 
 ## Visible Conversation Transcript
 
@@ -123,6 +131,69 @@ Johnny Fang 方偉翰, imedtac Corp. [edited, @Jason Lin]:
 想請教
 回答完所有問題後，會回傳的 summary 目前你們有預覽的頁面嗎?
 如果有的話，demo時可以直接展示結果，我們就不需要另外刻頁面
+
+Today 5:27 PM
+
+Jason Lin:
+想請教
+回答完所有問題後，會回傳的 summary 目前你們有預覽的頁面嗎?
+如果有的話，demo時可以直接展示結果，我們就不需要另外刻頁面
+
+Johnny Fang 方偉翰, imedtac Corp.:
+[replying to Jason Lin's summary preview question]
+嗨嗨，我們有現成可以用的預覽頁嗎?
+
+Today 8:09 PM
+
+Jason Lin:
+Ben、Johnny、Lauren 大家好，整理幾個工程點對齊如下：
+
+1. request_id / idempotency_key
+request_id 建議每次 HTTP request 都產生新的 unique id，主要用於 trace 與雙方 log 核對。
+idempotency_key 則用於同一個 logical operation 的 retry，同一 endpoint、同一 session/question context、同一 request body retry 時使用同一個 key，NYCU 會回同一個結果，避免 question flow 前進兩次。換言之，不同題目，或使用者明確送出新的答案嘗試時，請使用新的 idempotency_key。對於可能的例外情形，像是同一 idempotency_key 搭配不同 answer body，NYCU 會回 HTTP 409 / idempotency_conflict，且不推進 question flow；六月 demo 的 recovery 建議定調為 restart demo session（若有 idempotency conflict 的狀況，就直接 restart questionnaire），不做自動 answer revision。
+
+此外，也想與貴公司討論，iMVS 前端實作 pending answer state：使用者按下 submit 後，立即 snapshot 當次 question_id、answer body 與 idempotency_key，並把當題所有答題相關 controls 設為 disabled / readonly，help、restart demo、operator fallback 這類與答題內容無關的控制可以保留。若 request timeout，需要 retry 時只 retry 同一份 answer body 與同一個 idempotency_key。等 NYCU 回覆下一題或 summary 後，再開啟下一個畫面的答題控制。若收到 idempotency_conflict，請不要自動換新的 idempotency_key 重送不同答案，這可避免使用者在 request pending 時改答案，降低 duplicate submit（idempotency_conflict）的風險。
+
+2. capabilities.max_questions / Question X of Y
+capabilities.max_questions 建議視為 iMVS 提供給 NYCU 後端伺服器的出題數量上限（也就是 NYCU 的題目不得超過 max_questions 的數量，但不是最後一定會問這麼多題）。UI 的 Y 建議使用 NYCU api response 裡的 progress.expected_total（因為 expected_total 的定義是 NYCU 後台設定「總共會提供的題目數量」）。六月 tachycardia demo lane 我們可以先讓 expected_total 在同一個 session 內維持穩定，讓進度顯示容易處理。
+
+3. skip / I'm not sure / None of these
+我們同意這次 demo 不做 generic silent skip。保留 I'm not sure 很ok，因為它容易被解讀。另外，None of these 則建議不需要做成 UI 固定按鈕；如果某題需要 none answer，我們會把它當成題 options 裡的一個 option id 回傳，iMVS 依 option id 回傳即可。
+
+4. Option count / label length
+選項數量的部分，我們會配合你們目前最多 9 個短選項、且不讓使用者 scroll 的排法。第一版 tachycardia preset 會盡量維持短選項與較少選項，只有必要時才接近上限。
+
+5. Summary preview
+回答完所有問題後，NYCU Endpoint 2 會回 status=summary 與 staff_review_summary。目前思考，最省工程量的方式可能是 iMVS 直接在既有 result / preview page 顯示這份 payload；如果你們想先快速驗證畫面，我們也可以提供一個 NYCU-hosted demo-only preview（mock page）。
+
+6. Demo environment
+了解你們會由前端直接呼叫 NYCU API。我們會提供固定的 NYCU-hosted Render rehearsal API base URL：
+https://nycu-imedtac-triage-demo-api.onrender.com/api/triage-demo
+
+完整 endpoint 是：
+POST https://nycu-imedtac-triage-demo-api.onrender.com/api/triage-demo/sessions
+POST https://nycu-imedtac-triage-demo-api.onrender.com/api/triage-demo/sessions/{session_key}/answers
+
+我們已把 http://localhost 與 http://localhost:5174 加入 CORS allowlist。Demo auth 採簡單 bearer-token gate，request header 格式如下：
+
+Content-Type: application/json
+Authorization: Bearer <demo token>
+
+我們已把第一版 tachycardia preset questions 切齊許醫師今天提供的 case。
+
+[Today after the 8:09 PM group reply; exact minute not visible in screenshot]
+
+Jason Lin:
+[replying to Johnny Fang's summary-preview question]
+嗨 Johnny，考量畫面設計的美觀與一致性，不知道如果由我們這邊提供 ui，會不會影響設備操作的完整性，這可能要再討論一下
+
+Today 8:13 PM
+
+Jason Lin -> Ben Siu 蕭銳輝, imedtac Corp. [private chat]:
+這份 DEMO_BEARER_TOKEN = [REDACTED]
+
+Jason Lin -> Ben Siu 蕭銳輝, imedtac Corp. [private chat]:
+demo bearer token 如上，經測試可正常呼叫。
 ```
 
 ## Working Extraction
@@ -168,10 +239,30 @@ Johnny Fang 方偉翰, imedtac Corp. [edited, @Jason Lin]:
   render `staff_review_summary` inside its existing demo result / preview page,
   or NYCU may provide a lightweight demo-only preview page for rehearsal and
   debugging if imedtac wants a fast visual target.
+- Jason later replied to Johnny's preview-page question that, although NYCU
+  could discuss providing UI, visual consistency and completeness of the device
+  operation may be affected. This means summary-preview UI ownership and any
+  NYCU-hosted / NYCU-provided UI surface remain discussion items, not unilateral
+  implementation changes.
 - The exact API base URL is still NYCU-owned and must be provided before
   rehearsal.
 - The demo bearer-token format, rotation path, and whether credentials are sent
   with CORS requests still need NYCU implementation decision.
+- Jason's `2026-05-25 20:09` Teams reply externally committed NYCU to the
+  listed engineering behaviors for the first rehearsal: idempotency conflict
+  returns HTTP `409` and does not advance the question flow; June recovery is
+  restart questionnaire / restart demo session, not automatic answer revision;
+  UI progress should use `progress.expected_total`; generic silent skip is out;
+  `I'm not sure` stays as interpretable answer state; static `None of these`
+  is not required; option labels should stay short and within the current
+  no-scroll working layout; Endpoint 2 returns `status=summary` and
+  `staff_review_summary`; and the Render base URL / endpoint paths / CORS
+  origins / bearer-token header format are the current integration contract.
+- Jason's `2026-05-25 20:13` private message to Ben shared the actual
+  `DEMO_BEARER_TOKEN` value and stated that testing confirmed successful calls
+  with the token. The value is not stored here. Any future token rotation or
+  authentication-rule change must be communicated to imedtac because Ben has
+  already received a working credential.
 
 ## Engineering Interpretation
 
