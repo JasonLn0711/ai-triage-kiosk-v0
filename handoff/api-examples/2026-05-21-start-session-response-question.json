@@ -28,6 +28,7 @@
     "registry_refs": ["TACHY-001"],
     "source_refs": [
       "DUOBAO-DEMO-DESIGN-20260520",
+      "DUOBAO-AFRVR-TACHY-QA-20260525",
       "IMEDTAC-POST-MEETING-PROGRESS-20260521",
       "LOCAL-PROTOCOL-TBD"
     ],
@@ -52,9 +53,9 @@
     "summary_effect": "Adds the main cardiopulmonary concern to the staff-review summary.",
     "rendering_constraints": {
       "requires_no_scroll": true,
-      "max_visible_options_without_scroll": 4
+      "max_visible_options_without_scroll": 9
     },
-    "evidence_refs": ["LOCAL-PROTOCOL-TBD"],
+    "evidence_refs": ["DUOBAO-AFRVR-TACHY-QA-20260525", "LOCAL-PROTOCOL-TBD"],
     "demo_boundary": "Synthetic-data demo question for staff-review intake support."
   },
   "demo_boundary": "Synthetic-data staff-review intake support with human-review workflow and separate production validation path."

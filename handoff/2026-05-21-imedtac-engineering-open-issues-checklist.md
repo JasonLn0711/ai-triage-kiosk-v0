@@ -10,9 +10,11 @@ source:
   - ../source/2026-05-21-imedtac-engineering-sync/meeting-record.md
   - ../source/2026-05-21-imedtac-post-meeting-progress-record/source.md
   - ../source/2026-05-21-imedtac-teams-api-followup/source.md
+  - ../source/2026-05-23-to-2026-05-25-imedtac-teams-ui-api-followup/source.md
   - ./2026-05-21-imedtac-two-endpoint-api-reply.md
   - ./2026-05-21-duobao-style-tachycardia-live-demo-question-set.md
   - ./2026-05-21-to-2026-05-25-imedtac-response-plan.md
+  - ./2026-05-25-imedtac-integration-next-steps.md
 ---
 
 # 慧誠智醫工程整合 Open Issues / Integration Checklist
@@ -64,9 +66,10 @@ iMVS 完成 vital-sign measurement
 | P0-02 | Vital Upload API field dictionary | 以 `2026-05-12` iMVS API `V1.4` 的 `NBP/SPO2/HR/Temp/Glucose/Height/Weight` 與 units 作為 baseline；imedtac 確認 current demo machine / GitHub 格式的 field-name delta、required/optional、missing/failed/poor-quality 表示方式。 | imedtac engineering | `2026-05-22` ask | 至少確認 heart rate、SpO2、temperature、blood pressure、height、weight 是否沿用 V1.4；respiratory rate 是否提供要明確。 |
 | P0-03 | Session lifecycle | 定義 `session_key` expiry、abandoned session、summary-ready 後能否再送 answer、重整頁面是否可恢復。 | NYCU propose; imedtac confirm | `2026-05-22` draft | API 文件或 checklist 有明確 session-state behavior。 |
 | P0-04 | Retry / idempotency behavior | 確認 timeout retry 不會讓 question flow 前進兩次；相同 `idempotency_key` 搭不同 body 回 conflict。 | NYCU propose; imedtac confirm | `2026-05-22` draft | JSON examples 與 error code 包含 retry / conflict path。 |
-| P0-05 | Error / fallback UI contract | 確認 remote API unavailable、invalid answer、session expired、payload mismatch 時 iMVS 顯示與 fallback mode。 | imedtac UI + NYCU | `2026-05-24` | Local Scripted Demo Mode 標示方式與 fallback response 欄位確定。 |
-| P0-06 | Engineering environment path | 確認 browser direct call、imedtac backend proxy、CORS、firewall、VPN、token / shared secret。 | imedtac engineering | `2026-05-24` | rehearsal 前有 base URL / network path / auth assumption。 |
-| P0-07 | Demo acceptance criteria | 定義「串接完成」的最小可驗證流程。 | NYCU + imedtac | `2026-05-24` | rehearsal 能跑完 vital payload -> first question -> answer -> next question -> summary -> fallback check。 |
+| P0-05 | Progress denominator semantics | Ben asked whether `capabilities.max_questions` can be used as `Question X of Y`. NYCU should clarify that it is a cap and iMVS should use response-level `progress.expected_total`. | NYCU / Jason | immediate reply | API reply states `max_questions` is a cap; `progress.expected_total` drives UI progress. |
+| P0-06 | Error / fallback UI contract | 確認 remote API unavailable、invalid answer、session expired、payload mismatch 時 iMVS 顯示與 fallback mode。 | imedtac UI + NYCU | before rehearsal | Local Scripted Demo Mode 標示方式與 fallback response 欄位確定。 |
+| P0-07 | Engineering environment path | imedtac plans browser direct call to NYCU API. NYCU must provide base URL, CORS for `http://localhost` and `http://localhost:5174`, and bearer-token header rule if enabled. | NYCU + imedtac engineering | before rehearsal | Browser preflight and first API call pass from imedtac demo origin. |
+| P0-08 | Demo acceptance criteria | 定義「串接完成」的最小可驗證流程。 | NYCU + imedtac | before rehearsal | rehearsal 能跑完 vital payload -> first question -> answer -> next question -> summary -> fallback check。 |
 
 ## P1 Important Integration Issues
 
@@ -75,12 +78,12 @@ iMVS 完成 vital-sign measurement
 
 | ID | Issue | Decision / Input Needed | Owner | Target | Acceptance Check |
 | --- | --- | --- | --- | --- | --- |
-| P1-01 | UI rendering constraints | iMVS 單題最多 options、option label 字數、是否需 no-scroll、是否支援 progress。 | imedtac UI / engineering | `2026-05-22` ask | API examples 不超過 UI 容量；必要時調整 question template。 |
-| P1-02 | Question template support | 確認 `single_choice`、`multi_choice`、`scale`、variable option count、none-of-these behavior。 | imedtac UI / engineering | `2026-05-22` ask | NYCU question object 與 iMVS reusable template 可對應。 |
-| P1-03 | Skip / unable-to-answer policy | required 題不使用 silent skip；不確定情境優先用 `Not sure` / `Unable to answer`。 | 多寶 / 許醫師 + NYCU | `2026-05-25` | 每題標示 required/optional，以及是否允許 explicit skip。 |
+| P1-01 | UI rendering constraints | Teams `2026-05-25` signal: current working layout supports up to `9` short options without user scroll; exact max label length still needs practical confirmation. | imedtac UI / engineering + NYCU | before rehearsal | API examples stay within UI capacity; NYCU keeps labels short and prefers fewer options unless clinically needed. |
+| P1-02 | Question template support | 確認 `single_choice`、`multi_choice`、variable option count、AI-returned none option behavior；`scale` remains future. | imedtac UI / engineering | before rehearsal | NYCU question object 與 iMVS reusable template 可對應。 |
+| P1-03 | Skip / unable-to-answer policy | required 題不使用 silent skip；保留 `I'm not sure`；static UI `None of these` removed; NYCU returns `none_of_these` only as ordinary option when needed. | 多寶 / 許醫師 + NYCU + imedtac UI | current package achieved; refine after UI | 每題標示 required/optional，以及是否允許 explicit skip。 |
 | P1-04 | Mock server / contract test packet | 是否需要 NYCU 提供 mock endpoint 或只提供 JSON examples。 | imedtac engineering ask; NYCU implement if needed | `2026-05-24` decision | imedtac 可在 NYCU 正式部署前先串 UI。 |
 | P1-05 | Observability / debug logging | 雙方 log 至少保留 `request_id`、`response_id`、`session_key`、`case_id`、`flow_version`。 | both teams | rehearsal 前 | 出錯時能判斷是 payload、network、session state、question engine 或 UI 問題。 |
-| P1-06 | Staff-summary display location | 確認 `staff_review_summary` 放在 staff / doctor / customer preview，不放成病人診斷結果。 | imedtac UI + NYCU | `2026-05-24` | UI copy 不含 diagnosis、treatment、final triage level、production HIS/EMR claim。 |
+| P1-06 | Staff-summary display location | Johnny asked whether NYCU already has a summary preview page after all questions. Preferred path: iMVS renders `status=summary` / `staff_review_summary` inside its existing result / preview page; NYCU-hosted preview can be a temporary rehearsal/debug surface if needed. | imedtac UI + NYCU | immediate | UI copy 不含 diagnosis、treatment、final triage level、production HIS/EMR claim；summary remains `staff_only` and is not a patient result page。 |
 | P1-07 | Demo lane choice | tachycardia live-performance lane 與 respiratory synthetic fallback 的主次與 wording。 | Jason + 多寶 / 許醫師 + Johnny | drafted | `handoff/2026-05-21-duobao-style-tachycardia-live-demo-question-set.md` 可作為 Monday 第一版 preset questions/options 的 review draft。 |
 | P1-08 | Live HR demo mode / fallback | 確認 demo script 是否標示 `live_measured`、`synthetic_override`、或 `local_scripted_demo`，避免 demo 成敗依賴現場心跳值。 | NYCU propose; imedtac confirm | rehearsal 前 | Presenter script 和 payload 都能顯示目前 mode；live HR 不適合時可切 scripted fixture。 |
 
@@ -134,9 +137,11 @@ endpoint。
 
 | Action | Owner | Target |
 | --- | --- | --- |
-| Add API change-control section to the external API reply file. | Jason | done in this planning pass |
-| Send the two-endpoint API reply first. | Jason / NYCU | `2026-05-22` |
-| Ask imedtac for the P0/P1 engineering input packet. | Jason | `2026-05-22` |
-| Discuss skip / required-question policy with 多寶 / 許醫師. | Jason + 多寶 / 許醫師 | night of `2026-05-21` or morning of `2026-05-22` |
+| Add API change-control section to the external API reply file. | Jason | done |
+| Send the two-endpoint API reply first. | Jason / NYCU | done / in discussion |
+| Reply to Ben's `request_id` / `idempotency_key` and `max_questions` questions. | Jason / NYCU | immediate |
+| Confirm whether summary preview should be iMVS-native rendering or temporary NYCU-hosted demo preview. | imedtac UI + NYCU | immediate |
+| Ask imedtac for the remaining P0/P1 engineering input packet. | Jason | before rehearsal |
+| Discuss skip / required-question policy with 多寶 / 許醫師. | Jason + 多寶 / 許醫師 | achieved for tachycardia lane; refine after UI confirmation |
 | Decide whether mock endpoint is needed or JSON examples are enough. | imedtac engineering + NYCU | before first rehearsal |
 | Run first rehearsal against Remote REST API Mode or Local Scripted Demo Mode. | both teams | before `2026-06-10` customer demo |

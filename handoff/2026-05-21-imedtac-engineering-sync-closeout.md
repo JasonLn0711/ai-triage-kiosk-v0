@@ -145,13 +145,14 @@ Sources:
 
 - `../source/2026-05-21-imedtac-teams-api-followup/source.md`
 - `../source/2026-05-21-imedtac-post-meeting-progress-record/source.md`
+- `../source/2026-05-25-duobao-afrvr-tachycardia-case/source.md`
 
 | Task | Owner | Due / timing | Status | Notes |
 | --- | --- | --- | --- | --- |
-| Provide two-endpoint API document to Ben / Lauren / Johnny. | NYCU / Jason | `2026-05-22` target | drafted | Use `handoff/2026-05-21-imedtac-two-endpoint-api-reply.md`; June contract is start-session-with-vitals plus submit-answer. |
-| Provide preset question and option template contents. | NYCU / Jason with 多寶 / 許醫師 wording review | Tomorrow or Monday from the Teams ask: `2026-05-22` or `2026-05-25` | pending | Include question ids, option ids, labels, required/optional status, and demo-safe wording. |
-| Decide and reply on user skip behavior. | NYCU / Jason with 多寶 / 許醫師 clinical review; imedtac UI to confirm rendering | Before sending question template if possible | pending | Default to explicit `Unable to answer` / `I am not sure` options for clinically relevant questions; avoid silent skip for required safety questions. |
-| Align first customer-demo lane with imedtac's post-meeting preference. | NYCU / Jason with 多寶 / 許醫師 review | Before Monday `2026-05-25` if possible | pending | imedtac prefers tachycardia / chest-tightness because HR can be raised live; keep output as staff-review summary, not formal triage result. |
+| Provide two-endpoint API document to Ben / Lauren / Johnny. | NYCU / Jason | `2026-05-22` target | achieved; ready for next step | Use `handoff/2026-05-21-imedtac-two-endpoint-api-reply.md`; June contract is start-session-with-vitals plus submit-answer. |
+| Provide preset question and option template contents. | NYCU / Jason with 多寶 / 許醫師 wording review | Tomorrow or Monday from the Teams ask: `2026-05-22` or `2026-05-25` | achieved for first lane | 多寶's `2026-05-25` tachycardia Q/A case confirms question ids, option ids, selected answer path, and demo-safe staff-summary wording direction. |
+| Decide and reply on user skip behavior. | NYCU / Jason with 多寶 / 許醫師 clinical review; imedtac UI to confirm rendering | Before sending question template if possible | achieved for current package | Use explicit `Not sure`, `None of these`, or `Staff should confirm` options for required safety / handoff questions; generic skip can be represented only as explicit `skipped + skip_reason` for non-critical questions if imedtac needs it. |
+| Align first customer-demo lane with imedtac's post-meeting preference. | NYCU / Jason with 多寶 / 許醫師 review | Before Monday `2026-05-25` if possible | achieved; proceed to integration rehearsal | imedtac prefers tachycardia / chest-tightness because HR can be raised live; 多寶's case now anchors the first lane while output remains staff-review summary, not formal triage result. |
 | Preserve Teams channel as engineering communication route. | NYCU / Jason | done after source capture | recorded | Johnny opened `AI Triage 討論 w/ 陽交大`; Ben and Lauren are the primary imedtac technical contacts. |
 
 ## What imedtac Should Provide

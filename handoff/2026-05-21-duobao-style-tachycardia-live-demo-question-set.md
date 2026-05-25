@@ -4,7 +4,7 @@ title: "Duobao-Style Tachycardia Live Demo Question Set"
 date: 2026-05-21
 topic: ai-triage
 type: handoff
-status: clinical-review draft
+status: clinical-input integrated draft
 audience: Jason / Duobao / imedtac engineering / NYCU demo team
 source:
   - ../source/2026-05-15-imedtac-second-sync-and-duobao-followup/duobao-demo-case-draft.md
@@ -14,6 +14,7 @@ source:
   - ../source/2026-05-21-imedtac-post-meeting-progress-record/source.md
   - ../source/2026-05-21-imedtac-teams-api-followup/source.md
   - ../source/2026-05-21-duobao-post-imedtac-internal-sync/meeting-record.md
+  - ../source/2026-05-25-duobao-afrvr-tachycardia-case/source.md
   - ../docs/2026-05-12-imvs-hardware-and-vital-units-baseline.md
   - https://www.heart.org/en/health-topics/arrhythmia/about-arrhythmia/tachycardia--fast-heart-rate
   - https://www.heart.org/en/health-topics/heart-attack/warning-signs-of-a-heart-attack
@@ -38,6 +39,17 @@ This lane follows imedtac's post-`2026-05-21` preference because heart rate is t
 most controllable live vital. The respiratory low-SpO2 case should remain the
 synthetic fallback / evidence demo lane because SpO2 is clinically expressive but
 hard to perform reliably in a live meeting.
+
+`2026-05-25` update: 多寶 provided a Case 2 AfRVR-style tachycardia
+question-answer demo with measured-first vitals and selected answers. This
+confirms the first-lane question / option template is ready to move from
+internal clinical-input alignment into imedtac engineering rehearsal.
+
+Teams `2026-05-25` UI update: imedtac working layout supports up to `9` short
+options without user scrolling, will keep an `I'm not sure` affordance, and
+will not keep a static `None of these` UI button. If this question set needs
+`none_of_these`, NYCU should return it as an explicit option in
+`question.options`, not rely on a generic UI control.
 
 All content here is a synthetic-data demo question set. It supports
 staff-review intake and does not output arrhythmia diagnosis, AfRVR diagnosis,
@@ -73,7 +85,7 @@ production HIS / EMR writeback.
 | `question_set_version` | `tachycardia-question-set-v0.2-draft` |
 | Runtime-safe label | Palpitation / chest tightness with elevated heart-rate cue |
 | Internal clinical anchor | Duobao's AfRVR-style case |
-| Synthetic case anchor | `76 y/o female`, palpitations and chest tightness for half a day, HR `150 bpm`, SpO2 `98%`, BP `102/68 mmHg`, T `36.5 C` |
+| Synthetic case anchor | `76 y/o female`, palpitations and middle chest tightness for half a day, HR `130 bpm`, RR `16`, SpO2 `98%`, BP `102/68 mmHg`, T `36.5 C`; history context: arrhythmia and hypertension; medication context: aspirin and antihypertensive drug; allergy: none |
 | Live demo persona | English-speaking adult demo visitor. The measured heart rate can come from an on-site participant, but symptoms, age, history, and answers remain synthetic. |
 | Control comparison | Healthy/control run with normal-looking heart rate and no chest-tightness answers. |
 | Fallback mode | Local scripted or synthetic fixture run if live HR cannot be raised, the participant should not exercise, or device quality is unstable. |
@@ -94,15 +106,20 @@ is sent to imedtac as final.
 | 1 | `tachy-chief-concern` | `single_choice` | What is the main reason you are using the kiosk today? | `heart_racing` = Heart racing / palpitations; `chest_tightness` = Chest tightness / pressure; `breathing_or_dizzy` = Shortness of breath or dizziness; `other_or_not_sure` = Other / not sure | Required. No silent skip. | Anchors the cardiopulmonary branch and records chief concern. |
 | 2 | `tachy-onset` | `single_choice` | When did this start? | `within_1_hour` = Within the last hour; `few_hours` = A few hours ago; `half_day` = About half a day; `more_than_1_day_or_not_sure` = More than one day / not sure | Required. No silent skip. | Adds onset and duration context to the staff summary. |
 | 3 | `tachy-current-feeling` | `multi_choice` | Which descriptions fit what you feel now? | `heart_racing` = Heart racing or pounding; `chest_heavy` = Chest tightness or heaviness; `chest_pressure_pain` = Chest pressure or pain; `burning_sharp_or_not_sure` = Burning, sharp discomfort, or not sure | Required. Allow one or more. | Preserves Duobao's quality/location branch while using touch choices. |
-| 4 | `tachy-associated-symptoms` | `multi_choice` | Are any of these happening with it? | `short_breath` = Shortness of breath; `sweating_nausea_fatigue` = Sweating, nausea, or unusual fatigue; `dizzy_faint` = Dizziness, lightheadedness, or fainting; `radiating_or_none` = Pain spreading to arm / jaw / back, or none of these | Required. Allow one or more. If imedtac needs a cleaner `none` option, split this into Q4a/Q4b. | Captures warning-symptom family for staff review without diagnosing. |
+| 4 | `tachy-associated-symptoms` | `multi_choice` | Are any of these happening with it? | `short_breath` = Shortness of breath; `sweating_nausea_fatigue` = Sweating, nausea, or unusual fatigue; `dizzy_faint` = Dizziness, lightheadedness, or fainting; `none_of_these` = None of these | Required. Allow one or more; `none_of_these` should be mutually exclusive. If imedtac wants a separate radiation screen, split it into a follow-up after UI limits are confirmed. | Captures warning-symptom family for staff review without diagnosing. |
 | 5 | `tachy-post-vital-heart-rate-cue` | `single_choice` | The kiosk received a high heart-rate reading for this demo. How do you feel right now? | `still_racing` = My heart still feels fast; `chest_still_heavy` = My chest still feels heavy / tight; `both` = Both; `neither_or_not_sure` = Neither now / not sure | Required. No silent skip. | Makes the vital-aware differentiator visible after measurement. |
 | 6 | `tachy-heart-history-meds` | `multi_choice` | Have you been told you have a heart rhythm problem, or do you take heart / blood-pressure medicine? | `known_rhythm_problem` = Known rhythm problem; `heart_bp_medicine` = Heart or blood-pressure medicine; `no_known` = No known history / medicine; `staff_confirm` = Not sure, staff should confirm | Required with `staff_confirm` option. | Adds history/medication context that helps staff interpret the heart-rate cue. |
-| 7 | `tachy-medication-allergy-confirm` | `multi_choice` | Do you have medication allergies or medicines staff should confirm? | `med_allergy` = Medication allergy; `regular_medicines` = Regular medicines; `none_known` = None known; `not_sure` = Not sure | Optional if time is tight; otherwise required with `not_sure`. | Preserves Duobao's universal handoff context without free text. |
+| 7 | `tachy-medication-allergy-confirm` | `multi_choice` | Do you have medication allergies or medicines staff should confirm? | `med_allergy` = Medication allergy; `regular_medicines` = Regular medicines; `none_known` = No known medication allergy; `not_sure` = Not sure | Optional if time is tight; otherwise required with `not_sure`. | Preserves Duobao's universal handoff context without free text. |
 
 MVP rendering note: if iMVS confirms a strict four-option no-scroll limit, keep
 Q1, Q2, Q5, Q6, and Q7 as above. For Q4, the cleaner implementation is to split
 warning symptoms into two shorter multi-choice questions and merge Q6/Q7 into
 one staff-confirmation question so the total remains at seven.
+
+Updated UI rendering note: after the Teams `2026-05-25` follow-up, the current
+working assumption is no-scroll support for up to `9` short options.
+NYCU should still prefer shorter labels and fewer options for the first live
+demo because the user has to make the selection quickly on a kiosk screen.
 
 ## Example Answer Path
 
@@ -112,7 +129,7 @@ one staff-confirmation question so the total remains at seven.
   "question_set_version": "tachycardia-question-set-v0.2-draft",
   "vitals": {
     "heart_rate_bpm": {
-      "value": 150,
+      "value": 130,
       "unit": "bpm",
       "measurement_status": "measured",
       "quality_flag": "needs_review"
@@ -146,10 +163,10 @@ one staff-confirmation question so the total remains at seven.
     "tachy-chief-concern": ["heart_racing"],
     "tachy-onset": ["half_day"],
     "tachy-current-feeling": ["heart_racing", "chest_heavy"],
-    "tachy-associated-symptoms": ["short_breath"],
+    "tachy-associated-symptoms": ["none_of_these"],
     "tachy-post-vital-heart-rate-cue": ["both"],
-    "tachy-heart-history-meds": ["known_rhythm_problem"],
-    "tachy-medication-allergy-confirm": ["not_sure"]
+    "tachy-heart-history-meds": ["known_rhythm_problem", "heart_bp_medicine"],
+    "tachy-medication-allergy-confirm": ["regular_medicines", "none_known"]
   }
 }
 ```
@@ -164,18 +181,18 @@ one staff-confirmation question so the total remains at seven.
     "measured_elevated_heart_rate_demo",
     "reported_palpitations",
     "reported_chest_tightness",
-    "reported_shortness_of_breath",
+    "associated_symptoms_none_selected",
     "staff_review_needed"
   ],
   "staff_review_summary": {
     "format": "review_summary_demo",
     "subjective": [
-      "Synthetic demo patient reports heart racing with chest heaviness for about half a day.",
-      "Selected associated symptom: shortness of breath.",
-      "Patient selected known rhythm problem; medication and allergy details should be confirmed by staff."
+      "Synthetic demo patient reports palpitations and middle chest tightness for about half a day.",
+      "Selected associated symptoms: none of the listed shortness of breath, sweating, dizziness, or fainting options.",
+      "Patient selected rhythm-history and hypertension context; aspirin, antihypertensive medication, and allergy status should be confirmed by staff."
     ],
     "objective": [
-      "Demo vital payload includes HR 150 bpm, SpO2 98%, BP 102/68 mmHg, and temperature 36.5 C.",
+      "Demo vital payload includes HR 130 bpm, SpO2 98%, BP 102/68 mmHg, and temperature 36.5 C.",
       "Heart-rate field quality flag is needs_review."
     ],
     "review_basis": [
@@ -215,7 +232,8 @@ Forbidden output for this case:
 | Patient-facing wording could alarm the user. | Patient questions should say "high heart-rate reading for this demo" or "heart-rate cue", not "dangerous tachycardia". |
 | Staff preview and patient UI need separation. | `staff_review_summary` should be `staff_only`; patient-facing UI should show only the next action selected by imedtac's workflow owner. |
 | Skip behavior affects safety. | Required questions should include `Not sure` / `Unable to answer` / `Staff should confirm`; avoid a silent skip on Q1-Q5. |
-| UI template capacity is still unknown. | Ask imedtac to confirm max options, label length, variable option counts, no-scroll behavior, and whether `none_option_id` can enforce mutual exclusion. |
+| UI template capacity is partially confirmed. | Use up to `9` short options as the current no-scroll working layout; still ask imedtac to confirm label length, variable option counts, and whether `none_option_id` can enforce mutual exclusion. |
+| Summary preview location is now an integration decision. | Preferred path is iMVS rendering `status=summary` / `staff_review_summary` in its existing result / preview page; NYCU-hosted preview should be temporary rehearsal/debug support only. |
 | The live demo needs two scripts. | Prepare both "control/normal-looking run" and "elevated-HR cue run" so the differentiator is visible. |
 | Clinical owner still controls thresholds. | Treat HR values and stop rules as demo cues until Duobao / company clinical owner approves exact wording and thresholds. |
 
@@ -263,7 +281,7 @@ Recommended optional question-object fields:
 | `question.allow_not_sure` | Lets UI support uncertainty without a silent skip. |
 | `question.allow_skip` | Should be `false` for Q1-Q5; can be `true` only for non-critical staff-context questions if imedtac requires skip. |
 | `question.max_selections` | Needed for `multi_choice` rendering and validation. |
-| `question.none_option_id` | Needed if "None of these" must be mutually exclusive. |
+| `question.none_option_id` | Needed only when NYCU explicitly returns a none option inside `question.options`; imedtac will not provide a static UI-level `None of these` button. |
 | `question.trigger_reason_codes` | Lets imedtac log why a question appeared. |
 | `question.summary_effect` | Explains how an answer contributes to `staff_review_summary`. |
 
@@ -299,8 +317,9 @@ generic skip button, Endpoint 2 should add:
 
 1. Is the English wording "heart racing", "chest heaviness", and "heart-rate cue"
    acceptable for the US customer demo?
-2. Should the synthetic anchor stay at HR `150 bpm`, or should the live demo
-   target use a lower measured-HR cue plus explicit synthetic fallback?
+2. The `2026-05-25` 多寶 case uses HR `130 bpm`; should the synthetic fixture
+   and API examples keep this as the case-aligned value while preserving a
+   clearly labeled local scripted fallback if live HR cannot reach the cue?
 3. Should Q5 immediately end in `staff_review_summary` if the user selects
    `both`, or should Q6-Q7 still be asked for handoff completeness?
 4. Can iMVS render Q4 with the grouped warning-symptom option, or should Q4 be

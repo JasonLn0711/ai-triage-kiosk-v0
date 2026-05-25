@@ -25,7 +25,7 @@
   "vitals": {
     "temperature_c": 36.5,
     "spo2_percent": 98,
-    "heart_rate_bpm": 150,
+    "heart_rate_bpm": 130,
     "respiratory_rate_per_min": 16,
     "blood_pressure_systolic_mm_hg": 102,
     "blood_pressure_diastolic_mm_hg": 68
@@ -44,6 +44,7 @@
     "LOCAL-PROTOCOL-TBD",
     "DUOBAO-CASE-DRAFT-20260515",
     "DUOBAO-DEMO-DESIGN-20260520",
+    "DUOBAO-AFRVR-TACHY-QA-20260525",
     "IMEDTAC-ENGINEERING-SYNC-20260521",
     "IMEDTAC-POST-MEETING-PROGRESS-20260521",
     "IMEDTAC-TEAMS-API-FOLLOWUP-20260521",
@@ -64,16 +65,18 @@
       "chest_heavy"
     ],
     "tachy-associated-symptoms": [
-      "short_breath"
+      "none_of_these"
     ],
     "tachy-post-vital-heart-rate-cue": [
       "both"
     ],
     "tachy-heart-history-meds": [
-      "known_rhythm_problem"
+      "known_rhythm_problem",
+      "heart_bp_medicine"
     ],
     "tachy-medication-allergy-confirm": [
-      "not_sure"
+      "regular_medicines",
+      "none_known"
     ]
   },
   "allowed_output": "staff-review summary only",

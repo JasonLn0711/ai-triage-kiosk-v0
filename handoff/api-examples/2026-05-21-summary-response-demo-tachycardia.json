@@ -24,18 +24,18 @@
     "measured_elevated_heart_rate_demo",
     "reported_palpitations",
     "reported_chest_tightness",
-    "reported_shortness_of_breath",
+    "associated_symptoms_none_selected",
     "staff_review_needed"
   ],
   "staff_review_summary": {
     "format": "review_summary_demo",
     "subjective": [
-      "Synthetic demo patient reports heart racing with chest heaviness for about half a day.",
-      "Selected associated symptom: shortness of breath.",
-      "Patient selected known rhythm problem; medication and allergy details should be confirmed by staff."
+      "Synthetic demo patient reports palpitations and middle chest tightness for about half a day.",
+      "Selected associated symptoms: none of the listed shortness of breath, sweating, dizziness, or fainting options.",
+      "Patient selected rhythm-history and hypertension context; aspirin, antihypertensive medication, and allergy status should be confirmed by staff."
     ],
     "objective": [
-      "Demo vital payload includes HR 150 bpm, SpO2 98%, BP 102/68 mmHg, respiratory rate 16 breaths/min, and temperature 36.5 C.",
+      "Demo vital payload includes HR 130 bpm, SpO2 98%, BP 102/68 mmHg, respiratory rate 16 breaths/min, and temperature 36.5 C.",
       "Heart-rate field quality flag is needs_review."
     ],
     "review_basis": [
@@ -53,6 +53,6 @@
       "Production integration managed through a separate validation path"
     ]
   },
-  "evidence_refs": ["LOCAL-PROTOCOL-TBD"],
+  "evidence_refs": ["DUOBAO-AFRVR-TACHY-QA-20260525", "LOCAL-PROTOCOL-TBD"],
   "demo_boundary": "Synthetic-data staff-review intake support with human-review workflow and separate production validation path."
 }

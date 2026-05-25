@@ -166,7 +166,7 @@ Problem: customer may read summary as diagnosis.
 Safe wording:
 
 ```text
-Synthetic demo case. Patient reports heart racing with chest heaviness for about half a day, plus shortness of breath. Measured vitals include HR 150 bpm, SpO2 98%, BP 102/68 mmHg, respiratory rate 16 breaths/min, and temperature 36.5 C. Staff should review the measured heart-rate cue, reported cardiopulmonary symptoms, rhythm-history selection, and medication/allergy confirmation. This demo does not diagnose, assign final triage level, recommend treatment, or write to HIS/EMR.
+Synthetic demo case. Patient reports palpitations and middle chest tightness for about half a day, with no selected associated shortness of breath, sweating, dizziness, or fainting options. Measured vitals include HR 130 bpm, SpO2 98%, BP 102/68 mmHg, respiratory rate 16 breaths/min, and temperature 36.5 C. Staff should review the measured heart-rate cue, reported cardiopulmonary symptoms, rhythm-history selection, and medication/allergy confirmation. This demo does not diagnose, assign final triage level, recommend treatment, or write to HIS/EMR.
 ```
 
 Unsafe wording:

@@ -31,6 +31,19 @@ Use these files for the current `post_measurement_only` contract. The examples
 now use the tachycardia / palpitation / chest-tightness live demo case:
 `demo-tachycardia-live-001`.
 
+The `2026-05-25` 多寶 case input aligns this example set to a measured-first
+HR `130 bpm` cue with palpitations, middle chest tightness, selected
+`none_of_these` associated symptoms, rhythm-history / hypertension context,
+aspirin / antihypertensive medication context, and no known medication allergy.
+
+Teams `2026-05-25` UI follow-up clarifies that
+`capabilities.max_questions` is a cap, while `progress.expected_total` should
+drive `Question X of Y`. imedtac UI working layout supports up to `9` short
+options without user scrolling; these examples keep most returned questions
+shorter for readability. Summary examples use `status=summary` and
+`staff_review_summary`, which iMVS can render in an existing result / preview
+page or NYCU can show in a temporary demo-only preview during rehearsal.
+
 - `2026-05-21-start-session-request-demo-tachycardia.json`
 - `2026-05-21-start-session-response-question.json`
 - `2026-05-21-submit-answer-request-demo-tachycardia.json`

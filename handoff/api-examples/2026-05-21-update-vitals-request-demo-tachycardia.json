@@ -31,7 +31,7 @@
       "missing_reason": null
     },
     "heart_rate_bpm": {
-      "value": 150,
+      "value": 130,
       "unit": "bpm",
       "measurement_status": "measured",
       "quality_flag": "needs_review",

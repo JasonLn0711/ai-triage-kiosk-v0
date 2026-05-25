@@ -26,7 +26,7 @@
   "question": {
     "id": "tachy-onset",
     "registry_refs": ["TACHY-002"],
-    "source_refs": ["DUOBAO-DEMO-DESIGN-20260520", "LOCAL-PROTOCOL-TBD"],
+    "source_refs": ["DUOBAO-DEMO-DESIGN-20260520", "DUOBAO-AFRVR-TACHY-QA-20260525", "LOCAL-PROTOCOL-TBD"],
     "evidence_status": "clinical-review-needed",
     "review_owner": "clinical_reviewer_tbd",
     "type": "single_choice",
@@ -48,9 +48,9 @@
     "summary_effect": "Adds onset and duration context to the staff-review summary.",
     "rendering_constraints": {
       "requires_no_scroll": true,
-      "max_visible_options_without_scroll": 4
+      "max_visible_options_without_scroll": 9
     },
-    "evidence_refs": ["LOCAL-PROTOCOL-TBD"],
+    "evidence_refs": ["DUOBAO-AFRVR-TACHY-QA-20260525", "LOCAL-PROTOCOL-TBD"],
     "demo_boundary": "Staff should review this answer with the measured vitals."
   },
   "demo_boundary": "Synthetic-data staff-review intake support with human-review workflow and separate production validation path."

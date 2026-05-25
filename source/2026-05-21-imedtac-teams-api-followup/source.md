@@ -9,6 +9,7 @@ channel: Microsoft Teams
 source_note: user-provided screenshot and copied chat text
 related:
   - ../2026-05-21-imedtac-engineering-sync/meeting-record.md
+  - ../2026-05-23-to-2026-05-25-imedtac-teams-ui-api-followup/source.md
   - ../../handoff/2026-05-21-imvs-nycu-api-design-v0.2-draft.md
   - ../../handoff/2026-05-21-imedtac-engineering-sync-closeout.md
 ---
@@ -105,3 +106,17 @@ The skip behavior question needs review before company response:
   generation and which can be optional.
 - API: whether `answer.skipped=true`, `skip_reason`, or a fixed "unable to
   answer" option is safer than a generic skip button.
+
+## Continued Follow-Up
+
+The visible follow-up from `2026-05-23` to `2026-05-25` is preserved separately
+in:
+
+```text
+../2026-05-23-to-2026-05-25-imedtac-teams-ui-api-followup/source.md
+```
+
+That later source adds the Case Tachy handoff, Ben's `request_id` /
+`idempotency_key` and `capabilities.max_questions` questions, the direct-browser
+demo environment path, requested CORS origins, and imedtac UI signals on option
+capacity and `I'm not sure` / `None of these` behavior.

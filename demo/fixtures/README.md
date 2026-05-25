@@ -12,6 +12,7 @@ hospital chart numbers, live endpoint URLs, credentials, or real ASR audio.
 | `chest-pain-high-bp-low-spo2.json` | Chest pain with high BP / low SpO2 context. |
 | `fever-urinary.json` | Fever with urinary or respiratory symptom context. |
 | `respiratory-low-spo2-early-handoff.json` | Duobao-aligned respiratory handoff case with two-phase question flow and lower SpO2 context. |
+| `tachycardia-live-demo.json` | Duobao-aligned tachycardia / palpitation / chest-tightness live-performance case with measured-first HR cue. |
 
 ## Boundary
 

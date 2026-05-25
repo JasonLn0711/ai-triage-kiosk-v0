@@ -4,7 +4,7 @@ title: "Duobao Normalized June Demo Case Pack v1"
 date: 2026-05-20
 topic: ai-triage
 type: handoff
-status: clinical-review draft
+status: superseded-by-2026-05-25-tachycardia-case-alignment
 audience: Duobao, Johnny Fang, imedtac engineering, NYCU demo team
 source:
   - ../source/2026-05-20-duobao-demo-cases-question-design/source.md
@@ -13,6 +13,7 @@ source:
   - ./2026-05-21-imvs-nycu-api-design-v0.2-draft.md
   - ../source/2026-05-21-imedtac-engineering-sync/meeting-record.md
   - ../source/2026-05-21-duobao-post-imedtac-internal-sync/meeting-record.md
+  - ../source/2026-05-25-duobao-afrvr-tachycardia-case/source.md
 ---
 
 # Duobao Normalized June Demo Case Pack v1
@@ -43,6 +44,15 @@ question loop -> staff-review summary.
 Post-Duobao internal sync note: treat 多寶's diagnosis-shaped case labels and
 draft triage levels as internal design anchors only. The customer-visible loop
 should demonstrate vital-aware question selection and staff-review summary
+
+Post-`2026-05-25` update: 多寶 provided a Case 2 AfRVR-style tachycardia
+question-answer demo. The current delivery package now uses the derived
+tachycardia lane in
+`handoff/2026-05-21-duobao-style-tachycardia-live-demo-question-set.md` and the
+two-endpoint reply in
+`handoff/2026-05-21-imedtac-two-endpoint-api-reply.md`. This v1 pack remains a
+historical bridge; the Monday first-lane input is achieved and ready for
+imedtac engineering rehearsal.
 generation, not AI assignment of formal triage level.
 
 ## Boundary
@@ -249,7 +259,8 @@ Not claimed:
 - Internal label from 多寶: `AfRVR`
 - Runtime-safe label: `Palpitation / chest tightness with very fast heart rate`
 - Synthetic profile: `76 y/o female`
-- Synthetic vitals: `T 36.5 C`, `HR 150`, `RR 16`, `SpO2 98%`, `BP 102/68`
+- Synthetic vitals after the `2026-05-25` 多寶 case update: `T 36.5 C`,
+  `HR 130`, `RR 16`, `SpO2 98%`, `BP 102/68`
 
 ### Question Flow
 
@@ -271,7 +282,7 @@ Subjective:
 - Patient-selected associated symptoms are listed.
 
 Objective:
-- Synthetic measured vitals include HR 150, BP 102/68, SpO2 98%, RR 16, T 36.5 C.
+- Synthetic measured vitals include HR 130, BP 102/68, SpO2 98%, RR 16, T 36.5 C.
 
 Review basis:
 - Very fast heart-rate cue plus reported palpitation / chest tightness should be reviewed by staff.
@@ -287,7 +298,9 @@ Not claimed:
 
 ### 多寶 Review Questions
 
-- Should HR 150 trigger immediate staff-summary stop before question 7?
+- With HR 130 as the `2026-05-25` case-aligned cue, should the flow continue
+  through medication/allergy context before summary, or should a shorter live
+  demo path be used?
 - Should "known heart rhythm problems" be included, or is it too clinically specific for June?
 - Is "chest feels heavy" acceptable patient-facing English?
 
@@ -383,9 +396,9 @@ python3 scripts/check_governance_registries.py
 npm run demo:ready
 ```
 
-Post-`2026-05-21` addendum:
+Post-`2026-05-21` / `2026-05-25` addendum:
 
-- The tachycardia live-performance lane now has a clinical-review draft packet:
+- The tachycardia live-performance lane now has a clinical-input integrated packet:
   `handoff/2026-05-21-duobao-style-tachycardia-live-demo-question-set.md`.
 - The governance registries now include tachycardia source rows, seven visible
   tachycardia question rows, API question mappings, and
@@ -395,7 +408,8 @@ Post-`2026-05-21` addendum:
 
 Next after 多寶 / 慧誠 review:
 
-1. Ask 多寶 to approve or edit the seven visible tachycardia questions.
+1. Send the case-aligned tachycardia question / option template as the first
+   imedtac rehearsal lane.
 2. Ask imedtac engineering whether iMVS can render the question templates used
    here: `single_choice`, `multi_choice`, variable option counts, and no-scroll
    display limits. Keep numeric / scale as a future template only if imedtac

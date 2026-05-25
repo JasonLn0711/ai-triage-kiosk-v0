@@ -97,9 +97,9 @@ For the tachycardia live lane, option IDs such as `heart_racing`,
 | `patient_context.sex` | 完整 API | MVP 可依 case 固定或省略。 |
 | `vitals` | MVP 必要 | 兩個 endpoint flow 的主要輸入。 |
 | `capabilities.question_types` | MVP 必要 | 讓 NYCU 只回 iMVS 可顯示的題型。 |
-| `capabilities.max_questions` | MVP 必要 | 控制 demo 題數與畫面節奏。 |
-| `capabilities.max_options_per_question` | 需 imedtac 確認 | MVP 可先採 4 個 option 的 conservative default。 |
-| `capabilities.max_option_label_length` | 需 imedtac 確認 | MVP 可先採 48 字元 default。 |
+| `capabilities.max_questions` | MVP 必要 | 控制 demo 題數上限與畫面節奏；不是 `Question X of Y` 的最終題數。UI 進度建議讀 response 的 `progress.expected_total`。 |
+| `capabilities.max_options_per_question` | Teams `2026-05-25` 已有初步訊號 | imedtac UI 目前工作假設可容納最多 `9` 個短選項且不讓使用者 scroll；NYCU first lane 仍優先使用較少、較短選項。 |
+| `capabilities.max_option_label_length` | 需 imedtac 確認 | MVP 可先採 48 字元 default，並由 NYCU / 多寶主動縮短 label。 |
 | `capabilities.variable_option_count` | 需 imedtac 確認 | 完整 API 支援 variable options；MVP 可先固定選項數。 |
 | `capabilities.voice_input` | MVP 必要 / 完整 API | MVP 固定 `false`；語音輸入屬後續擴充。 |
 
@@ -185,7 +185,7 @@ Scope controls:
 | `question.trigger_reason_codes` | MVP 建議 | 記錄為什麼此題出現，例如 `measured_elevated_heart_rate_demo` 或 `reported_palpitations`。 |
 | `question.summary_effect` | 完整 API | 讓工程與 clinical reviewer 對齊選項如何進入 `staff_review_summary`。 |
 | `question.rendering_constraints.requires_no_scroll` | 需 imedtac 確認 | MVP 可先固定 `true`。 |
-| `question.rendering_constraints.max_visible_options_without_scroll` | 需 imedtac 確認 | MVP 可先採 4 個 options。 |
+| `question.rendering_constraints.max_visible_options_without_scroll` | Teams `2026-05-25` 已有初步訊號 | 目前工作假設可維持最多 `9` 個短選項；first lane 仍優先少選項、短 label。 |
 
 ## Tachycardia Live-Lane Field Impact
 
@@ -334,7 +334,7 @@ Lean Endpoint 1 request for the tachycardia live demo:
   "vitals": {
     "measurement_timestamp": "2026-05-21T10:00:00+08:00",
     "heart_rate_bpm": {
-      "value": 150,
+      "value": 130,
       "unit": "bpm",
       "measurement_status": "measured",
       "quality_flag": "needs_review"
@@ -435,6 +435,7 @@ stay out of the June MVP unless imedtac already has a reliable widget.
 | `staff_review_summary.review_action` | MVP 必要 | 提供 staff-review workflow cue。 |
 | `staff_review_summary.staff_handoff_note` | MVP 必要 | demo preview 可直接顯示的短句。 |
 | `staff_review_summary.scope_controls` | MVP 必要 | 對外 demo 文件與 API payload 的 scope-control 欄位。 |
+| `staff_review_summary.display_surface` | MVP 建議 | Teams `2026-05-25` 新增確認點：preferred path 是 iMVS 既有 result / preview page render `status=summary` payload；NYCU-hosted preview page 只作為 temporary rehearsal / debug surface。 |
 
 ## Error / Fallback
 

@@ -216,9 +216,9 @@ Required fields:
 | `vitals.<field>.quality_flag` | string | yes | `ok`, `needs_review`, `device_error`, `out_of_range_demo`, or `unknown`. |
 | `vitals.<field>.missing_reason` | string/null | no | Required when a vital is missing or failed. |
 | `capabilities.question_types` | array | yes | June tachycardia live lane uses `single_choice` and `multi_choice`; keep `scale` as a future UI template only after imedtac confirms support. |
-| `capabilities.max_questions` | number | yes | Current June design cap follows the 慧誠 / iMVS product spec: fewer than `8` visible patient-facing questions; use `7` as the hard maximum. |
-| `capabilities.max_options_per_question` | number | ask imedtac | Needed to keep iMVS screens readable without scrolling. |
-| `capabilities.max_option_label_length` | number | ask imedtac | Needed to avoid text overflow on the kiosk display. |
+| `capabilities.max_questions` | number | yes | UI capacity cap, not guaranteed final question count. Use `progress.expected_total` for `Question X of Y`; current June tachycardia lane uses `7`. |
+| `capabilities.max_options_per_question` | number | yes after Teams `2026-05-25` signal | imedtac UI working layout supports up to `9` short options without user scrolling; NYCU should still prefer fewer options for readability. |
+| `capabilities.max_option_label_length` | number | ask imedtac / design short labels | Needed to avoid text overflow on the kiosk display; current working control is short option wording. |
 | `capabilities.variable_option_count` | boolean | ask imedtac | Confirms whether NYCU may return different option counts per question. |
 | `capabilities.voice_input` | boolean | yes | Recommended `false` for June critical path. |
 
@@ -245,7 +245,7 @@ Required fields:
 | `question_phase` | string | yes if `status=question` | Use `post_measurement_intake` for the June contract; future two-phase uses `pre_vital_intake` or `post_vital_followup`. |
 | `phase_reason` | string | yes if `status=question` | Short reason why this question is allowed in the current phase. |
 | `progress.current` | number | yes | Required for AC07 progress display. |
-| `progress.expected_total` | number | yes | Can be estimated for dynamic flows. |
+| `progress.expected_total` | number | yes | Recommended denominator for `Question X of Y`; must be less than or equal to `capabilities.max_questions`. For the June tachycardia lane, keep it stable within a session. |
 | `question.id` | string | yes if `status=question` | Stable runtime question id. |
 | `question.registry_refs` | array | yes | Question registry IDs backing this runtime question. |
 | `question.source_refs` | array | yes | Source IDs backing this runtime question. |
@@ -407,15 +407,17 @@ Use for mutually exclusive answers.
   ],
   "rendering_constraints": {
     "requires_no_scroll": true,
-    "max_visible_options_without_scroll": 4
+    "max_visible_options_without_scroll": 9
   }
 }
 ```
 
 ### `multi_choice`
 
-Use when multiple symptoms may apply. If `none_option_id` is selected, iMVS
-should clear other selected options.
+Use when multiple symptoms may apply. Teams `2026-05-25` indicates imedtac UI
+will not keep a static `None of these` button. If NYCU returns a
+question-specific `none_option_id`, iMVS should treat that returned option as
+mutually exclusive and clear other selected options.
 
 ```json
 {
@@ -468,8 +470,8 @@ Demo-safe summary wording after expert review:
 
 ```text
 Synthetic demo case.
-Patient reports heart racing with chest heaviness for about half a day, plus shortness of breath.
-Measured vitals include HR 150 bpm, SpO2 98%, BP 102/68 mmHg, respiratory rate 16 breaths/min, and temperature 36.5 C.
+Patient reports palpitations and middle chest tightness for about half a day, with no selected associated shortness of breath, sweating, dizziness, or fainting options.
+Measured vitals include HR 130 bpm, SpO2 98%, BP 102/68 mmHg, respiratory rate 16 breaths/min, and temperature 36.5 C.
 Staff should review the measured heart-rate cue, reported cardiopulmonary symptoms, rhythm-history selection, and medication/allergy confirmation.
 This demo does not diagnose, recommend treatment, assign a final triage level, or write to HIS/EMR.
 ```

@@ -26,7 +26,7 @@
   "question": {
     "id": "tachy-post-vital-heart-rate-cue",
     "registry_refs": ["TACHY-005"],
-    "source_refs": ["AHA-TACHYCARDIA-FAST-HR", "MEDLINEPLUS-AFIB", "DUOBAO-DEMO-DESIGN-20260520"],
+    "source_refs": ["AHA-TACHYCARDIA-FAST-HR", "MEDLINEPLUS-AFIB", "DUOBAO-DEMO-DESIGN-20260520", "DUOBAO-AFRVR-TACHY-QA-20260525"],
     "evidence_status": "source-backed",
     "review_owner": "clinical_reviewer_tbd",
     "type": "single_choice",
@@ -48,9 +48,9 @@
     "summary_effect": "Adds the post-vital current heart-racing / chest-heaviness status to the staff-review summary.",
     "rendering_constraints": {
       "requires_no_scroll": true,
-      "max_visible_options_without_scroll": 4
+      "max_visible_options_without_scroll": 9
     },
-    "evidence_refs": ["LOCAL-PROTOCOL-TBD"],
+    "evidence_refs": ["DUOBAO-AFRVR-TACHY-QA-20260525", "LOCAL-PROTOCOL-TBD"],
     "demo_boundary": "Post-vital heart-rate cue follow-up for staff-review context."
   },
   "demo_boundary": "Synthetic-data staff-review intake support with human-review workflow and separate production validation path."
