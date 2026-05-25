@@ -11,6 +11,7 @@ source:
   - ../docs/2026-05-22-future-complete-api-design-plan.md
   - ../source/2026-05-22-nycu-sent-api-reply-email/sent-reply-record.md
   - ../source/2026-05-21-imedtac-teams-api-followup/teams-thread-record-2026-05-22.md
+  - ../source/2026-05-23-to-2026-05-25-imedtac-teams-ui-api-followup/source.md
 ---
 
 # API Contract Freeze And Change Control
@@ -28,6 +29,41 @@ Jason sent the API reply packet on `2026-05-22 12:17` in the Gmail thread `[2025
 The sent email explicitly states that the attached API reply should serve as the June demo API implementation baseline and that future changes to endpoint, field names, required/optional status, enum, answer behavior, or UI constraints require an explicit change request. This turns the small fixed API reply from an internal draft into the externally communicated baseline.
 
 Jason also replied in the Microsoft Teams channel `AI Triage 討論 w/ 陽交大` at `2026-05-22 12:24`. The Teams reply confirmed that the API reply document had just been sent by email, that NYCU would provide the first preset questions/options by Monday, and that the June demo should not implement a generic skip button for unable-to-answer behavior. The reply states that iMVS should return an explicit `Not sure` option id, such as `not_sure` or question-specific `*_not_sure`, so the summary preserves an interpretable answer state.
+
+Jason later sent the engineering alignment reply in the same Microsoft Teams
+channel on `2026-05-25 20:09`. That reply externally committed the first
+rehearsal to the following positions: `request_id` is unique per HTTP request;
+`idempotency_key` is stable for the same logical operation and retry;
+same-key/different-body conflicts return HTTP `409` /
+`idempotency_conflict` without advancing the question flow; June conflict
+recovery is restart questionnaire / restart demo session, not automatic answer
+revision; iMVS should use pending-answer state to snapshot the answer body and
+disable answer-related controls during the request; `capabilities.max_questions`
+is a question-count cap rather than the UI progress denominator;
+`progress.expected_total` is the recommended `Question X of Y` denominator;
+generic silent skip is out of scope; `I'm not sure` remains an interpretable
+answer state; static `None of these` is not required; if a none answer is
+needed, NYCU returns it as an ordinary option id; the current no-scroll working
+layout is up to `9` short options; Endpoint 2 returns `status=summary` and
+`staff_review_summary`; the Render base URL and two endpoint paths are the
+first-rehearsal integration target; `http://localhost` and
+`http://localhost:5174` are in the CORS allowlist; and demo auth uses a simple
+bearer-token gate with `Content-Type: application/json` plus
+`Authorization: Bearer <demo token>`.
+
+Jason also sent the actual demo bearer token to Ben in a private Teams chat at
+`2026-05-25 20:13` and stated that testing confirmed successful calls with the
+token. The token value is intentionally not recorded in this repo. Because a
+working credential has already been shared externally, any token rotation,
+auth-header change, or token-required behavior change must be communicated to
+Ben / imedtac before the rehearsal path depends on the changed behavior.
+
+After the `20:09` group reply, Jason also replied to Johnny's summary-preview
+question that a NYCU-provided UI may affect visual consistency and completeness
+of the device operation, so this may require further discussion. This makes the
+summary display surface and any NYCU-hosted / NYCU-provided UI a change-control
+item: NYCU should not unilaterally switch from iMVS-rendered summary display to
+a NYCU-provided UI surface without first discussing that impact with imedtac.
 
 ## First Principle
 
@@ -49,6 +85,15 @@ The API reply therefore becomes the single source of truth for the June integrat
 ## Change-Control Rule
 
 A change request is required before either team implements a change to endpoint paths, field names, field meanings, requiredness, enum values, answer payload shape, summary shape, or vital payload dictionary listed in the small fixed contract. A valid change request should state the current rule, proposed rule, reason, compatibility impact, affected examples/tests, owner, target date, and required version bump.
+
+The no-silent-change rule is absolute for any behavior already communicated in
+Gmail or Teams. If NYCU needs to adjust endpoint paths, schema, workflow mode,
+idempotency behavior, conflict recovery, CORS origins, bearer-token requirement
+or header format, progress semantics, option rendering assumptions, skip /
+not-sure behavior, summary display surface, or the tachycardia preset question
+handoff, NYCU must tell imedtac explicitly and discuss the change before either
+side implements against the new behavior. Avoiding contradictory external
+messages is a project reliability requirement, not just etiquette.
 
 Clarifications that do not change runtime behavior can be appended as notes. Display text, question wording, labels, and staff-summary wording can evolve under `question_set_version` and `wording_version`, provided the machine-readable IDs and small contract remain stable.
 

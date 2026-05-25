@@ -67,6 +67,28 @@ Do not turn this repo into:
 - If implementation begins, add a clear `app/`, `prototype/`, or `demo/`
   structure before adding code.
 
+## External Commitment Change Control
+
+- Treat anything Jason has already sent to 慧誠智醫（imedtac Co., Ltd.）through
+  Teams, Gmail, or another company-facing channel as an external commitment, not
+  as an internal draft.
+- Do not silently change behavior that has already been communicated externally.
+  This includes endpoint paths, request/response schema, workflow mode,
+  idempotency behavior, conflict recovery, CORS origins, bearer-token
+  requirement or header format, progress semantics, option rendering
+  assumptions, skip / not-sure behavior, summary display surface, tachycardia
+  preset-question handoff, and demo environment routing.
+- If a change is needed after an external message has been sent, first record
+  the current commitment, proposed change, reason, compatibility impact, owner,
+  and target date; then explicitly notify and discuss it with imedtac before
+  either side implements against the new behavior.
+- Preserve external-message records under `source/` with credential values
+  redacted. Record that a credential was shared and through which private
+  channel, but never store bearer tokens, API keys, private links, or live
+  credentials in Git, Markdown, screenshots, logs, or planning notes.
+- Reliability with imedtac depends on consistency. Avoiding contradictory
+  external messages is a project requirement.
+
 ## Article And Handoff Writing Method
 
 - This section is a non-negotiable repo rule. Write every article, handoff note,
