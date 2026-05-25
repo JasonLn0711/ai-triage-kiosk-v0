@@ -148,11 +148,17 @@ and Render rebuilds/redeploys the latest GitHub `main` commit.
 
 Post-push verification on `2026-05-25 20:01 GMT+8`, after publishing the
 token-gate code to GitHub `main`, still returned HTTP `200` for a no-token
-`POST /api/triage-demo/sessions`. This means the public Render service has not
-yet entered token-required mode. Remaining Render action: confirm
-`DEMO_BEARER_TOKEN` is saved, trigger `Save, rebuild, and deploy` or
-`Manual Deploy -> Deploy latest commit`, then verify no-token POST returns
-HTTP `401` / `demo_bearer_token_required`.
+`POST /api/triage-demo/sessions`, so Render still needed the environment
+variable save/redeploy step.
+
+Follow-up public verification on `2026-05-25 20:25 GMT+8` confirmed that
+token-required mode is now active:
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| `GET /healthz` | HTTP `200` | Response body still reports `status="ok"` and `x-render-origin-server: Render`. |
+| `OPTIONS /api/triage-demo/sessions` from `http://localhost:5174` | HTTP `204` | Response includes `Access-Control-Allow-Origin: http://localhost:5174` and `Access-Control-Allow-Headers: Content-Type, Authorization`. |
+| No-token `POST /api/triage-demo/sessions` | HTTP `401` | Response error code is `demo_bearer_token_required`; `WWW-Authenticate` is `Bearer realm="nycu-imedtac-triage-demo"`. |
 
 ## CORS Origin Boundary
 

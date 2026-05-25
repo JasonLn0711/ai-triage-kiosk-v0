@@ -129,11 +129,13 @@ should be shared only through the agreed private channel.
 
 Jason prepared `DEMO_BEARER_TOKEN` in Render for token-required rehearsal; the
 value is intentionally not recorded in this packet. Token-required behavior
-becomes live only after the environment variable is saved and Render
-rebuilds/redeploys the latest GitHub `main` commit. A post-push public check on
-`2026-05-25 20:01 GMT+8` still returned HTTP `200` for a no-token start-session
-request, so the remaining Render action is to save/rebuild/redeploy and verify
-the expected `401` no-token response.
+became active after the environment variable was saved and Render
+rebuilds/redeployed the latest GitHub `main` commit. Public verification on
+`2026-05-25 20:25 GMT+8` confirmed `/healthz` HTTP `200`, CORS preflight HTTP
+`204`, and no-token start-session HTTP `401` /
+`demo_bearer_token_required`. Private bearer-token success was shared with
+imedtac through the agreed private channel and the token value remains outside
+repo files.
 
 ## Start Session Request
 
@@ -344,6 +346,15 @@ Temporary fallback:
 ```text
 NYCU-hosted demo-only preview page may be used for debugging, but it must be
 visibly labeled as temporary rehearsal support.
+```
+
+Change-control note:
+
+```text
+Jason has already told imedtac that a NYCU-provided UI may affect visual
+consistency and device-operation completeness. Do not switch the rehearsal
+summary surface from iMVS rendering to NYCU-provided UI without first discussing
+the impact with imedtac.
 ```
 
 Acceptance check:
