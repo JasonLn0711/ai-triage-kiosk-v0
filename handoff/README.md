@@ -38,6 +38,7 @@ Current detailed discussion artifacts:
 - `handoff/2026-05-21-to-2026-05-25-imedtac-response-plan.md`
 - `handoff/2026-05-21-decision-defaults-and-owner-matrix.md`
 - `handoff/2026-05-22-api-v0.2-requirements-from-expert-review.md`
+- `handoff/2026-05-25-render-rehearsal-api-deployment-runbook.md`
 - `docs/2026-05-19-two-phase-question-flow-design.md`
 - `docs/version-control-policy.md`
 - `docs/2026-05-19-api-session-design-plain-explanation.md`
@@ -71,6 +72,15 @@ Current v0.2 freeze-gate additions:
 - staff summary uses `review_basis` rather than `assessment_support`;
 - error examples fall back to standard staff workflow and do not include
   generated summaries.
+- answer-submit UI behavior is fixed for rehearsal: iMVS locks answer-related
+  controls immediately after submit and unlocks only after NYCU returns the next
+  question or `staff_review_summary`;
+- `idempotency_conflict` recovery is fixed as `restart_demo_session` for the
+  June demo, not answer revision or a GET current-question recovery path.
+- Render rehearsal API service is created as
+  `nycu-imedtac-triage-demo-api`; the intended API base URL is
+  `https://nycu-imedtac-triage-demo-api.onrender.com/api/triage-demo`.
+  Render must use `npm run render:start`, not the repo's static `start` script.
 
 Post-sync `2026-05-21` update:
 
@@ -136,6 +146,9 @@ supplemental notes only if they come up in discussion.
   `handoff_reason_codes`, session expiry / state fields, retry / idempotency
   fields, measurement-quality fields, stable error behavior, and no fake
   summary on failure.
+- Preserve the current `idempotency_conflict` rule in any external reply:
+  return HTTP 409 / `status: "error"`, do not advance question flow, and restart
+  the demo session for rehearsal recovery.
 - Use the post-sync June flow unless a later explicit decision changes it:
   complete measurement, upload vital payload, run the question loop, then show
   staff-review summary. Keep the two-phase workflow as a future optimized path.

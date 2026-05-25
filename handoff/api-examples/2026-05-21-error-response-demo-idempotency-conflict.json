@@ -1,0 +1,39 @@
+{
+  "api_version": "2026-05-22-demo-v0.2-draft",
+  "schema_version": "imvs-nycu-triage-demo-schema-v0.2-draft",
+  "flow_version": "tachycardia-live-demo-flow-v0.2-draft",
+  "case_id": "demo-tachycardia-live-001",
+  "case_version": "demo-tachycardia-live-001-v0.2",
+  "fixture_version": "v0.2.0",
+  "question_set_version": "tachycardia-question-set-v0.2-draft",
+  "wording_version": "staff-summary-wording-v0.2-clinical-draft",
+  "request_id": "req-demo-tachy-conflict-002",
+  "response_id": "resp-demo-tachy-error-idempotency-conflict-001",
+  "session_key": "demo-session-tachy-001",
+  "session_state": "active",
+  "workflow_mode": "post_measurement_only",
+  "measurement_state": "complete",
+  "vitals_ready": true,
+  "status": "error",
+  "http_status": 409,
+  "error": {
+    "code": "idempotency_conflict",
+    "message": "The same idempotency_key was reused with a different answer body.",
+    "retryable": false,
+    "details": {
+      "idempotency_key": "idem-demo-tachy-answer-001"
+    }
+  },
+  "recovery": {
+    "safe_next_action": "restart_demo_session",
+    "owner": "imvs_ui_operator",
+    "ui_locking_required": true,
+    "instructions": [
+      "Do not reuse this idempotency_key for a different answer.",
+      "Do not auto-submit the changed answer with a new idempotency_key.",
+      "Keep answer controls locked until the operator starts a new demo session or switches to labeled fallback.",
+      "Start a new demo session through POST /api/triage-demo/sessions."
+    ]
+  },
+  "demo_boundary": "Synthetic-data staff-review intake support with human-review workflow and separate production validation path."
+}

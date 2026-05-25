@@ -228,7 +228,10 @@ Need from imedtac to freeze engineering details:
 - example payload;
 - session lifecycle expectations: expiry, refresh/recovery, abandoned sessions,
   and whether summary-ready sessions can accept more answers;
-- timeout / retry / idempotency expectations;
+- timeout / retry / idempotency expectations, including the June rule that
+  `idempotency_conflict` recovery is restart demo session and iMVS locks
+  answer-related controls after submit until NYCU returns next question or
+  summary;
 - UI insertion point after measurement report;
 - question template limits: current signal is up to `9` short options
   without user scroll; exact label-length guidance remains useful;

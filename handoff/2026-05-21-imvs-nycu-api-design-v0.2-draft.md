@@ -4,7 +4,7 @@ title: "iMVS / NYCU AI Triage Demo API Design v0.2 Draft"
 date: 2026-05-21
 topic: ai-triage
 type: handoff
-status: post-sync update needed
+status: superseded-by-2026-05-25-freeze-for-rehearsal
 audience: Johnny Fang and imedtac engineering design team
 source:
   - ../docs/2026-05-12-imvs-hardware-and-vital-units-baseline.md
@@ -33,11 +33,25 @@ iMVS vital-sign payload
   -> NYCU next question or staff_review_summary
 ```
 
-This file began as NYCU's pre-sync API v0.2 draft. After the sync, treat it as
-the working base for the confirmed post-sync API update. It is not frozen until
-慧誠 confirms current-device deltas from the 5/12 V1.4 payload baseline,
-required/optional fields, missing/failure semantics, UI insertion point, and
-session ownership.
+This file began as NYCU's pre-sync API v0.2 draft. It records the path that led
+to the confirmed post-sync API update. Earlier freeze blockers in this draft are
+now superseded for first rehearsal by the 2026-05-25 freeze note below.
+
+2026-05-25 freeze note: for the first imedtac integration rehearsal, the current
+frozen architecture is recorded in
+`handoff/2026-05-21-imedtac-two-endpoint-api-reply.md` and
+`handoff/2026-05-25-imedtac-integration-next-steps.md`. Render deployment is a
+NYCU-hosted rehearsal base URL decision, not a change to the two-endpoint API
+contract. The first rehearsal path remains:
+
+```text
+POST /api/triage-demo/sessions
+POST /api/triage-demo/sessions/{session_key}/answers
+```
+
+Any later change to endpoint paths, schema, workflow mode, conflict recovery,
+CORS origin, token requirement, or summary display surface should be treated as
+a new coordination decision with imedtac.
 
 Important baseline update: 慧誠 already provided iMVS Product Spec `V2.0.4` and
 iMVS API Definition `V1.4` on `2026-05-12`. Those files define hardware modules,
@@ -131,6 +145,11 @@ June v0.2 enum baseline:
 | `client_event.input_mode` | June value: `touch`; optional/future values: `keyboard`, `voice_confirmed`, `operator_scripted` |
 | `fallback.recommended_mode` | `standard_staff_workflow`, `local_scripted_demo`, `retry_remote_api` |
 | `error.code` | `api_timeout`, `invalid_session`, `measurement_quality_unavailable`, `missing_required_field`, `unsupported_question_type`, `idempotency_conflict` |
+
+For June rehearsal, `idempotency_conflict` maps to
+`recovery.safe_next_action=restart_demo_session`. It is not an answer-revision
+workflow. iMVS should lock answer controls after submit and unlock only after
+NYCU returns the next question or summary.
 
 `answer.selected_option_ids` is constrained by the immediately preceding
 `question.options[*].id` list. This is intentional: option labels may change

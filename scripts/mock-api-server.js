@@ -11,6 +11,16 @@ const {
 
 const PORT = Number(process.env.PORT || 4193);
 
+function sendHealth(res) {
+  res.statusCode = 200;
+  res.setHeader("Content-Type", "application/json; charset=utf-8");
+  res.end(JSON.stringify({
+    status: "ok",
+    service: "nycu-imedtac-triage-demo-api",
+    mode: "synthetic-data-rehearsal-api"
+  }));
+}
+
 function readJsonBody(req) {
   return new Promise((resolve, reject) => {
     const chunks = [];
@@ -33,6 +43,11 @@ function readJsonBody(req) {
 
 const server = http.createServer(async (req, res) => {
   setCorsHeaders(req, res);
+  if (req.method === "GET" && req.url === "/healthz") {
+    sendHealth(res);
+    return;
+  }
+
   if (req.method === "OPTIONS") {
     res.statusCode = 204;
     res.end();

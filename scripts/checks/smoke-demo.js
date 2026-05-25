@@ -37,6 +37,8 @@ for (const relativePath of REQUIRED_FILES) {
 
 const html = read("app/triage-kiosk/index.html");
 const script = read("app/triage-kiosk/triage-kiosk.js");
+const packageJson = JSON.parse(read("package.json"));
+const mockApiServer = read("scripts/mock-api-server.js");
 const engine = require(path.join(ROOT, "core/triage_engine/index.js"));
 const contract = require(path.join(ROOT, "api/lib/triage-demo-contract.js"));
 
@@ -54,6 +56,10 @@ assert(engine.CASES.some((demoCase) => demoCase.id === "respiratory-low-spo2-ear
 assert(engine.CASES.some((demoCase) => demoCase.id === "demo-tachycardia-live-001"), "Tachycardia live case should be wired into the runtime.");
 assert(contract.expectedTotal === 7, "Contract API should expose the tachycardia expected_total denominator.");
 assert(contract.questionSequence.some((question) => question.id === "tachy-post-vital-heart-rate-cue"), "Contract API should include the post-vital HR cue question.");
+assert(packageJson.scripts["render:start"] === "node scripts/mock-api-server.js", "Render start script should launch the API server, not the static frontend.");
+assert(packageJson.scripts["render:build"].includes("npm test"), "Render build script should run contract tests before deploy.");
+assert(mockApiServer.includes('req.method === "GET" && req.url === "/healthz"'), "Render API server should expose GET /healthz for HTTP health checks.");
+assert(mockApiServer.includes("process.env.PORT"), "Render API server should bind to the PORT environment variable.");
 assert(engine.CASES.every((demoCase) => !demoCase.questionLimit || demoCase.questionLimit <= 7), "June demo cases should keep visible questions under 8.");
 assert(!html.includes("<textarea"), "Demo runtime should stay choice-only and not expose free-text input.");
 assert(engine.QUESTION_BANK.every((question) => question.type !== "text"), "Question bank should not include free-text questions.");

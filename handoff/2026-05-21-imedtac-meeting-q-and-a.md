@@ -248,6 +248,11 @@ Fallback if not accepted:
 使用 `request_id` + `idempotency_key`。同一個 idempotency key 重送時，
 NYCU API 應回同一個結果，不讓流程前進兩次。
 
+若同一個 `idempotency_key` 搭配不同 answer body，NYCU 回
+`idempotency_conflict` 並不推進流程。六月 demo 的 recovery 固定為 restart
+demo session，不做自動 answer revision。iMVS 前端送出答案後應先鎖住答題
+相關控制，收到 NYCU 下一題或 summary 後再解鎖。
+
 ### Q10. session 多久過期？
 
 **Answer:**
@@ -737,6 +742,7 @@ NYCU 建議由 NYCU API 產生 session_key，iMVS 後續每次 answer submit 或
 
 ```text
 我們會用 request_id 和 idempotency_key 控制 retry。同一個 idempotency_key 重送時，API 回同一個結果，不讓 question loop 因為重送而跳兩題。
+同一個 idempotency_key 如果搭配不同答案，API 回 idempotency_conflict；六月 demo recovery 是 restart demo session，不做自動 answer revision。送出答案後，iMVS 前端應鎖住答題按鈕與選項，直到 NYCU 回下一題或 summary。
 ```
 
 **If they want iMVS-owned session:**

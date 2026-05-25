@@ -227,6 +227,11 @@ The best contract split is:
 | Server-managed session/config | NYCU | Flow/case/question/wording versions, source refs, evidence status, review owner, summary wording, progress policy, fallback rules. |
 | Response trace and review metadata | NYCU response | Full provenance and scope-control fields for debugging, clinical review, and handoff packet consistency. |
 
+Answer-submit UI control is an iMVS responsibility. For the June demo, iMVS
+should lock answer-related buttons/options immediately after submitting an
+answer and unlock them only after NYCU returns the next question or summary.
+This avoids changed-answer resubmission while the request is pending.
+
 ### Caller-Required MVP Fields
 
 Endpoint 1 `POST /api/triage-demo/sessions` should require from imedtac:
@@ -445,5 +450,7 @@ stay out of the June MVP unless imedtac already has a reliable widget.
 | `error.code` | MVP 必要 | 最小 error contract。 |
 | `error.message` | MVP 必要 | rehearsal debug 與 fallback 顯示需要。 |
 | `error.retryable` | MVP 建議 | MVP 可先固定常見 error 的 retry rule。 |
+| `recovery.safe_next_action` | MVP 建議 | `idempotency_conflict` 的六月 demo 值固定為 `restart_demo_session`；不要自動 answer revision。 |
+| `recovery.ui_locking_required` | MVP 建議 | `idempotency_conflict` 時 iMVS 應維持答題控制鎖定，直到 operator restart 或 fallback。 |
 | `fallback.recommended_mode` | MVP 必要 | demo continuity 需要。 |
 | `demo_boundary` | MVP 必要 | fallback 時仍維持相同 operating scope。 |

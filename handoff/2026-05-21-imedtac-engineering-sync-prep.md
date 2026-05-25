@@ -353,6 +353,10 @@ It should not provide diagnosis, treatment, final triage level, or discharge adv
 - Should answer history be stored on iMVS side, NYCU side, both, or neither for
   the demo?
 - Does the engineering team need idempotency keys for retry?
+- Current June decision: if the same `idempotency_key` is reused with a
+  different answer body, NYCU returns `idempotency_conflict` and does not advance
+  the flow. The rehearsal recovery is restart demo session, and iMVS locks
+  answer controls after submit until NYCU returns the next question or summary.
 
 ### Question Rendering
 
@@ -405,6 +409,7 @@ The API contract needs failure behavior, not only success JSON:
 - network unavailable;
 - user abandons the flow;
 - API returns summary too early or too late.
+- Same `idempotency_key` arrives with a different answer body.
 
 For June, define a simple fallback:
 
@@ -412,6 +417,10 @@ For June, define a simple fallback:
 If AI API is unavailable, iMVS shows a demo-safe fallback screen and does not
 pretend a clinical result was generated.
 ```
+
+For an `idempotency_conflict`, the demo-safe recovery is restart demo session or
+clearly labeled local scripted fallback. The June flow does not add answer
+revision or GET current-question recovery endpoints.
 
 ### 2. Payload Versioning
 

@@ -104,6 +104,10 @@ test("same idempotency key with different answer body returns idempotency_confli
   assert.equal(conflict.statusCode, 409);
   assert.equal(conflict.body.status, "error");
   assert.equal(conflict.body.error.code, "idempotency_conflict");
+  assert.equal(conflict.body.error.retryable, false);
+  assert.equal(conflict.body.session_state, "active");
+  assert.equal(conflict.body.recovery.safe_next_action, "restart_demo_session");
+  assert.equal(conflict.body.recovery.ui_locking_required, true);
 });
 
 test("answering the final question returns status=summary with staff_review_summary", () => {

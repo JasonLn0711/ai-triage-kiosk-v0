@@ -85,10 +85,10 @@ POST /api/triage-demo/sessions/{session_key}/answers
 | --- | --- | --- |
 | P0-02 | Closed for NYCU mock and first rehearsal. The field baseline uses the `2026-05-12` iMVS API `V1.4` vital dictionary and the tachycardia fixture uses HR `130`, SpO2 `98`, BP `102/68`, RR `16`, T `36.5 C`. imedtac still owns current-device delta confirmation, but it is no longer an endpoint-shape blocker. | `docs/2026-05-21-imedtac-api-field-mvp-scope-note.md`; `demo/fixtures/tachycardia-live-demo.json`; `handoff/2026-05-25-first-rehearsal-packet.md`. |
 | P0-03 | Closed for mock. Sessions return `session_key`, `session_expires_at`, `session_state=active`, then `summary_ready`. New answers after summary return `session_summary_ready`; invalid keys return `invalid_session`. | `api/lib/triage-demo-contract.js`; `tests/contract/triage-demo-api.test.js`. |
-| P0-04 | Closed for mock. Same `idempotency_key` retry returns the same response without advancing; same key with a different body returns `idempotency_conflict`. | `api/lib/triage-demo-contract.js`; `tests/contract/triage-demo-api.test.js`. |
+| P0-04 | Closed for mock. Same `idempotency_key` retry returns the same response without advancing; same key with a different body returns `idempotency_conflict` with `recovery.safe_next_action=restart_demo_session`. iMVS should not auto-submit a changed answer with a new key after this error. | `api/lib/triage-demo-contract.js`; `tests/contract/triage-demo-api.test.js`; `handoff/2026-05-25-first-rehearsal-packet.md`. |
 | P0-05 | Closed. `capabilities.max_questions` is a capacity cap; UI progress uses response-level `progress.expected_total`. The tachycardia lane returns `expected_total=7`. | `handoff/2026-05-25-imedtac-integration-next-steps.md`; `handoff/2026-05-25-first-rehearsal-packet.md`; contract tests. |
 | P0-06 | Closed for rehearsal. Runtime and presenter notes support `live_measured`, `synthetic_override`, and `local_scripted_demo`; error responses include stable `status=error`. | `docs/2026-05-25-demo-fallback-script.md`; `docs/demo-script-for-presenter.md`; `api/lib/triage-demo-contract.js`. |
-| P0-07 | Closed for local/serverless mock. CORS allows `http://localhost` and `http://localhost:5174`, supports `OPTIONS`, and documents `Authorization: Bearer <demo token>` without storing a token. Hosted base URL remains a deployment value, not a schema blocker. | `api/triage-demo/sessions.js`; `api/triage-demo/sessions/[session_key]/answers.js`; `handoff/2026-05-25-first-rehearsal-packet.md`. |
+| P0-07 | Closed for first rehearsal path. CORS allows `http://localhost` and `http://localhost:5174`, supports `OPTIONS`, and documents `Authorization: Bearer <demo token>` without storing a token. The NYCU-hosted Render rehearsal base URL is fixed as `https://nycu-imedtac-triage-demo-api.onrender.com/api/triage-demo`; this is a deployment target, not a schema change. | `api/triage-demo/sessions.js`; `api/triage-demo/sessions/[session_key]/answers.js`; `handoff/2026-05-25-first-rehearsal-packet.md`; `handoff/2026-05-25-render-rehearsal-api-deployment-runbook.md`. |
 | P0-08 | Closed for first rehearsal. Acceptance now covers start session, next question, answer, summary, retry, conflict, invalid session, CORS, summary preview, and fallback mode. | `docs/demo-acceptance-criteria.md`; `handoff/2026-05-25-first-rehearsal-packet.md`; `tests/contract/triage-demo-api.test.js`. |
 
 ## P1 Important Integration Issues
@@ -106,6 +106,7 @@ POST /api/triage-demo/sessions/{session_key}/answers
 | P1-06 | Staff-summary display location | Johnny asked whether NYCU already has a summary preview page after all questions. Preferred path: iMVS renders `status=summary` / `staff_review_summary` inside its existing result / preview page; NYCU-hosted preview can be a temporary rehearsal/debug surface if needed. | imedtac UI + NYCU | immediate | UI copy 不含 diagnosis、treatment、final triage level、production HIS/EMR claim；summary remains `staff_only` and is not a patient result page。 |
 | P1-07 | Demo lane choice | tachycardia live-performance lane 與 respiratory synthetic fallback 的主次與 wording。 | Jason + 多寶 / 許醫師 + Johnny | drafted | `handoff/2026-05-21-duobao-style-tachycardia-live-demo-question-set.md` 可作為 Monday 第一版 preset questions/options 的 review draft。 |
 | P1-08 | Live HR demo mode / fallback | 確認 demo script 是否標示 `live_measured`、`synthetic_override`、或 `local_scripted_demo`，避免 demo 成敗依賴現場心跳值。 | NYCU propose; imedtac confirm | rehearsal 前 | Presenter script 和 payload 都能顯示目前 mode；live HR 不適合時可切 scripted fixture。 |
+| P1-09 | Answer-submit UI locking | iMVS should lock all answer-related controls immediately after submit and unlock only after NYCU returns the next question or summary. Help / restart / fallback controls can remain available. | imedtac UI | first rehearsal | Prevents changed-answer resubmission while the request is pending and lowers `idempotency_conflict` risk. |
 
 ## P2 Safety / Product Boundary Issues
 
@@ -132,6 +133,9 @@ POST /api/triage-demo/sessions/{session_key}/answers
 - iMVS 能送 `answer.selected_option_ids` 與 `idempotency_key`。
 - NYCU 能回下一題或 `staff_review_summary`。
 - 相同 `idempotency_key` retry 不會讓流程前進兩次。
+- 送出答案後，iMVS 鎖住答題相關按鈕與選項，直到 NYCU 回下一題或 summary。
+- 相同 `idempotency_key` 搭配不同 answer body 時，NYCU 回
+  `idempotency_conflict`，recovery 固定為 restart demo session。
 - `session_key` expired / invalid 時有穩定 error response。
 - remote API unavailable 時，iMVS 能切換到清楚標示的 fallback。
 - summary display 不含 diagnosis、treatment、final triage level、HIS / EMR

@@ -6,6 +6,8 @@
   "scripts": {
     "build": "node scripts/build-vercel.js",
     "mock:api": "node scripts/mock-api-server.js",
+    "render:build": "npm run version:check && npm test && npm run smoke",
+    "render:start": "node scripts/mock-api-server.js",
     "start": "python3 -m http.server 4183",
     "smoke": "node scripts/checks/smoke-demo.js",
     "test": "npm run test:unit && npm run test:contract",

@@ -320,6 +320,9 @@ AI Triage Demo service 目前無法使用，或 measurement quality 無法支援
 - `error.message`
 - `http_status`
 - `retry_allowed`
+- `recovery.safe_next_action` for errors with a fixed demo recovery path
+- `recovery.ui_locking_required` when the iMVS UI should keep answer controls
+  locked
 - `fallback_to_standard_staff_workflow: true`
 - 不包含 `staff_review_summary`
 
@@ -332,6 +335,12 @@ AI Triage Demo service 目前無法使用，或 measurement quality 無法支援
 - `api_timeout`
 - `measurement_quality_unavailable`
 - `idempotency_conflict`
+
+June rehearsal decision: `idempotency_conflict` returns HTTP 409 /
+`status: "error"`, does not advance the question flow, and uses
+`recovery.safe_next_action=restart_demo_session`. iMVS should lock answer
+controls immediately after answer submit and unlock only after NYCU returns the
+next question or `staff_review_summary`.
 
 ## 9. 會前或會中需要慧誠確認的事項
 

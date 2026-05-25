@@ -43,7 +43,10 @@ integration.
   progress denominator.
 - Same `idempotency_key` retry returns the same response without advancing the
   flow.
-- Same `idempotency_key` with a different body returns `idempotency_conflict`.
+- iMVS locks answer-related controls immediately after answer submit, then
+  unlocks only after NYCU returns the next question or summary.
+- Same `idempotency_key` with a different body returns `idempotency_conflict`
+  with `recovery.safe_next_action=restart_demo_session`.
 - Invalid `session_key` returns stable `status=error`.
 - The final summary response includes `staff_review_summary` and
   `summary_visibility=staff_only`.

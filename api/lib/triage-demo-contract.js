@@ -232,18 +232,34 @@ function errorResult(statusCode, body, code, message, options = {}) {
       session_key: session.session_key,
       session_expires_at: session.session_expires_at,
       status: "error",
+      session_state: options.session_state || "error",
       error: {
         code,
         message,
         retryable: Boolean(options.retryable),
         details: options.details || null
       },
+      recovery: options.recovery || null,
       demo_boundary: DEMO_BOUNDARY
     }
   };
 }
 
-function withIdempotency(scope, body, compute) {
+function idempotencyConflictRecovery() {
+  return {
+    safe_next_action: "restart_demo_session",
+    owner: "imvs_ui_operator",
+    ui_locking_required: true,
+    instructions: [
+      "Do not reuse this idempotency_key for a different answer.",
+      "Do not auto-submit the changed answer with a new idempotency_key.",
+      "Keep answer controls locked until the operator starts a new demo session or switches to labeled fallback.",
+      "Start a new demo session through POST /api/triage-demo/sessions."
+    ]
+  };
+}
+
+function withIdempotency(scope, body, compute, options = {}) {
   const idempotencyKey = body && body.idempotency_key;
   if (!idempotencyKey) return compute();
 
@@ -253,11 +269,15 @@ function withIdempotency(scope, body, compute) {
   if (existing && existing.bodyHash !== bodyHash) {
     return errorResult(409, body, "idempotency_conflict", "The same idempotency_key was reused with a different request body.", {
       retryable: false,
+      session_key: options.session_key || null,
+      session_expires_at: options.session_expires_at || null,
+      session_state: options.session_state || "error",
       details: {
         idempotency_key: idempotencyKey,
         expected_body_hash: existing.bodyHash,
         received_body_hash: bodyHash
-      }
+      },
+      recovery: idempotencyConflictRecovery()
     });
   }
   if (existing) return clone(existing.result);
@@ -389,6 +409,10 @@ function submitAnswer(sessionKey, body = {}) {
         `${question.id} was recorded; the next governed tachycardia demo question is ready.`
       )
     };
+  }, {
+    session_key: session.session_key,
+    session_expires_at: session.session_expires_at,
+    session_state: session.state
   });
 }
 

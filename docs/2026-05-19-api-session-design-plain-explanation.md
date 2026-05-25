@@ -154,6 +154,15 @@ For the June demo, do not build:
 - raw audio retention;
 - all-specialty medical reasoning;
 - a broad LLM chatbot.
+- GET session-state / GET current-question recovery endpoints for the first
+  demo.
+- answer revision after `idempotency_conflict`.
+
+For the June demo, `idempotency_conflict` is an integration-safety stop: NYCU
+returns an error without advancing the question flow, and the operator restarts
+the demo session or switches to a clearly labeled fallback. The iMVS front end
+should lock answer controls immediately after submit and unlock only after NYCU
+returns the next question or `staff_review_summary`.
 
 ## Engineering Shape
 
@@ -192,4 +201,6 @@ Acceptance conditions:
 - no real identifiers;
 - no diagnosis / treatment / final triage wording;
 - fallback response if the session is invalid;
+- answer controls are locked while an answer request is pending;
+- `idempotency_conflict` recovery is restart demo session;
 - summary is staff-review-only.

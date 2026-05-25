@@ -52,11 +52,29 @@ POST /api/triage-demo/sessions
 POST /api/triage-demo/sessions/{session_key}/answers
 ```
 
-NYCU-hosted rehearsal base URL remains a deployment decision:
+NYCU-hosted Render rehearsal base URL:
 
 ```text
-https://<nycu-rehearsal-host>/api/triage-demo
+https://nycu-imedtac-triage-demo-api.onrender.com/api/triage-demo
 ```
+
+Render health check:
+
+```http
+GET /healthz
+```
+
+Render service settings:
+
+```text
+Build Command: npm install && npm run render:build
+Start Command: npm run render:start
+Health Check Path: /healthz
+```
+
+Do not use Render's autofilled `yarn start` for this service. In this repo,
+`start` is the static frontend server; the rehearsal API must run
+`node scripts/mock-api-server.js` through `npm run render:start`.
 
 ## Browser / CORS Contract
 
@@ -204,10 +222,25 @@ Conflict:
 ```text
 same endpoint + same idempotency_key + different answer body
 = status error, error.code idempotency_conflict, HTTP 409
+= recovery.safe_next_action restart_demo_session
 ```
 
 `request_id` can be unique per HTTP request. The mock compares idempotency
 payloads without treating a changed `request_id` as a conflict.
+
+iMVS UI behavior during answer submission:
+
+```text
+user submits answer
+-> iMVS freezes the answer body and idempotency_key
+-> iMVS locks all answer-related buttons/options
+-> if a timeout occurs, retry only the same body with the same idempotency_key
+-> unlock answer controls only after NYCU returns the next question or summary
+```
+
+If `idempotency_conflict` occurs, the first rehearsal rule is restart demo
+session. Do not auto-generate a new `idempotency_key` for the changed answer,
+because that would become an answer-revision workflow outside the June contract.
 
 ## Error / Fallback Examples
 
@@ -230,10 +263,23 @@ Idempotency conflict:
 ```json
 {
   "status": "error",
+  "session_key": "demo-session-tachy-001",
+  "session_state": "active",
   "error": {
     "code": "idempotency_conflict",
     "message": "The same idempotency_key was reused with a different request body.",
     "retryable": false
+  },
+  "recovery": {
+    "safe_next_action": "restart_demo_session",
+    "owner": "imvs_ui_operator",
+    "ui_locking_required": true,
+    "instructions": [
+      "Do not reuse this idempotency_key for a different answer.",
+      "Do not auto-submit the changed answer with a new idempotency_key.",
+      "Keep answer controls locked until the operator starts a new demo session or switches to labeled fallback.",
+      "Start a new demo session through POST /api/triage-demo/sessions."
+    ]
   }
 }
 ```
@@ -280,7 +326,10 @@ Acceptance check:
 - `capabilities.max_questions` is treated as a cap; UI progress uses
   `progress.expected_total`.
 - Same `idempotency_key` retry returns the same response without advancing.
-- Same `idempotency_key` with a different body returns `idempotency_conflict`.
+- After submit, iMVS locks answer-related controls until the NYCU next-question
+  or summary response arrives.
+- Same `idempotency_key` with a different body returns `idempotency_conflict`
+  and `recovery.safe_next_action=restart_demo_session`.
 - Seventh answer returns `status=summary` and `staff_review_summary`.
 - Invalid session returns stable `status=error`.
 - Remote unavailable path switches to a labeled `local_scripted_demo` mode.

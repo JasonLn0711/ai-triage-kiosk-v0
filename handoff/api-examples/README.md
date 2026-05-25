@@ -43,6 +43,10 @@ options without user scrolling; these examples keep most returned questions
 shorter for readability. Summary examples use `status=summary` and
 `staff_review_summary`, which iMVS can render in an existing result / preview
 page or NYCU can show in a temporary demo-only preview during rehearsal.
+For answer submission, iMVS should lock answer-related controls after submit and
+unlock only after NYCU returns the next question or summary. The
+`idempotency_conflict` example fixes the June recovery rule as
+`restart_demo_session`, not answer revision.
 
 - `2026-05-21-start-session-request-demo-tachycardia.json`
 - `2026-05-21-start-session-response-question.json`
@@ -52,6 +56,7 @@ page or NYCU can show in a temporary demo-only preview during rehearsal.
 - `2026-05-21-summary-response-demo-tachycardia.json`
 - `2026-05-21-error-response-demo-api-timeout.json`
 - `2026-05-21-error-response-demo-invalid-session.json`
+- `2026-05-21-error-response-demo-idempotency-conflict.json`
 - `2026-05-21-error-response-demo-measurement-quality-unavailable.json`
 - `2026-05-21-error-response-demo-missing-required-field.json`
 - `2026-05-21-error-response-demo-unsupported-question-type.json`

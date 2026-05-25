@@ -32,7 +32,7 @@ the perfect choice under time pressure.
 | --- | --- | --- | --- |
 | `live_measured` | Voluntary live measurement is available and the device reading is suitable for rehearsal. | "This run uses the measured demo vital payload and keeps the output as staff-review support." | UI mode label `live measured`; request `demo_script.mode = live_measured`. |
 | `synthetic_override` | The live device works, but the measured value does not show the tachycardia cue clearly enough for the product story. | "We are switching to the synthetic HR 130 fixture so the rehearsal stays deterministic." | UI mode label `synthetic override`; same tachycardia fixture and option ids. |
-| `local_scripted_demo` | Network, hosted API, device, or operator flow is unstable. | "This is the local scripted fallback using the same governed question set and staff-review summary." | UI mode label `local scripted demo`; no remote dependency. |
+| `local_scripted_demo` | Network, hosted API, device, operator flow, or `idempotency_conflict` recovery makes the live session unsuitable to continue. | "This is the local scripted fallback using the same governed question set and staff-review summary." | UI mode label `local scripted demo`; no remote dependency. |
 
 ## Presenter Rules
 
@@ -53,9 +53,11 @@ the perfect choice under time pressure.
 3. If the live heart-rate cue is not suitable, switch to `synthetic_override`
    before starting the question loop.
 4. If the remote API is unavailable, switch to `local_scripted_demo`.
-5. Complete the seven tachycardia questions.
-6. Show `status=summary` / `staff_review_summary`.
-7. State the scope controls: staff-review intake support, human review workflow,
+5. If NYCU returns `idempotency_conflict`, do not continue the current answer
+   path. Restart the demo session or switch to `local_scripted_demo`.
+6. Complete the seven tachycardia questions.
+7. Show `status=summary` / `staff_review_summary`.
+8. State the scope controls: staff-review intake support, human review workflow,
    synthetic-data demo context, and separate validation path.
 
 ## Fallback Acceptance Check
@@ -65,6 +67,8 @@ The fallback path is ready when:
 - the UI visibly displays one of the three mode labels;
 - presenter notes name the active mode;
 - local scripted mode can complete without network access;
+- `idempotency_conflict` recovery is restart demo session or clearly labeled
+  fallback, not answer revision;
 - the tachycardia fixture remains the same case id,
   `demo-tachycardia-live-001`;
 - the staff summary still carries staff-only scope controls;

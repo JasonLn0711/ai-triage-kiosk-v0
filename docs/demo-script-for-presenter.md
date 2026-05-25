@@ -77,6 +77,15 @@ We removed ASR and free text from v0 so the demo remains deterministic,
 reviewable, and safe for source-governed clinical wording review.
 ```
 
+If answer submission conflicts:
+
+```text
+If the remote API reports an answer-sync conflict, this demo restarts the demo
+session or switches to the clearly labeled local_scripted_demo mode. The iMVS
+front end should lock answer controls immediately after submit, then unlock the
+next answer controls only after NYCU returns the next question or summary.
+```
+
 Avoid:
 
 - describing hidden ASR / LLM internals;
