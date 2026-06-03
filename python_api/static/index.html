@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>FastAPI AI Triage Demo Tester</title>
+    <link rel="stylesheet" href="/static/styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <strong>FastAPI AI Triage Demo Tester</strong>
+        <span>Synthetic-data staff-review intake support</span>
+      </div>
+      <button id="resetButton" type="button">Reset</button>
+    </header>
+
+    <main class="layout">
+      <section class="panel">
+        <p class="eyebrow">Connection</p>
+        <label>
+          API base URL
+          <input id="baseUrlInput" value="" placeholder="same origin">
+        </label>
+        <label>
+          Demo bearer token
+          <input id="tokenInput" type="password" placeholder="Optional">
+        </label>
+        <button id="startButton" class="primary" type="button">Start session</button>
+        <div id="sessionMeta" class="meta"></div>
+      </section>
+
+      <section class="panel question-panel">
+        <div class="question-head">
+          <div>
+            <p class="eyebrow" id="progressLabel">Question</p>
+            <h1 id="questionText">Start a session to load the first governed question.</h1>
+          </div>
+          <span id="statusPill" class="pill">ready</span>
+        </div>
+        <div id="optionsMount" class="options"></div>
+        <button id="submitButton" class="primary" type="button" disabled>Submit answer</button>
+      </section>
+
+      <section class="panel">
+        <p class="eyebrow">Staff-review summary</p>
+        <div id="summaryMount" class="summary empty">Summary appears after the final question.</div>
+      </section>
+
+      <section class="panel raw-panel">
+        <p class="eyebrow">Raw API response</p>
+        <pre id="rawOutput">{}</pre>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
+
