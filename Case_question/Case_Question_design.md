@@ -19,7 +19,7 @@ graph LR
 **Question 0-1**  
 What brings you here?  
 *Example: headache for 3 days*
-Choice: headache, sore thorat
+Choice: headache, sore throat, abdominal pain, chest pain, shortness of breath, palpitation, fainting, fever, dizziness, trauma, skin problem, allergy, urinary symptoms, cough / cold symptoms, diarrhea, back pain, eye problem, ear / nose / throat problem, chronic follow-up, nausea / vomiting, weakness / fatigue, limb pain / swelling
 
 **Question 0-3** *(if duration not provided in 0-2)*  
 How long have you had {symptoms}?
@@ -72,6 +72,32 @@ How long have you had {symptoms}?
 ## (2) Symptom-Specific Phase
 
 Route to one case based on chief complaint from 0-2.
+
+Detailed multi-answer question modules are stored in `Case_question/Symptom_module/`.
+
+| Chief complaint route | Symptom module file |
+|-----------------------|---------------------|
+| Abdominal pain | `Symptom_module/abdominal_pain.md` |
+| Headache | `Symptom_module/Headache.md` |
+| Chest tightness / chest pain | `Symptom_module/chest_pain.md` |
+| Shortness of breath | `Symptom_module/shortness_of_breath.md` |
+| Palpitation / tachycardia | `Symptom_module/palpitation.md` |
+| Syncope / fainting | `Symptom_module/syncope.md` |
+| Fever | `Symptom_module/fever.md` |
+| Dizziness | `Symptom_module/dizziness.md` |
+| Trauma | `Symptom_module/trauma.md` |
+| Skin infection / skin problem | `Symptom_module/skin_infection.md` |
+| Allergy | `Symptom_module/allergy.md` |
+| UTI / urinary symptoms | `Symptom_module/urinary_symptoms.md` |
+| URI / upper respiratory | `Symptom_module/upper_respiratory.md` |
+| Diarrhea | `Symptom_module/diarrhea.md` |
+| Back pain | `Symptom_module/back_pain.md` |
+| Eye problem | `Symptom_module/eye.md` |
+| ENT | `Symptom_module/ent.md` |
+| Chronic disease follow-up | `Symptom_module/chronic_follow_up.md` |
+| Nausea / vomiting | `Symptom_module/nausea_vomiting.md` |
+| Weakness / fatigue | `Symptom_module/weakness_fatigue.md` |
+| Limb pain / swelling | `Symptom_module/limb_pain_swelling.md` |
 
 ### Case 2-1 Abdominal pain
 
