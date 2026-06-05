@@ -6,7 +6,10 @@ from pathlib import Path
 from fastapi import FastAPI, Request
 from fastapi.responses import FileResponse, JSONResponse, Response
 from fastapi.staticfiles import StaticFiles
-import triage_contract as contract
+try:
+    from . import triage_contract as contract
+except ImportError:  # pragma: no cover - supports running main.py from python_api/
+    import triage_contract as contract
 
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
