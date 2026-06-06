@@ -23,18 +23,22 @@ def choose_branch(body: dict[str, Any], flags: list) -> str:
     chief_concern = _requested_chief_concern(body)
     case_id = body.get("case_id")
 
-    if case_id == "demo-v1-fever-001":
-        return "fever"
-    if case_id == "demo-v1-low-spo2-001":
-        return "shortness_of_breath"
-    if case_id == "demo-tachycardia-live-001" or "tachycardia_staff_review_demo" in flag_codes:
-        return "palpitation"
-    if any(term in chief_concern for term in ("palpitation", "heart racing", "tachycardia", "chest")):
+    if "tachycardia_staff_review_demo" in flag_codes:
         return "palpitation"
     if "low_spo2_review_demo" in flag_codes:
         return "shortness_of_breath"
     if "measured_fever_context_demo" in flag_codes:
         return "fever"
+    if "measured_elevated_heart_rate_demo" in flag_codes:
+        return "palpitation"
+    if case_id == "demo-v1-fever-001":
+        return "fever"
+    if case_id == "demo-v1-low-spo2-001":
+        return "shortness_of_breath"
+    if case_id == "demo-tachycardia-live-001":
+        return "palpitation"
+    if any(term in chief_concern for term in ("palpitation", "heart racing", "tachycardia", "chest")):
+        return "palpitation"
     if any(term in chief_concern for term in ("fever", "temperature", "chills")):
         return "fever"
     if any(term in chief_concern for term in ("breath", "spo2", "oxygen")):

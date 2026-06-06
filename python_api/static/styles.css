@@ -287,6 +287,52 @@ button:disabled {
   gap: 10px;
 }
 
+.soap-section {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px;
+  background: #f8fbfc;
+}
+
+.soap-label {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  color: #fff;
+  background: var(--brand);
+  font-weight: 800;
+}
+
+.soap-section h3 {
+  margin: 0 0 8px;
+  font-size: 15px;
+  letter-spacing: 0;
+}
+
+.soap-section ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 18px;
+}
+
+.soap-section li,
+.soap-empty {
+  color: var(--ink);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.soap-empty {
+  margin: 0;
+  color: var(--muted);
+}
+
 .summary-card {
   border: 1px solid var(--line);
   border-radius: 8px;

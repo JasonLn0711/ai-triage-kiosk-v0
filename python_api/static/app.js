@@ -242,6 +242,10 @@ function apiBaseUrl() {
   return elements.baseUrlInput.value.trim() || window.location.origin;
 }
 
+function apiUrl(path) {
+  return new URL(path, apiBaseUrl()).toString();
+}
+
 function headers() {
   const token = elements.tokenInput.value.trim();
   const value = { "Content-Type": "application/json" };
@@ -285,7 +289,7 @@ function answerBody() {
 }
 
 async function postJson(path, body) {
-  const response = await fetch(`${apiBaseUrl()}${path}`, {
+  const response = await fetch(apiUrl(path), {
     method: "POST",
     headers: headers(),
     body: JSON.stringify(body)
@@ -299,7 +303,7 @@ async function postJson(path, body) {
 }
 
 async function getJson(path) {
-  const response = await fetch(`${apiBaseUrl()}${path}`);
+  const response = await fetch(apiUrl(path));
   const data = await response.json();
   showRaw(data, response.status);
   if (!response.ok) throw new Error(`HTTP ${response.status}`);
@@ -339,7 +343,7 @@ function renderSummary(data) {
   state.selectedOptionIds = [];
   elements.statusPill.textContent = "summary";
   elements.progressLabel.textContent = `Question ${data.progress.current} of ${data.progress.expected_total}`;
-  elements.questionText.textContent = "Staff-review summary is ready.";
+  elements.questionText.textContent = "SOAP staff-review summary is ready.";
   elements.sessionMeta.textContent = `Session: ${data.session_key} | summary_ready`;
   elements.optionsMount.innerHTML = "";
   elements.submitButton.disabled = true;
@@ -347,21 +351,31 @@ function renderSummary(data) {
   elements.autoAnswerButton.disabled = true;
 
   const summary = data.staff_review_summary || {};
-  const fields = [
-    ["capability statement", summary.capability_statement],
-    ["chief concern", summary.chief_concern],
-    ["handoff reason codes", data.handoff_reason_codes],
-    ["staff review flags", summary.staff_review_flags],
-    ["vitals observed", summary.vitals_observed],
-    ["answer highlights", summary.symptom_answer_highlights],
-    ["scope controls", summary.scope_controls]
+  const assessment = [
+    ...(summary.review_basis || []),
+    ...(summary.staff_review_flags || []).map((flag) => `${flag.label}: ${flag.summary_text}`)
   ];
+  const plan = [
+    ...(summary.review_action || []),
+    summary.staff_handoff_note,
+    ...(summary.scope_controls || []).map((control) => `Scope control: ${control}`)
+  ].filter(Boolean);
+  const sections = [
+    ["S", "Subjective", summary.subjective || [summary.chief_concern].filter(Boolean)],
+    ["O", "Objective", summary.objective || summary.vitals_observed || []],
+    ["A", "Assessment", assessment],
+    ["P", "Plan", plan]
+  ];
+
   elements.summaryMount.classList.remove("empty");
-  elements.summaryMount.innerHTML = fields.map(([key, value]) => `
-    <div class="summary-card">
-      <strong>${escapeHtml(key)}</strong>
-      <span>${escapeHtml(formatValue(value))}</span>
-    </div>
+  elements.summaryMount.innerHTML = sections.map(([letter, title, value]) => `
+    <section class="soap-section">
+      <div class="soap-label" aria-hidden="true">${escapeHtml(letter)}</div>
+      <div>
+        <h3>${escapeHtml(title)}</h3>
+        ${renderSoapContent(value)}
+      </div>
+    </section>
   `).join("");
 }
 
@@ -398,6 +412,11 @@ async function autoAnswerFlow() {
     state.selectedOptionIds = [selected];
     await submitAnswer();
   }
+}
+function renderSoapContent(value) {
+  const items = Array.isArray(value) ? value.filter(Boolean) : [value].filter(Boolean);
+  if (!items.length) return `<p class="soap-empty">No demo data recorded.</p>`;
+  return `<ul>${items.map((item) => `<li>${escapeHtml(formatValue(item))}</li>`).join("")}</ul>`;
 }
 
 function formatValue(value) {

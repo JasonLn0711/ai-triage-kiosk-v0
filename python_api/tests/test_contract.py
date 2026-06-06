@@ -15,11 +15,11 @@ def start_body(**overrides):
     return {
         "request_id": overrides.get("request_id", "req-contract-start-001"),
         "idempotency_key": overrides.get("idempotency_key", "idem-contract-start-001"),
-        "case_id": "demo-tachycardia-live-001",
+        "case_id": overrides.get("case_id", "demo-tachycardia-live-001"),
         "workflow_mode": "post_measurement_only",
         "measurement_state": "complete",
         "vitals_ready": True,
-        "vitals": {
+        "vitals": overrides.get("vitals", {
             "heart_rate_bpm": {
                 "value": 130,
                 "unit": "bpm",
@@ -27,7 +27,7 @@ def start_body(**overrides):
                 "quality_flag": "needs_review",
                 "missing_reason": None,
             }
-        },
+        }),
         "capabilities": {
             "question_types": ["single_choice", "multi_choice"],
             "max_questions": overrides.get("max_questions", 99),
@@ -106,6 +106,45 @@ def test_start_session_returns_first_question_and_progress_expected_total():
     assert body["progress"]["expected_total"] == 7
     assert body["question"]["id"] == "tachy-chief-concern"
     assert body["question"]["rendering_constraints"]["max_visible_options_without_scroll"] == 9
+
+
+def test_start_session_routes_from_fever_vital_before_legacy_case_id():
+    response = client.post(
+        "/api/triage-demo/sessions",
+        json=start_body(
+            idempotency_key="idem-fever-vital-route",
+            vitals={
+                "heart_rate_bpm": {"value": 88, "unit": "bpm"},
+                "temperature_c": {"value": 38.2, "unit": "C"},
+            },
+        ),
+    )
+    body = response.json()
+
+    assert response.status_code == 200
+    assert body["question"]["id"] == "FEV-1"
+    assert body["question_phase"] == "symptom_specific"
+    assert body["progress"]["expected_total"] == 8
+
+
+def test_start_session_routes_from_imvs_low_spo2_before_legacy_case_id():
+    response = client.post(
+        "/api/triage-demo/sessions",
+        json=start_body(
+            idempotency_key="idem-spo2-vital-route",
+            vitals={
+                "HR": {"BP_Value": "86", "Unit": "bpm"},
+                "SPO2": {"Value": "92", "Unit": "%"},
+                "Temp": {"Value": "36.8", "Unit": "C"},
+            },
+        ),
+    )
+    body = response.json()
+
+    assert response.status_code == 200
+    assert body["question"]["id"] == "SOB-1"
+    assert body["question_phase"] == "symptom_specific"
+    assert body["progress"]["expected_total"] == 8
 
 
 def test_same_answer_idempotency_key_retry_returns_same_response_without_advancing_flow():

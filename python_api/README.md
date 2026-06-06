@@ -36,6 +36,13 @@ Health check:
 http://127.0.0.1:8000/healthz
 ```
 
+The API test page builds requests from the origin plus the canonical endpoint
+path. If a browser field, tunnel path, or proxy path accidentally adds a prefix
+such as `/doebow`, the request should still target `/api/triage-demo/sessions`
+on the FastAPI app. A server log entry for
+`POST /doebow/api/triage-demo/sessions` means the caller or proxy is
+forwarding the prefix instead of using the canonical API path.
+
 ## API Endpoints
 
 ```text
