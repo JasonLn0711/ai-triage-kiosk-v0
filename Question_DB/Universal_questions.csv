@@ -1,0 +1,6 @@
+category,module_title,module_file,question_id,question_type,question,answers,answer_options
+Universal,Universal Phase,Case_Question_design.md,UNIV-1,Past medical history,Do you have any past medical history?,[ ] HTN [ ] DM [ ] Heart disease [ ] Stroke [ ] Cancer [ ] Others [ ] None [ ] Not sure,HTN; DM; Heart disease; Stroke; Cancer; Others; None; Not sure
+Universal,Universal Phase,Case_Question_design.md,UNIV-2,Previous surgery,Have you had previous surgery?,[ ] Yes [ ] No [ ] Not sure,Yes; No; Not sure
+Universal,Universal Phase,Case_Question_design.md,UNIV-3,Current medications,Are you currently taking any medications?,[ ] Yes [ ] No [ ] Not sure,Yes; No; Not sure
+Universal,Universal Phase,Case_Question_design.md,UNIV-4,Drug allergy,Do you have any drug allergy?,[ ] Yes [ ] No [ ] Not sure,Yes; No; Not sure
+Universal,Universal Phase,Case_Question_design.md,UNIV-5,Pregnancy status,Are you pregnant?,[ ] Yes [ ] Not sure [ ] No,Yes; Not sure; No

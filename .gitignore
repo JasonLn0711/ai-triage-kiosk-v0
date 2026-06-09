@@ -6,5 +6,4 @@ dist/
 .vercel/
 __pycache__/
 spec/
-Question_DB/
 .DS_Store

@@ -264,6 +264,92 @@ button:disabled {
   margin-bottom: 16px;
 }
 
+.answer-pad {
+  display: grid;
+  gap: 12px;
+  width: min(460px, 100%);
+}
+
+.answer-display {
+  display: grid;
+  gap: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: #f8fbfc;
+}
+
+.answer-display-label {
+  color: var(--brand-strong);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+.answer-display-value {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  color: var(--ink);
+  font-size: 28px;
+  font-weight: 750;
+  letter-spacing: 0;
+}
+
+.numpad {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.unit-picker {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.unit-button {
+  min-height: 46px;
+  border-color: #b9ccd2;
+  background: #f8fbfc;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 750;
+  text-transform: capitalize;
+}
+
+.unit-button.selected {
+  border-color: var(--brand);
+  color: #fff;
+  background: var(--brand);
+}
+
+.numpad-key {
+  min-height: 58px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.numpad-key.secondary {
+  font-size: 16px;
+}
+
+.answer-input {
+  width: min(420px, 100%);
+  margin-bottom: 16px;
+}
+
+.answer-input input {
+  min-height: 56px;
+  font-size: 24px;
+  font-weight: 750;
+}
+
 .option {
   width: 100%;
   text-align: left;

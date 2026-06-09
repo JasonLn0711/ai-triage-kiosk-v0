@@ -1,7 +1,9 @@
 const state = {
   sessionKey: null,
   currentQuestion: null,
-  selectedOptionIds: []
+  selectedOptionIds: [],
+  answerValue: null,
+  durationUnit: "days"
 };
 
 const elements = {
@@ -127,14 +129,14 @@ function predictedRoute(vitals) {
   if (vitals.spo2 !== null && vitals.spo2 < 94) return "shortness of breath";
   if (vitals.temperature !== null && vitals.temperature >= 37.5) return "fever";
   if (vitals.heartRate !== null && vitals.heartRate >= 120) return "palpitation";
-  return "palpitation fallback";
+  return "initial intake";
 }
 
 function chiefConcernForRoute(route) {
   if (route === "tachycardia" || route === "palpitation") return "heart racing";
   if (route === "shortness of breath") return "shortness of breath";
   if (route === "fever") return "fever";
-  return "palpitation";
+  return "";
 }
 
 function qualityFlag(value, kind) {
@@ -196,7 +198,7 @@ function imvsVitals(vitals) {
 
 function capabilitiesForRoute(route) {
   return {
-    question_types: ["single_choice", "multi_choice"],
+    question_types: ["single_choice", "multi_choice", "number", "text"],
     max_questions: route === "tachycardia" || route === "palpitation" ? 7 : 8,
     max_options_per_question: 9,
     max_option_label_length: 64,
@@ -268,6 +270,17 @@ function startBodyFromEditor() {
 }
 
 function answerBody() {
+  const answer = {
+    selected_option_ids: state.selectedOptionIds,
+    scale_value: null
+  };
+  if (isNumberQuestion(state.currentQuestion)) {
+    answer.numeric_value = Number(state.answerValue);
+  } else if (isDurationQuestion(state.currentQuestion)) {
+    answer.text_value = String(state.answerValue || "").trim() + " " + state.durationUnit;
+  } else if (isTextQuestion(state.currentQuestion)) {
+    answer.text_value = String(state.answerValue || "").trim();
+  }
   return {
     request_id: requestId("answer"),
     idempotency_key: idemKey(`answer-${state.currentQuestion.id}`),
@@ -277,13 +290,10 @@ function answerBody() {
     vitals_ready: true,
     question_phase: state.currentQuestion.phase || "post_measurement_intake",
     question_id: state.currentQuestion.id,
-    answer: {
-      selected_option_ids: state.selectedOptionIds,
-      scale_value: null
-    },
+    answer,
     client_event: {
       answered_at: new Date().toISOString(),
-      input_mode: "touch"
+      input_mode: isNumberQuestion(state.currentQuestion) || isDurationQuestion(state.currentQuestion) ? "number_pad" : "touch"
     }
   };
 }
@@ -318,6 +328,7 @@ function showRaw(data, statusCode) {
 function renderQuestion(data) {
   state.currentQuestion = data.question;
   state.selectedOptionIds = [];
+  state.answerValue = null;
   elements.statusPill.textContent = data.status;
   elements.progressLabel.textContent = `Question ${data.progress.current} of ${data.progress.expected_total}`;
   elements.questionText.textContent = data.question.text;
@@ -327,6 +338,20 @@ function renderQuestion(data) {
   elements.autoAnswerButton.disabled = false;
   elements.summaryMount.classList.add("empty");
   elements.summaryMount.textContent = "Summary appears after the final question.";
+
+  if (isNumberQuestion(data.question)) {
+    renderNumberPad();
+    return;
+  }
+  if (isDurationQuestion(data.question)) {
+    renderDurationPad();
+    return;
+  }
+  if (isTextQuestion(data.question)) {
+    renderTextEntry();
+    return;
+  }
+
   elements.optionsMount.innerHTML = data.question.options.map((option) => `
     <button class="option" type="button" data-option-id="${escapeHtml(option.id)}">
       <strong>${escapeHtml(option.label)}</strong>
@@ -336,6 +361,144 @@ function renderQuestion(data) {
   elements.optionsMount.querySelectorAll(".option").forEach((button) => {
     button.addEventListener("click", () => toggleOption(button));
   });
+}
+
+function isNumberQuestion(question) {
+  if (!question) return false;
+  return question.type === "number" || question.id === "INIT-2" || /age/i.test(question.text || "");
+}
+
+function isTextQuestion(question) {
+  if (!question) return false;
+  return question.type === "text" || question.id === "INIT-4" || /how long/i.test(question.text || "");
+}
+
+function isDurationQuestion(question) {
+  if (!question) return false;
+  return question.id === "INIT-4" || /how long|duration/i.test(question.text || "");
+}
+
+function renderNumberPad() {
+  state.answerValue = "";
+  elements.optionsMount.innerHTML = `
+    <div class="answer-pad">
+      <div class="answer-display" aria-live="polite">
+        <span class="answer-display-label">Age</span>
+        <div id="answerValueDisplay" class="answer-display-value">Enter age</div>
+      </div>
+      <div class="numpad" role="group" aria-label="Age number pad">
+        ${[1,2,3,4,5,6,7,8,9].map((digit) => `<button class="numpad-key" type="button" data-digit="${digit}">${digit}</button>`).join("")}
+        <button class="numpad-key secondary" type="button" data-action="clear">Clear</button>
+        <button class="numpad-key" type="button" data-digit="0">0</button>
+        <button class="numpad-key secondary" type="button" data-action="backspace">Back</button>
+      </div>
+    </div>
+  `;
+  elements.optionsMount.querySelectorAll("[data-digit]").forEach((button) => {
+    button.addEventListener("click", () => appendDigit(button.dataset.digit));
+  });
+  elements.optionsMount.querySelectorAll("[data-action]").forEach((button) => {
+    button.addEventListener("click", () => handlePadAction(button.dataset.action));
+  });
+  if (isDurationQuestion(state.currentQuestion)) updateDurationPad();
+  else updateNumberPad();
+}
+
+function renderDurationPad() {
+  state.answerValue = "";
+  state.durationUnit = "days";
+  elements.optionsMount.innerHTML = `
+    <div class="answer-pad">
+      <div class="answer-display" aria-live="polite">
+        <span class="answer-display-label">Duration</span>
+        <div id="answerValueDisplay" class="answer-display-value">Enter duration</div>
+      </div>
+      <div class="unit-picker" role="group" aria-label="Duration unit">
+        <button class="unit-button" type="button" data-unit="hours">hours</button>
+        <button class="unit-button" type="button" data-unit="days">days</button>
+        <button class="unit-button" type="button" data-unit="weeks">weeks</button>
+        <button class="unit-button" type="button" data-unit="months">months</button>
+      </div>
+      <div class="numpad" role="group" aria-label="Duration number pad">
+        <button class="numpad-key" type="button" data-digit="1">1</button>
+        <button class="numpad-key" type="button" data-digit="2">2</button>
+        <button class="numpad-key" type="button" data-digit="3">3</button>
+        <button class="numpad-key" type="button" data-digit="4">4</button>
+        <button class="numpad-key" type="button" data-digit="5">5</button>
+        <button class="numpad-key" type="button" data-digit="6">6</button>
+        <button class="numpad-key" type="button" data-digit="7">7</button>
+        <button class="numpad-key" type="button" data-digit="8">8</button>
+        <button class="numpad-key" type="button" data-digit="9">9</button>
+        <button class="numpad-key secondary" type="button" data-action="clear">Clear</button>
+        <button class="numpad-key" type="button" data-digit="0">0</button>
+        <button class="numpad-key secondary" type="button" data-action="backspace">Back</button>
+      </div>
+    </div>
+  `;
+  elements.optionsMount.querySelectorAll("[data-unit]").forEach((button) => {
+    button.addEventListener("click", () => selectDurationUnit(button.dataset.unit));
+  });
+  elements.optionsMount.querySelectorAll("[data-digit]").forEach((button) => {
+    button.addEventListener("click", () => appendDigit(button.dataset.digit));
+  });
+  elements.optionsMount.querySelectorAll("[data-action]").forEach((button) => {
+    button.addEventListener("click", () => handlePadAction(button.dataset.action));
+  });
+  updateDurationPad();
+}
+
+function renderTextEntry() {
+  elements.optionsMount.innerHTML = `
+    <label class="answer-input">
+      <span>Type answer</span>
+      <input id="answerValueInput" type="text" inputmode="text" autocomplete="off">
+    </label>
+  `;
+  const input = elements.optionsMount.querySelector("#answerValueInput");
+  input.addEventListener("input", () => {
+    state.answerValue = input.value;
+    elements.submitButton.disabled = !input.value.trim();
+  });
+  input.focus();
+}
+
+function updateNumberPad() {
+  const display = elements.optionsMount.querySelector("#answerValueDisplay");
+  if (!display) return;
+  display.textContent = state.answerValue ? `${state.answerValue}` : "Enter age";
+  elements.submitButton.disabled = !state.answerValue;
+}
+
+function updateDurationPad() {
+  const display = elements.optionsMount.querySelector("#answerValueDisplay");
+  if (!display) return;
+  display.textContent = state.answerValue ? String(state.answerValue) + " " + state.durationUnit : "Enter duration";
+  elements.optionsMount.querySelectorAll("[data-unit]").forEach((button) => {
+    button.classList.toggle("selected", button.dataset.unit === state.durationUnit);
+  });
+  elements.submitButton.disabled = !state.answerValue;
+}
+
+function selectDurationUnit(unit) {
+  state.durationUnit = unit;
+  updateDurationPad();
+}
+
+function appendDigit(digit) {
+  const next = `${state.answerValue || ""}${digit}`.replace(/^0+(?=\d)/, "");
+  state.answerValue = next.slice(0, 3);
+  if (isDurationQuestion(state.currentQuestion)) updateDurationPad();
+  else updateNumberPad();
+}
+
+function handlePadAction(action) {
+  if (action === "clear") {
+    state.answerValue = "";
+  } else if (action === "backspace") {
+    state.answerValue = (state.answerValue || "").slice(0, -1);
+  }
+  if (isDurationQuestion(state.currentQuestion)) updateDurationPad();
+  else updateNumberPad();
 }
 
 function renderSummary(data) {
@@ -357,8 +520,7 @@ function renderSummary(data) {
   ];
   const plan = [
     ...(summary.review_action || []),
-    summary.staff_handoff_note,
-    ...(summary.scope_controls || []).map((control) => `Scope control: ${control}`)
+    summary.staff_handoff_note
   ].filter(Boolean);
   const sections = [
     ["S", "Subjective", summary.subjective || [summary.chief_concern].filter(Boolean)],
@@ -400,16 +562,44 @@ function toggleOption(button) {
 }
 
 function pickFirstOption() {
+  if (isNumberQuestion(state.currentQuestion)) {
+    state.answerValue = "40";
+    updateNumberPad();
+    return;
+  }
+  if (isDurationQuestion(state.currentQuestion)) {
+    state.answerValue = "1";
+    state.durationUnit = "days";
+    updateDurationPad();
+    return;
+  }
+  if (isTextQuestion(state.currentQuestion)) {
+    const input = elements.optionsMount.querySelector("#answerValueInput");
+    if (input) {
+      input.value = "Today";
+      input.dispatchEvent(new Event("input"));
+    }
+    return;
+  }
   const first = elements.optionsMount.querySelector(".option");
   if (first) toggleOption(first);
 }
 
 async function autoAnswerFlow() {
   while (state.currentQuestion) {
-    const noneId = state.currentQuestion.none_option_id;
-    const selected = noneId || state.currentQuestion.options[0]?.id;
-    if (!selected) return;
-    state.selectedOptionIds = [selected];
+    if (isNumberQuestion(state.currentQuestion)) {
+      state.answerValue = 40;
+    } else if (isDurationQuestion(state.currentQuestion)) {
+      state.answerValue = "1";
+      state.durationUnit = "days";
+    } else if (isTextQuestion(state.currentQuestion)) {
+      state.answerValue = "Today";
+    } else {
+      const noneId = state.currentQuestion.none_option_id;
+      const selected = noneId || state.currentQuestion.options[0]?.id;
+      if (!selected) return;
+      state.selectedOptionIds = [selected];
+    }
     await submitAnswer();
   }
 }
@@ -455,8 +645,16 @@ async function startSession() {
   else renderQuestion(data);
 }
 
+function hasAnswerReady() {
+  if (!state.currentQuestion) return false;
+  if (isNumberQuestion(state.currentQuestion)) return Boolean(String(state.answerValue || "").trim()) && Number.isFinite(Number(state.answerValue));
+  if (isDurationQuestion(state.currentQuestion)) return Boolean(String(state.answerValue || "").trim());
+  if (isTextQuestion(state.currentQuestion)) return Boolean(String(state.answerValue || "").trim());
+  return state.selectedOptionIds.length > 0;
+}
+
 async function submitAnswer() {
-  if (!state.sessionKey || !state.currentQuestion || !state.selectedOptionIds.length) return;
+  if (!state.sessionKey || !state.currentQuestion || !hasAnswerReady()) return;
   const data = await postJson(`/api/triage-demo/sessions/${encodeURIComponent(state.sessionKey)}/answers`, answerBody());
   if (data.status === "summary") renderSummary(data);
   else renderQuestion(data);
@@ -466,6 +664,8 @@ function resetFlowOnly() {
   state.sessionKey = null;
   state.currentQuestion = null;
   state.selectedOptionIds = [];
+  state.answerValue = null;
+  state.durationUnit = "days";
   elements.sessionMeta.textContent = "";
   elements.progressLabel.textContent = "Question";
   elements.questionText.textContent = "Start from the vital-sign phase to load the first governed question.";

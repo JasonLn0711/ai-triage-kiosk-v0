@@ -14,7 +14,7 @@ from python_api.triage_v1.vital_rules import evaluate_vitals
 
 client = TestClient(app)
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-CSV_PATH = PROJECT_ROOT / "Case_question/symptom_questions.csv"
+CSV_PATH = PROJECT_ROOT / "Question_DB" / "symptom_questions.csv"
 
 
 def setup_function():

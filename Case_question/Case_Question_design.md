@@ -5,28 +5,32 @@
 ```mermaid
 graph LR
     A[Patient Arrival] --> B[Vital Signs Measurement]
-    B --> C[Initial Phase - Section 0]
-    C --> D[Symptom-Specific Phase - Section 1]
-    D --> E[Universal Phase - Section 2]
-    E --> G[Generate SOAP Report]
+    B --> C[vital_rules.py evaluates measured vitals]
+    C --> D[flow_router.py selects intake branch]
+    D --> E[Symptom-Specific Phase]
+    E --> F[Universal Phase]
+    F --> G[Generate SOAP Report]
     G --> H[Triage Complete]
 ```
 
 ---
 
-## (0) Initial Phase
+## (0) Vital-First Routing Boundary
+**Question 0-1**
+What is your biological gender? Male, Female, Other
 
-**Question 0-1**  
+**Question 0-2**
+What is your age? []number pad
+**Question 0-3**  
 What brings you here?  
 *Example: headache for 3 days*
 Choice: headache, sore throat, abdominal pain, chest pain, shortness of breath, palpitation, fainting, fever, dizziness, trauma, skin problem, allergy, urinary symptoms, cough / cold symptoms, diarrhea, back pain, eye problem, ear / nose / throat problem, chronic follow-up, nausea / vomiting, weakness / fatigue, limb pain / swelling
-
 **Question 0-3** *(if duration not provided in 0-2)*  
 How long have you had {symptoms}?
 
-## (1) After Vital Signs Phase  
+## (1) Vital Rules Phase  
 
-### Case 1-1 Temperature
+### Vital rule 1 Temperature
 
 | Condition | Action / Question |
 |-----------|-------------------|
@@ -36,14 +40,14 @@ How long have you had {symptoms}?
 | T > 39.0°C | please notify staff. |
 | T < 35.0°C | please notify staff. |
 
-### Case 1-2 SpO₂
+### Vital rule 2 SpO₂
 
 | Condition | Action / Question |
 |-----------|-------------------|
 | SpO₂ < 94% | Please remeasure. Are you feeling short of breath or having trouble breathing? |
 | SpO₂ < 90% | please notify staff. |
 
-### Case 1-3 Heart rate
+### Vital rule 3 Heart rate
 
 | Condition | Action / Question |
 |-----------|--------|
@@ -51,7 +55,7 @@ How long have you had {symptoms}?
 | HR > 120 | Please sit for a while, then remeasure. Are you feeling palpitations (heart racing) or chest pain? |
 | HR > 130 | ⚠ Tachycardia — please notify staff. |
 
-### Case 1-4 Blood pressure
+### Vital rule 4 Blood pressure
 
 | Condition | Action / Question |
 |-----------|--------|
@@ -59,7 +63,7 @@ How long have you had {symptoms}?
 | SBP > 180 | ⚠ High Blood Pressure — please notify staff. Do you have a severe headache, blurred vision, or chest pain? |
 | DBP > 110 | ⚠ High Diastolic Pressure — please notify staff. |
 
-### Case 1-5 Respiratory rate
+### Vital rule 5 Respiratory rate
 
 | Condition | Action / Question |
 |-----------|--------|
@@ -69,13 +73,13 @@ How long have you had {symptoms}?
 
 ---
 
-## (2) Symptom-Specific Phase
+## (2) Flow Router And Symptom-Specific Phase
 
-Route to one case based on chief complaint from 0-2.
+The runtime first evaluates measured vitals in `python_api/triage_v1/vital_rules.py`, then `python_api/triage_v1/flow_router.py` selects the intake branch from review flags. Chief complaint text is a fallback only when measured vitals do not select a branch.
 
 Detailed multi-answer question modules are stored in `Case_question/Symptom_module/`.
 
-| Chief complaint route | Symptom module file |
+| Flow router branch or fallback concern | Symptom module file |
 |-----------------------|---------------------|
 | Abdominal pain | `Symptom_module/abdominal_pain.md` |
 | Headache | `Symptom_module/Headache.md` |
@@ -99,7 +103,7 @@ Detailed multi-answer question modules are stored in `Case_question/Symptom_modu
 | Weakness / fatigue | `Symptom_module/weakness_fatigue.md` |
 | Limb pain / swelling | `Symptom_module/limb_pain_swelling.md` |
 
-### Case 2-1 Abdominal pain
+### Symptom module 1 Abdominal pain
 
 | ID | Type | Question | Options / Note |
 |----|------|----------|----------------|
@@ -107,7 +111,7 @@ Detailed multi-answer question modules are stored in `Case_question/Symptom_modu
 | 1-1-2 | Quality | Rate the pain from 1–10. | NRS (Numeric Rating Scale) |
 | 1-1-3 | Association | Do you have nausea, vomiting, or diarrhea? | [ ] Nausea [ ] Vomiting [ ] Diarrhea [ ] None |
 
-### Case 2-2 Headache
+### Symptom module 2 Headache
 
 | ID | Type | Question | Options / Note |
 |----|------|----------|----------------|
@@ -115,7 +119,7 @@ Detailed multi-answer question modules are stored in `Case_question/Symptom_modu
 | 1-2-2 | Quality | Did any of these happen? | [ ] Sudden severe headache [ ] Weakness / numbness [ ] Trouble speaking [ ] Vision change [ ] Fever [ ] Neck stiffness [ ] None |
 | 1-2-3 | Association | Is this headache: | [ ] New [ ] Similar to before [ ] Gradually worsening |
 
-### Case 2-3 Chest tightness / chest pain
+### Symptom module 3 Chest tightness / chest pain
 
 | ID | Type | Question | Options / Note |
 |----|------|----------|----------------|
@@ -123,7 +127,7 @@ Detailed multi-answer question modules are stored in `Case_question/Symptom_modu
 | 1-3-2 | Quality | What does it feel like? | [ ] Pressure [ ] Tightness [ ] Sharp pain [ ] Burning [ ] Palpitation |
 | 1-3-3 | Association | Do you have any of these? | [ ] Shortness of breath [ ] Sweating [ ] Dizziness [ ] Fainting [ ] None |
 
-### Case 2-4 Fever
+### Symptom module 4 Fever
 
 | ID | Type | Question | Options / Note |
 |----|------|----------|----------------|
@@ -131,7 +135,7 @@ Detailed multi-answer question modules are stored in `Case_question/Symptom_modu
 | 1-4-2 | Quality | Are you experiencing chills? | [ ] Chills [ ] Shaking [ ] None |
 | 1-4-3 | Red flags | Do you feel any of these? | [ ] Shortness of breath [ ] Confusion [ ] Severe weakness [ ] Unable to drink [ ] None |
 
-### Case 2-5 Dizziness
+### Symptom module 5 Dizziness
 
 | ID | Type | Question | Options / Note |
 |----|------|----------|----------------|
@@ -139,7 +143,7 @@ Detailed multi-answer question modules are stored in `Case_question/Symptom_modu
 | 1-5-2 | Onset | Did it happen suddenly? | Yes / No |
 | 1-5-3 | Association | Do you have other symptoms? | [ ] Hearing loss/ringing [ ] Headache [ ] Chest pain [ ] Weakness [ ] Head injury [ ] None |
 
-### Case 2-6 Trauma
+### Symptom module 6 Trauma
 
 | ID | Type | Question | Options / Note |
 |----|------|----------|----------------|
@@ -147,7 +151,7 @@ Detailed multi-answer question modules are stored in `Case_question/Symptom_modu
 | 1-6-2 | Location | Which body part is injured? | Head, Neck, Chest, Abdomen, Back, Limbs |
 | 1-6-3 | Association | Do you have any of these? | [ ] Loss of consciousness [ ] Severe bleeding [ ] Unable to move limb [ ] Severe pain [ ] None |
 
-### Case 2-7 Skin infection
+### Symptom module 7 Skin infection
 
 | ID | Type | Question | Options / Note |
 |----|------|----------|----------------|
@@ -155,7 +159,7 @@ Detailed multi-answer question modules are stored in `Case_question/Symptom_modu
 | 1-7-2 | Quality | How does it look or feel? | [ ] Redness / warmth [ ] Swelling [ ] Pus or discharge [ ] Pain [ ] Itching |
 | 1-7-3 | Association | Any of these symptoms? | [ ] Fever [ ] Spreading redness [ ] Red streaks [ ] None |
 
-### Case 2-8 Allergy
+### Symptom module 8 Allergy
 
 | ID | Type | Question | Options / Note |
 |----|------|----------|----------------|
@@ -163,7 +167,7 @@ Detailed multi-answer question modules are stored in `Case_question/Symptom_modu
 | 1-8-2 | Quality | What symptoms do you have? | [ ] Rash / hives [ ] Swelling [ ] Itching [ ] Shortness of breath [ ] Wheezing [ ] Nausea [ ] None |
 | 1-8-3 | Red flags | Any severe symptoms? | [ ] Trouble breathing [ ] Throat tightness [ ] Feeling faint [ ] None |
 
-### Case 2-9 UTI (urinary symptoms)
+### Symptom module 9 UTI (urinary symptoms)
 
 | ID | Type | Question | Options / Note |
 |----|------|----------|----------------|
@@ -171,7 +175,7 @@ Detailed multi-answer question modules are stored in `Case_question/Symptom_modu
 | 1-9-2 | Association | Do you have other symptoms? | [ ] Fever [ ] Chills [ ] Nausea/Vomiting [ ] None |
 | 1-9-3 | History | Is this similar to before? | Yes / No / First time |
 
-### Case 2-10 URI (upper respiratory)
+### Symptom module 10 URI (upper respiratory)
 
 | ID | Type | Question | Options / Note |
 |----|------|----------|----------------|
@@ -179,7 +183,7 @@ Detailed multi-answer question modules are stored in `Case_question/Symptom_modu
 | 1-10-2 | Association | Any of these symptoms? | [ ] Shortness of breath [ ] Chest pain [ ] Wheezing [ ] None |
 | 1-10-3 | Duration | How long have they lasted? | Days / Weeks |
 
-### Case 2-11 Diarrhea
+### Symptom module 11 Diarrhea
 
 | ID | Type | Question | Options / Note |
 |----|------|----------|----------------|
@@ -187,7 +191,7 @@ Detailed multi-answer question modules are stored in `Case_question/Symptom_modu
 | 1-11-2 | Association | Do you have other symptoms? | [ ] Fever [ ] Vomiting [ ] Severe pain [ ] None |
 | 1-11-3 | Hydration | Any signs of dehydration? | [ ] Dizziness [ ] Decreased urine [ ] Unable to keep fluids |
 
-### Case 2-12 Back pain
+### Symptom module 12 Back pain
 
 | ID | Type | Question | Options / Note |
 |----|------|----------|----------------|
@@ -195,7 +199,7 @@ Detailed multi-answer question modules are stored in `Case_question/Symptom_modu
 | 1-12-2 | Quality | Onset and Intensity? | Sudden / Gradual, NRS 1-10 |
 | 1-12-3 | Red flags | Do you have any of these? | [ ] Weakness in legs [ ] Incontinence [ ] Fever [ ] Recent trauma [ ] None |
 
-### Case 2-13 Eye
+### Symptom module 13 Eye
 
 | ID | Type | Question | Options / Note |
 |----|------|----------|----------------|
@@ -203,7 +207,7 @@ Detailed multi-answer question modules are stored in `Case_question/Symptom_modu
 | 1-13-2 | Association | Any other factors? | [ ] Injury [ ] Contact lenses [ ] Light sensitivity |
 | 1-13-3 | Red flags | Emergency signs? | [ ] Sudden vision loss [ ] Severe pain [ ] Penetrating injury |
 
-### Case 2-14 ENT (ear / nose / throat)
+### Symptom module 14 ENT (ear / nose / throat)
 
 | ID | Type | Question | Options / Note |
 |----|------|----------|----------------|
@@ -211,7 +215,7 @@ Detailed multi-answer question modules are stored in `Case_question/Symptom_modu
 | 1-14-2 | Quality | Describe the symptom. | [ ] Pain [ ] Hearing loss [ ] Congestion [ ] Sore throat [ ] Discharge |
 | 1-14-3 | Association | Any of these symptoms? | [ ] Fever [ ] Difficulty swallowing [ ] Trouble breathing |
 
-### Case 2-15 Chronic disease (follow-up / medication refill)
+### Symptom module 15 Chronic disease (follow-up / medication refill)
 
 | ID | Type | Question | Options / Note |
 |----|------|----------|----------------|
@@ -244,7 +248,7 @@ Detailed multi-answer question modules are stored in `Case_question/Symptom_modu
 ```
 <age> y/o <gender>
 C.C.: <chief complaint> for <duration>
-Detail: <symptom-specific answers from Case 1-X>
+Detail: <symptom-specific answers from the selected module>
 Past history: <2-1, 2-2>
 Medications: <2-3>
 Allergy: <2-4>

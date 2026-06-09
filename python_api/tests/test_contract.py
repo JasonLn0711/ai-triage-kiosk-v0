@@ -6,6 +6,8 @@ from fastapi.testclient import TestClient
 
 from python_api import triage_contract as contract
 from python_api.main import app
+from python_api.triage_v1.models import FlowState, NormalizedVital, Patient, PatientAnswer
+from python_api.triage_v1.summary_builder import build_summary
 
 
 client = TestClient(app)
@@ -15,7 +17,6 @@ def start_body(**overrides):
     return {
         "request_id": overrides.get("request_id", "req-contract-start-001"),
         "idempotency_key": overrides.get("idempotency_key", "idem-contract-start-001"),
-        "case_id": overrides.get("case_id", "demo-tachycardia-live-001"),
         "workflow_mode": "post_measurement_only",
         "measurement_state": "complete",
         "vitals_ready": True,
@@ -28,6 +29,7 @@ def start_body(**overrides):
                 "missing_reason": None,
             }
         }),
+        "patient_context": overrides.get("patient_context", {}),
         "capabilities": {
             "question_types": ["single_choice", "multi_choice"],
             "max_questions": overrides.get("max_questions", 99),
@@ -108,7 +110,7 @@ def test_start_session_returns_first_question_and_progress_expected_total():
     assert body["question"]["rendering_constraints"]["max_visible_options_without_scroll"] == 9
 
 
-def test_start_session_routes_from_fever_vital_before_legacy_case_id():
+def test_start_session_routes_from_fever_vital_rules():
     response = client.post(
         "/api/triage-demo/sessions",
         json=start_body(
@@ -124,10 +126,10 @@ def test_start_session_routes_from_fever_vital_before_legacy_case_id():
     assert response.status_code == 200
     assert body["question"]["id"] == "FEV-1"
     assert body["question_phase"] == "symptom_specific"
-    assert body["progress"]["expected_total"] == 8
+    assert body["progress"]["expected_total"] == 11
 
 
-def test_start_session_routes_from_imvs_low_spo2_before_legacy_case_id():
+def test_start_session_routes_from_imvs_low_spo2_vital_rules():
     response = client.post(
         "/api/triage-demo/sessions",
         json=start_body(
@@ -144,7 +146,136 @@ def test_start_session_routes_from_imvs_low_spo2_before_legacy_case_id():
     assert response.status_code == 200
     assert body["question"]["id"] == "SOB-1"
     assert body["question_phase"] == "symptom_specific"
-    assert body["progress"]["expected_total"] == 8
+    assert body["progress"]["expected_total"] == 11
+
+
+def test_normal_vitals_start_initial_questions_even_with_payload_chief_concern():
+    response = client.post(
+        "/api/triage-demo/sessions",
+        json=start_body(
+            idempotency_key="idem-normal-chief-concern-still-initial",
+            vitals={
+                "heart_rate_bpm": {"value": 78, "unit": "bpm"},
+                "spo2_percent": {"value": 98, "unit": "%"},
+                "temperature_c": {"value": 36.6, "unit": "C"},
+                "blood_pressure_systolic_mm_hg": {"value": 118, "unit": "mmHg"},
+                "blood_pressure_diastolic_mm_hg": {"value": 76, "unit": "mmHg"},
+                "respiratory_rate_per_min": {"value": 16, "unit": "/min"},
+                "glucose_mg_dl": {"value": 90, "unit": "mg/dL"},
+                "height_cm": {"value": 170, "unit": "cm"},
+                "weight_kg": {"value": 70, "unit": "kg"},
+            },
+            patient_context={
+                "demo_patient_id": "DEMO-VITAL-001",
+                "age": 68,
+                "sex": "female",
+                "identity_mode": "demo",
+                "chief_concern": "palpitation",
+            },
+        ),
+    )
+    body = response.json()
+
+    assert response.status_code == 200
+    assert body["question"]["id"] == "INIT-1"
+    assert body["question"]["text"] == "What is your biological gender?"
+    assert body["question_phase"] == "initial"
+
+
+def test_normal_vitals_start_initial_questions_then_route_to_symptom_module_and_universal_csv():
+    start = client.post(
+        "/api/triage-demo/sessions",
+        json=start_body(
+            idempotency_key="idem-normal-initial-route",
+            vitals={
+                "heart_rate_bpm": {"value": 78, "unit": "bpm"},
+                "temperature_c": {"value": 36.6, "unit": "C"},
+                "spo2_percent": {"value": 98, "unit": "%"},
+            },
+            patient_context={"demo_patient_id": "DEMO-NORMAL-001", "sex": "female"},
+        ),
+    )
+    body = start.json()
+    session_key = body["session_key"]
+
+    assert start.status_code == 200
+    assert body["question"]["id"] == "INIT-1"
+    assert body["question_phase"] == "initial"
+
+    gender = client.post(
+        f"/api/triage-demo/sessions/{session_key}/answers",
+        json=answer_body(body["question"], ["init-1_female"], "idem-normal-init-1"),
+    ).json()
+    assert gender["question"]["id"] == "INIT-2"
+    assert gender["question"]["type"] == "number"
+
+    age_answer = answer_body(gender["question"], [], "idem-normal-init-2")
+    age_answer["answer"]["numeric_value"] = 40
+    age = client.post(f"/api/triage-demo/sessions/{session_key}/answers", json=age_answer).json()
+    assert age["question"]["id"] == "INIT-3"
+
+    complaint = client.post(
+        f"/api/triage-demo/sessions/{session_key}/answers",
+        json=answer_body(age["question"], ["init-3_chest_pain"], "idem-normal-init-3"),
+    ).json()
+    assert complaint["question"]["id"] == "INIT-4"
+
+    duration_answer = answer_body(complaint["question"], [], "idem-normal-init-4")
+    duration_answer["answer"]["text_value"] = "Today"
+    symptom = client.post(f"/api/triage-demo/sessions/{session_key}/answers", json=duration_answer).json()
+
+    assert symptom["question"]["id"] == "CP-1"
+    assert symptom["question_phase"] == "symptom_specific"
+    assert symptom["progress"]["expected_total"] == 15
+
+
+def test_initial_gender_answer_overrides_start_payload_sex_in_summary():
+    start = client.post(
+        "/api/triage-demo/sessions",
+        json=start_body(
+            idempotency_key="idem-gender-override-start",
+            vitals={
+                "heart_rate_bpm": {"value": 78, "unit": "bpm"},
+                "temperature_c": {"value": 36.6, "unit": "C"},
+                "spo2_percent": {"value": 98, "unit": "%"},
+            },
+            patient_context={"demo_patient_id": "DEMO-GENDER-001", "sex": "female"},
+        ),
+    )
+    body = start.json()
+    session_key = body["session_key"]
+
+    gender = client.post(
+        f"/api/triage-demo/sessions/{session_key}/answers",
+        json=answer_body(body["question"], ["init-1_male"], "idem-gender-override-init-1"),
+    ).json()
+
+    age_answer = answer_body(gender["question"], [], "idem-gender-override-init-2")
+    age_answer["answer"]["numeric_value"] = 40
+    age = client.post(f"/api/triage-demo/sessions/{session_key}/answers", json=age_answer).json()
+
+    complaint = client.post(
+        f"/api/triage-demo/sessions/{session_key}/answers",
+        json=answer_body(age["question"], ["init-3_chest_pain"], "idem-gender-override-init-3"),
+    ).json()
+
+    duration_answer = answer_body(complaint["question"], [], "idem-gender-override-init-4")
+    duration_answer["answer"]["text_value"] = "Today"
+    current = client.post(f"/api/triage-demo/sessions/{session_key}/answers", json=duration_answer).json()
+
+    for index in range(20):
+        if current["status"] == "summary":
+            break
+        current_question = current["question"]
+        selected = [current_question["none_option_id"]] if current_question.get("none_option_id") else first_option_ids(current_question)
+        current = client.post(
+            f"/api/triage-demo/sessions/{session_key}/answers",
+            json=answer_body(current_question, selected, f"idem-gender-override-module-{index}"),
+        ).json()
+
+    summary = current["staff_review_summary"]
+    assert summary["patient_record"]["sex"] == "Male"
+    assert "40 y/o Male" in summary["soap_note"]["subjective"]
 
 
 def test_same_answer_idempotency_key_retry_returns_same_response_without_advancing_flow():
@@ -198,8 +329,78 @@ def test_same_idempotency_key_with_different_answer_body_returns_conflict():
     assert body["recovery"]["ui_locking_required"] is True
 
 
+def test_summary_builder_formats_subjective_template_fields():
+    vitals = {
+        "temperature_c": NormalizedVital("temperature_c", 37.2, "C", "measured", "ok"),
+        "heart_rate_bpm": NormalizedVital("heart_rate_bpm", 92, "bpm", "measured", "ok"),
+        "respiratory_rate_per_min": NormalizedVital("respiratory_rate_per_min", 18, "/min", "measured", "ok"),
+        "spo2_percent": NormalizedVital("spo2_percent", 97, "%", "measured", "ok"),
+        "blood_pressure_systolic_mm_hg": NormalizedVital("blood_pressure_systolic_mm_hg", 128, "mmHg", "measured", "ok"),
+        "blood_pressure_diastolic_mm_hg": NormalizedVital("blood_pressure_diastolic_mm_hg", 76, "mmHg", "measured", "ok"),
+    }
+    patient = Patient(
+        patient_id="demo-template",
+        age=32,
+        sex="Female",
+        chief_concern="abdominal pain",
+        vitals=vitals,
+        answers=[
+            PatientAnswer("INIT-4", "How long have you had abdominal pain?", [], "2 days", "initial"),
+            PatientAnswer("ABD-1", "Where is the abdominal pain?", ["Right upper abdomen"], None, "symptom_specific"),
+            PatientAnswer("1-1-2", "Rate the pain from 1-10.", [], 6, "symptom_specific"),
+            PatientAnswer("UNIV-1", "Do you have any past medical history?", ["HTN"], None, "universal"),
+            PatientAnswer("UNIV-2", "Have you had previous surgery?", ["No"], None, "universal"),
+            PatientAnswer("UNIV-3", "Are you currently taking any medications?", ["No"], None, "universal"),
+            PatientAnswer("UNIV-4", "Do you have any drug allergy?", ["No"], None, "universal"),
+            PatientAnswer("UNIV-5", "Are you pregnant?", ["Not sure"], None, "universal"),
+        ],
+    )
+    flow_state = FlowState(
+        session_key="summary-template-session",
+        case_id="summary-template-case",
+        flow_version="test",
+        current_phase="summary",
+        question_plan=[],
+        current_index=0,
+        vitals=vitals,
+        patient_context={},
+        patient=patient,
+        answers=[],
+        flags=[],
+        branch="Pain/abdominal_pain.md",
+    )
+
+    subjective = build_summary(flow_state, registry=None)["staff_review_summary"]["subjective"]
+
+    assert "32 y/o Female" in subjective
+    assert "C.C.: abdominal pain for 2 days" in subjective
+    assert "Detail: Where is the abdominal pain?: Right upper abdomen; Rate the pain from 1-10.: 6" in subjective
+    assert "Past history: HTN, No" in subjective
+    assert "Medications: No" in subjective
+    assert "Allergy: No" in subjective
+    assert "NRS: 6" in subjective
+    assert "Pregnancy: Not sure" in subjective
+
+
 def test_answering_final_question_returns_staff_review_summary():
-    start = client.post("/api/triage-demo/sessions", json=start_body()).json()
+    start = client.post("/api/triage-demo/sessions", json=start_body(
+        vitals={
+            "temperature_c": {"value": 36.5, "unit": "C"},
+            "heart_rate_bpm": {"value": 150, "unit": "bpm"},
+            "respiratory_rate_per_min": {"value": 16, "unit": "/min"},
+            "spo2_percent": {"value": 98, "unit": "%"},
+            "blood_pressure_systolic_mm_hg": {"value": 102, "unit": "mmHg"},
+            "blood_pressure_diastolic_mm_hg": {"value": 68, "unit": "mmHg"},
+        },
+        patient_context={
+            "age": 76,
+            "sex": "Female",
+            "chief_concern": "Palpitation and chest tightness for half day",
+            "past_history": ["arrhythmia", "hyperlipidemia"],
+            "allergy": "peanut",
+            "demo_review_level": 2,
+        },
+    )).json()
     session_key = start["session_key"]
     current_question = start["question"]
     result = None
@@ -221,6 +422,17 @@ def test_answering_final_question_returns_staff_review_summary():
     assert body["progress"]["expected_total"] == 7
     assert body["staff_review_summary"]
     assert body["summary_visibility"] == "staff_only"
+
+    summary = body["staff_review_summary"]
+    soap = summary["soap_note"]
+    assert summary["patient_record"]["answers"]
+    assert "76 y/o Female" in soap["subjective"]
+    assert "C.C.: Palpitation and chest tightness for half day" in soap["subjective"]
+    assert "Past history: arrhythmia, hyperlipidemia" in soap["subjective"]
+    assert "Allergy: peanut" in soap["subjective"]
+    assert "Vital sign: T/P/R: 36.5/150/16 SpO2: 98% BP 102/68 mmHg" in soap["objective"]
+    assert "Demo review level: 2" in soap["assessment"]
+    assert "vital sign: t/p/r" in summary["soap_text"].lower()
 
 
 def test_invalid_session_returns_stable_error_response():

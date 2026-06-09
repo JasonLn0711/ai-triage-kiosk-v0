@@ -10,14 +10,14 @@ from pathlib import Path
 from typing import Any, Callable
 
 try:
-    from .triage_v1.constants import DEMO_BOUNDARY, SESSION_TTL_SECONDS, SUPPORTED_CASE_IDS
+    from .triage_v1.constants import DEMO_BOUNDARY, SESSION_TTL_SECONDS
     from .triage_v1.flow_router import build_initial_flow, next_question, record_answer, validate_answer
     from .triage_v1.question_registry import QuestionRegistry, question_to_dict
     from .triage_v1.response_builder import question_response, summary_response
     from .triage_v1.session_store import SessionStore
     from .triage_v1.tachycardia_questions import tachycardia_questions
 except ImportError:  # pragma: no cover - supports running main.py from python_api/
-    from triage_v1.constants import DEMO_BOUNDARY, SESSION_TTL_SECONDS, SUPPORTED_CASE_IDS
+    from triage_v1.constants import DEMO_BOUNDARY, SESSION_TTL_SECONDS
     from triage_v1.flow_router import build_initial_flow, next_question, record_answer, validate_answer
     from triage_v1.question_registry import QuestionRegistry, question_to_dict
     from triage_v1.response_builder import question_response, summary_response
@@ -26,7 +26,6 @@ except ImportError:  # pragma: no cover - supports running main.py from python_a
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-JS_ROOT = PROJECT_ROOT / "JS"
 ALLOWED_ORIGINS = {"http://localhost", "http://localhost:5174"}
 
 _idempotency_records: dict[str, dict[str, Any]] = {}
@@ -42,24 +41,24 @@ def _read_json(relative_path: str) -> Any:
 def clone(value: Any) -> Any:
     return copy.deepcopy(value)
 
-
-fixture = json.loads((JS_ROOT / "fixtures/tachycardia-live-demo.json").read_text(encoding="utf-8"))
 start_question_example = _read_json("handoff/api-examples/2026-05-21-start-session-response-question.json")
 
 contract_fields = {
     "api_version": start_question_example["api_version"],
     "schema_version": start_question_example["schema_version"],
-    "flow_version": fixture["flow_version"],
-    "case_id": fixture["case_id"],
-    "case_version": fixture["case_version"],
-    "fixture_version": fixture["fixture_version"],
-    "question_set_version": fixture["question_set_version"],
+    "flow_version": "vital-rules-router-v1-demo",
+    "case_id": "vital-routed-session",
+    "case_version": "vital-rules-router-v1",
+    "fixture_version": "not_applicable",
+    "question_set_version": "vital-routed-question-set-v1",
     "wording_version": start_question_example["wording_version"],
 }
 
 _registry = QuestionRegistry(
-    PROJECT_ROOT / "Case_question/symptom_questions.csv",
+    PROJECT_ROOT / "Question_DB" / "symptom_questions.csv",
     seed_questions=tachycardia_questions(PROJECT_ROOT),
+    initial_csv_path=PROJECT_ROOT / "Question_DB" / "Initial_questions.csv",
+    universal_csv_path=PROJECT_ROOT / "Question_DB" / "Universal_questions.csv",
 )
 question_sequence = [question_to_dict(question) for question in _registry.questions_for_module("tachycardia_compatibility")]
 expected_total = len(question_sequence)
@@ -104,13 +103,13 @@ def require_demo_bearer_auth(headers: dict[str, str]) -> dict[str, Any] | None:
 def _next_response_id(kind: str) -> str:
     global _response_counter
     _response_counter += 1
-    return f"resp-demo-tachy-{kind}-{_response_counter:03d}"
+    return f"resp-vital-router-{kind}-{_response_counter:03d}"
 
 
 def _next_session_key() -> str:
     global _session_counter
     _session_counter += 1
-    return f"demo-session-tachy-{_session_counter:03d}"
+    return f"vital-router-session-{_session_counter:03d}"
 
 
 def _expiry_from(now: datetime | None = None) -> str:
@@ -202,9 +201,6 @@ def _with_idempotency(scope: str, body: dict[str, Any], compute: Callable[[], di
 
 
 def _validate_case(body: dict[str, Any]) -> str | None:
-    case_id = body.get("case_id")
-    if case_id and case_id not in SUPPORTED_CASE_IDS:
-        return f"unsupported case_id {case_id}"
     if body.get("workflow_mode") and body["workflow_mode"] != "post_measurement_only":
         return "workflow_mode must be post_measurement_only for the current demo contract"
     if body.get("measurement_state") and body["measurement_state"] != "complete":
@@ -221,7 +217,7 @@ def create_session(body: dict[str, Any] | None = None) -> dict[str, Any]:
         return error_result(422, body, "invalid_start_session_request", case_error, {"retryable": False})
 
     def compute() -> dict[str, Any]:
-        flow_state = build_initial_flow(body, _registry, _next_session_key(), _expiry_from(), fixture)
+        flow_state = build_initial_flow(body, _registry, _next_session_key(), _expiry_from())
         _sessions.put(flow_state)
         question = next_question(flow_state, _registry)
         if not question:
@@ -233,7 +229,7 @@ def create_session(body: dict[str, Any] | None = None) -> dict[str, Any]:
             flow_state,
             question,
             None,
-            "Measurement is complete and a deterministic V1 demo question route is ready.",
+            "Measurement is complete; vital_rules evaluated measured vitals and flow_router selected the intake branch.",
             contract_fields,
             _next_response_id,
         )
@@ -276,7 +272,7 @@ def submit_answer(session_key: str | None, body: dict[str, Any] | None = None) -
                 "session_expires_at": flow_state.session_expires_at,
             })
 
-        record_answer(flow_state, body, question)
+        record_answer(flow_state, body, question, _registry)
         if flow_state.current_index >= len(flow_state.question_plan):
             flow_state.state = "summary_ready"
             return {"statusCode": 200, "body": summary_response(body, flow_state, question.id, _registry, contract_fields, _next_response_id)}
