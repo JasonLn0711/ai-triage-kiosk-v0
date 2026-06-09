@@ -80,7 +80,7 @@ test("demo bearer token gate is disabled until DEMO_BEARER_TOKEN is configured",
   });
 });
 
-test("demo bearer token gate accepts only the configured Authorization header", () => {
+test("CT-API-002 CLD-AUTH-001 CLD-AUTH-002 bearer token gate accepts only the configured Authorization header", () => {
   withDemoBearerToken("unit-test-demo-token", () => {
     const missing = contract.requireDemoBearerAuth({ headers: {} });
     const invalid = contract.requireDemoBearerAuth({ headers: { authorization: "Bearer wrong-token" } });
@@ -95,7 +95,7 @@ test("demo bearer token gate accepts only the configured Authorization header", 
   });
 });
 
-test("start session returns first question and progress.expected_total independent of max_questions", () => {
+test("CT-API-001 start session returns first question and progress.expected_total independent of max_questions", () => {
   contract.resetMockState();
   const result = contract.createSession(startBody({ max_questions: 99 }));
 
@@ -108,7 +108,7 @@ test("start session returns first question and progress.expected_total independe
   assert.equal(result.body.question.rendering_constraints.max_visible_options_without_scroll, 9);
 });
 
-test("same answer idempotency key retry returns the same response without advancing flow", () => {
+test("CT-IDEMP-001 same answer idempotency key retry returns the same response without advancing flow", () => {
   contract.resetMockState();
   const start = contract.createSession(startBody());
   const sessionKey = start.body.session_key;
@@ -132,7 +132,7 @@ test("same answer idempotency key retry returns the same response without advanc
   assert.equal(second.body.question.id, "tachy-current-feeling");
 });
 
-test("same idempotency key with different answer body returns idempotency_conflict", () => {
+test("CT-IDEMP-002 same idempotency key with different answer body returns idempotency_conflict", () => {
   contract.resetMockState();
   const start = contract.createSession(startBody());
   const sessionKey = start.body.session_key;
@@ -151,7 +151,33 @@ test("same idempotency key with different answer body returns idempotency_confli
   assert.equal(conflict.body.recovery.ui_locking_required, true);
 });
 
-test("answering the final question returns status=summary with staff_review_summary", () => {
+test("CT-API-004 stale question_id returns a stable validation error", () => {
+  contract.resetMockState();
+  const start = contract.createSession(startBody());
+  const sessionKey = start.body.session_key;
+  const first = contract.submitAnswer(sessionKey, answerBody(start.body.question, ["heart_racing"], "idem-stale-001"));
+  const stale = contract.submitAnswer(sessionKey, answerBody(start.body.question, ["heart_racing"], "idem-stale-002"));
+
+  assert.equal(first.statusCode, 200);
+  assert.equal(stale.statusCode, 422);
+  assert.equal(stale.body.error.code, "invalid_answer");
+  assert.match(stale.body.error.message, /expected question_id tachy-onset/);
+});
+
+test("CT-API-005 invalid option id returns a stable validation error", () => {
+  contract.resetMockState();
+  const start = contract.createSession(startBody());
+  const invalid = contract.submitAnswer(
+    start.body.session_key,
+    answerBody(start.body.question, ["not_a_manifest_option"], "idem-invalid-option-001")
+  );
+
+  assert.equal(invalid.statusCode, 422);
+  assert.equal(invalid.body.error.code, "invalid_answer");
+  assert.match(invalid.body.error.message, /unknown option id/);
+});
+
+test("CT-API-003 answering the final question returns status=summary with staff_review_summary", () => {
   contract.resetMockState();
   const start = contract.createSession(startBody());
   const sessionKey = start.body.session_key;
