@@ -17,13 +17,26 @@ def option_id(question_id: str, label: str) -> str:
 
 
 def _question_type(value: str, labels: list[str]) -> str:
-    lowered = value.lower()
-    if "age" in lowered or "number" in lowered:
-        return "number"
-    if "free text" in lowered or "text" in lowered or "duration" in lowered:
-        return "text"
-    if "single" in lowered:
-        return "single_choice"
+    normalized = re.sub(r"[^a-z0-9]+", "_", value.lower()).strip("_")
+    aliases = {
+        "single_choice": "single_choice",
+        "single": "single_choice",
+        "multiple_choice": "multi_choice",
+        "multi_choice": "multi_choice",
+        "multiple": "multi_choice",
+        "multi": "multi_choice",
+        "number": "number",
+        "number_pad": "number",
+        "numeric": "number",
+        "time": "time",
+        "text": "text",
+        "free_text": "text",
+        "age": "number",
+        "duration": "text",
+        "biological_gender": "single_choice",
+    }
+    if normalized in aliases:
+        return aliases[normalized]
     if not labels:
         return "text"
     return "multi_choice"

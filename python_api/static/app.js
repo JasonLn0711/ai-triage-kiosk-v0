@@ -198,7 +198,7 @@ function imvsVitals(vitals) {
 
 function capabilitiesForRoute(route) {
   return {
-    question_types: ["single_choice", "multi_choice", "number", "text"],
+    question_types: ["single_choice", "multi_choice", "number", "time", "text"],
     max_questions: route === "tachycardia" || route === "palpitation" ? 7 : 8,
     max_options_per_question: 9,
     max_option_label_length: 64,
@@ -370,7 +370,7 @@ function isNumberQuestion(question) {
 
 function isTextQuestion(question) {
   if (!question) return false;
-  return question.type === "text" || question.id === "INIT-4" || /how long/i.test(question.text || "");
+  return question.type === "text" || question.type === "time" || question.id === "INIT-4" || /how long/i.test(question.text || "");
 }
 
 function isDurationQuestion(question) {

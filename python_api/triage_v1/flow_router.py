@@ -106,9 +106,9 @@ def validate_answer(question: Question, body: dict[str, Any]) -> str | None:
         if not isinstance(value, int | float):
             return "answer.numeric_value is required for number questions"
         return None
-    if question.type == "text":
+    if question.type in {"text", "time"}:
         if not value:
-            return "answer.text_value is required for text questions"
+            return f"answer.text_value is required for {question.type} questions"
         return None
     selected = selected_option_ids(body)
     if not selected:

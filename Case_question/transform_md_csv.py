@@ -6,7 +6,7 @@ Default input:
   Case_question/Symptom_module/
 
 Default output:
-  Case_question/symptom_questions.csv
+  Question_DB/symptom_questions.csv
 """
 
 from __future__ import annotations
@@ -19,8 +19,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 DEFAULT_INPUT = ROOT / "Symptom_module"
-DEFAULT_OUTPUT = ROOT / "Question_DB" / "symptom_questions.csv"
-
+DEFAULT_OUTPUT = ROOT / ".." / "Question_DB" / "symptom_questions.csv"
 
 OPTION_RE = re.compile(r"\[\s*\]\s*([^\[]+)")
 
@@ -77,7 +76,12 @@ def iter_question_rows(md_file: Path, input_dir: Path) -> list[dict[str, str]]:
 
         record = dict(zip(header, cells))
         question_id = record.get("id", "")
-        question_type = record.get("type", "")
+        question_type = (
+            record.get("question type")
+            or record.get("question_type")
+            or record.get("type")
+            or ""
+        )
         question = record.get("question", "")
         answers = record.get("answers") or record.get("options / note") or ""
 
