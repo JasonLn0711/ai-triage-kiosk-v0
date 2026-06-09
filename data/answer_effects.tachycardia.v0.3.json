@@ -1,0 +1,229 @@
+{
+  "effect_version": "tachycardia.v0.3",
+  "option_effects": {
+    "tachy-chief-concern.heart_racing": {
+      "effects": ["reported_palpitations"],
+      "reason_codes": ["reported_palpitations"],
+      "summary_phrases": {
+        "subjective": ["Patient selected heart racing / palpitations as the main concern."]
+      }
+    },
+    "tachy-chief-concern.chest_tightness": {
+      "effects": ["reported_chest_tightness"],
+      "reason_codes": ["reported_chest_tightness"],
+      "summary_phrases": {
+        "subjective": ["Patient selected chest tightness / pressure as the main concern."]
+      }
+    },
+    "tachy-chief-concern.breathing_or_dizzy": {
+      "effects": ["associated_warning_symptom_selected"],
+      "reason_codes": ["reported_breathing_or_dizziness_main_concern"],
+      "summary_phrases": {
+        "subjective": ["Patient selected shortness of breath or dizziness as the main concern."]
+      }
+    },
+    "tachy-chief-concern.other_or_not_sure": {
+      "effects": ["staff_confirm_main_concern"],
+      "reason_codes": ["main_concern_needs_staff_confirmation"],
+      "summary_phrases": {
+        "subjective": ["Patient selected other / not sure for the main concern; staff should confirm the chief concern."]
+      }
+    },
+    "tachy-onset.within_1_hour": {
+      "effects": ["onset_within_1_hour"],
+      "reason_codes": ["reported_recent_onset"],
+      "summary_phrases": {
+        "subjective": ["Patient selected onset within the last hour."]
+      }
+    },
+    "tachy-onset.few_hours": {
+      "effects": ["onset_few_hours"],
+      "reason_codes": ["reported_same_day_onset"],
+      "summary_phrases": {
+        "subjective": ["Patient selected onset a few hours ago."]
+      }
+    },
+    "tachy-onset.half_day": {
+      "effects": ["onset_half_day"],
+      "reason_codes": ["reported_half_day_onset"],
+      "summary_phrases": {
+        "subjective": ["Patient selected onset about half a day ago."]
+      }
+    },
+    "tachy-onset.more_than_1_day_or_not_sure": {
+      "effects": ["onset_more_than_1_day_or_not_sure"],
+      "reason_codes": ["onset_needs_staff_confirmation"],
+      "summary_phrases": {
+        "subjective": ["Patient selected onset more than one day ago / not sure; staff should confirm timing."]
+      }
+    },
+    "tachy-current-feeling.heart_racing": {
+      "effects": ["reported_palpitations"],
+      "reason_codes": ["reported_palpitations"],
+      "summary_phrases": {
+        "subjective": ["Current descriptors include heart racing or pounding."]
+      }
+    },
+    "tachy-current-feeling.chest_heavy": {
+      "effects": ["reported_chest_tightness"],
+      "reason_codes": ["reported_chest_tightness"],
+      "summary_phrases": {
+        "subjective": ["Current descriptors include chest tightness or heaviness."]
+      }
+    },
+    "tachy-current-feeling.chest_pressure_pain": {
+      "effects": ["reported_chest_pressure_pain"],
+      "reason_codes": ["reported_chest_pressure_pain"],
+      "summary_phrases": {
+        "subjective": ["Current descriptors include chest pressure or pain."]
+      }
+    },
+    "tachy-current-feeling.burning_sharp_or_not_sure": {
+      "effects": ["current_descriptor_needs_staff_confirmation"],
+      "reason_codes": ["current_descriptor_needs_staff_confirmation"],
+      "summary_phrases": {
+        "subjective": ["Patient selected burning, sharp discomfort, or not sure; staff should confirm symptom wording."]
+      }
+    },
+    "tachy-associated-symptoms.short_breath": {
+      "effects": ["associated_short_breath", "associated_warning_symptom_selected"],
+      "reason_codes": ["selected_short_breath_with_high_hr", "associated_warning_symptom_selected"],
+      "summary_phrases": {
+        "subjective": ["Associated symptoms selected for staff review include shortness of breath."]
+      }
+    },
+    "tachy-associated-symptoms.sweating_nausea_fatigue": {
+      "effects": ["associated_sweating_nausea_fatigue", "associated_warning_symptom_selected"],
+      "reason_codes": ["selected_sweating_nausea_fatigue_with_high_hr", "associated_warning_symptom_selected"],
+      "summary_phrases": {
+        "subjective": ["Associated symptoms selected for staff review include sweating, nausea, or unusual fatigue."]
+      }
+    },
+    "tachy-associated-symptoms.dizzy_faint": {
+      "effects": ["associated_dizzy_faint", "associated_warning_symptom_selected"],
+      "reason_codes": ["selected_dizzy_or_faint_with_high_hr", "associated_warning_symptom_selected"],
+      "summary_phrases": {
+        "subjective": ["Associated symptoms selected for staff review include dizziness, lightheadedness, or fainting."]
+      }
+    },
+    "tachy-associated-symptoms.none_of_these": {
+      "effects": ["associated_symptoms_none_selected"],
+      "reason_codes": ["no_listed_associated_symptoms_selected"],
+      "summary_phrases": {
+        "subjective": ["Selected associated symptoms: none of the listed shortness of breath, sweating, nausea, unusual fatigue, dizziness, or fainting options."]
+      }
+    },
+    "tachy-warning-symptom-review.symptoms_still_present": {
+      "effects": ["warning_symptoms_still_present"],
+      "reason_codes": ["associated_symptoms_still_present"],
+      "summary_phrases": {
+        "subjective": ["Patient selected that the associated symptoms are still happening."]
+      }
+    },
+    "tachy-warning-symptom-review.symptoms_improving": {
+      "effects": ["warning_symptoms_improving"],
+      "reason_codes": ["associated_symptoms_improving"],
+      "summary_phrases": {
+        "subjective": ["Patient selected that the associated symptoms are getting better."]
+      }
+    },
+    "tachy-warning-symptom-review.need_staff_help": {
+      "effects": ["patient_requests_staff_help"],
+      "reason_codes": ["patient_requests_staff_help"],
+      "summary_phrases": {
+        "subjective": ["Patient selected that staff help is needed now."]
+      }
+    },
+    "tachy-warning-symptom-review.not_sure": {
+      "effects": ["warning_symptom_status_needs_staff_confirmation"],
+      "reason_codes": ["warning_symptom_status_needs_staff_confirmation"],
+      "summary_phrases": {
+        "subjective": ["Patient selected not sure for current associated-symptom status; staff should confirm."]
+      }
+    },
+    "tachy-post-vital-heart-rate-cue.still_racing": {
+      "effects": ["post_vital_still_racing"],
+      "reason_codes": ["post_vital_still_racing"],
+      "summary_phrases": {
+        "subjective": ["After the heart-rate cue, patient selected that the heart still feels fast."]
+      }
+    },
+    "tachy-post-vital-heart-rate-cue.chest_still_heavy": {
+      "effects": ["post_vital_chest_still_heavy"],
+      "reason_codes": ["post_vital_chest_still_heavy"],
+      "summary_phrases": {
+        "subjective": ["After the heart-rate cue, patient selected that the chest still feels heavy / tight."]
+      }
+    },
+    "tachy-post-vital-heart-rate-cue.both": {
+      "effects": ["post_vital_still_racing", "post_vital_chest_still_heavy"],
+      "reason_codes": ["post_vital_still_racing", "post_vital_chest_still_heavy"],
+      "summary_phrases": {
+        "subjective": ["After the heart-rate cue, patient selected both heart still feels fast and chest still feels heavy / tight."]
+      }
+    },
+    "tachy-post-vital-heart-rate-cue.neither_or_not_sure": {
+      "effects": ["post_vital_neither_or_not_sure"],
+      "reason_codes": ["post_vital_needs_staff_confirmation"],
+      "summary_phrases": {
+        "subjective": ["After the heart-rate cue, patient selected neither now / not sure; staff should confirm."]
+      }
+    },
+    "tachy-heart-history-meds.known_rhythm_problem": {
+      "effects": ["known_rhythm_problem"],
+      "reason_codes": ["known_rhythm_problem_selected"],
+      "summary_phrases": {
+        "subjective": ["Patient selected known rhythm-problem history; staff should confirm details."]
+      }
+    },
+    "tachy-heart-history-meds.heart_bp_medicine": {
+      "effects": ["heart_bp_medicine"],
+      "reason_codes": ["heart_bp_medicine_selected"],
+      "summary_phrases": {
+        "subjective": ["Patient selected heart or blood-pressure medicine; staff should confirm medication details."]
+      }
+    },
+    "tachy-heart-history-meds.no_known": {
+      "effects": ["no_known_history_medicine"],
+      "reason_codes": ["no_known_history_medicine_selected"],
+      "summary_phrases": {
+        "subjective": ["Patient selected no known rhythm history or heart / blood-pressure medicine."]
+      }
+    },
+    "tachy-heart-history-meds.staff_confirm": {
+      "effects": ["history_meds_needs_staff_confirmation"],
+      "reason_codes": ["history_meds_needs_staff_confirmation"],
+      "summary_phrases": {
+        "subjective": ["Patient selected not sure for rhythm history or medication; staff should confirm."]
+      }
+    },
+    "tachy-medication-allergy-confirm.med_allergy": {
+      "effects": ["medication_allergy_selected"],
+      "reason_codes": ["medication_allergy_selected"],
+      "summary_phrases": {
+        "subjective": ["Patient selected medication allergy; staff should confirm the allergy record."]
+      }
+    },
+    "tachy-medication-allergy-confirm.regular_medicines": {
+      "effects": ["regular_medicines_selected"],
+      "reason_codes": ["regular_medicines_selected"],
+      "summary_phrases": {
+        "subjective": ["Patient selected regular medicines; staff should confirm the medication list."]
+      }
+    },
+    "tachy-medication-allergy-confirm.none_known": {
+      "effects": ["no_known_medication_allergy"],
+      "reason_codes": ["no_known_medication_allergy_selected"],
+      "summary_phrases": {
+        "subjective": ["Patient selected no known medication allergy."]
+      }
+    },
+    "tachy-medication-allergy-confirm.not_sure": {
+      "effects": ["medication_allergy_needs_staff_confirmation"],
+      "reason_codes": ["medication_allergy_needs_staff_confirmation"],
+      "summary_phrases": {
+        "subjective": ["Patient selected not sure for medication allergy or medicine context; staff should confirm."]
+      }
+    }
+  }
+}

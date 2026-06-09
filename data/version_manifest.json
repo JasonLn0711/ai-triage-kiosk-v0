@@ -2,7 +2,7 @@
   "project_version": "0.2.0",
   "version_scheme": "semver",
   "status": "draft_demo_only",
-  "updated_at": "2026-05-25",
+  "updated_at": "2026-06-08",
   "api_contract": {
     "api_version": "2026-05-22-demo-v0.2-draft",
     "schema_version": "imvs-nycu-triage-demo-schema-v0.2-draft",
@@ -45,7 +45,7 @@
     "FLOW-CHEST-PAIN-VITALS": "v0.1",
     "FLOW-FEVER-URINARY": "v0.1",
     "FLOW-RESPIRATORY-EARLY-HANDOFF": "v0.2",
-    "FLOW-TACHYCARDIA-LIVE-DEMO": "v0.2"
+    "FLOW-TACHYCARDIA-LIVE-DEMO": "v0.3"
   },
   "controlled_items": [
     {

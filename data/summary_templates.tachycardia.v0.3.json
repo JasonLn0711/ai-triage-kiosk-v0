@@ -1,0 +1,29 @@
+{
+  "summary_template_version": "tachycardia.v0.3",
+  "format": "review_summary_demo",
+  "scope_controls": [
+    "Staff-review intake support",
+    "Human review workflow",
+    "Synthetic-data demo context",
+    "Production integration managed through a separate validation path"
+  ],
+  "default_review_basis": [
+    "The summary organizes measured vitals and selected answers for human review."
+  ],
+  "review_basis_by_effect": {
+    "measured_elevated_heart_rate_demo": "Measured heart-rate cue is visible in this session and should be reviewed with the selected answers.",
+    "associated_warning_symptom_selected": "Selected associated cardiopulmonary symptoms support staff confirmation in this demo workflow.",
+    "associated_symptoms_none_selected": "No listed associated symptoms were selected; staff can review this alongside the measured heart-rate cue."
+  },
+  "review_action_by_effect": {
+    "associated_warning_symptom_selected": "Please confirm the selected associated symptoms and review them with the measured vital payload.",
+    "patient_requests_staff_help": "Please check the patient promptly in the demo workflow because the patient selected that staff help is needed now.",
+    "history_meds_needs_staff_confirmation": "Please confirm rhythm-history and medication context with the patient.",
+    "medication_allergy_needs_staff_confirmation": "Please confirm medication allergy and medicine context with the patient."
+  },
+  "default_review_action": "Please review measured heart rate, reported symptoms, rhythm-history selection, and medication/allergy confirmation.",
+  "staff_handoff_note_by_path": {
+    "warning": "Review measured heart rate and selected associated cardiopulmonary symptoms.",
+    "low_concern": "Review measured heart rate and reported palpitation / chest-tightness context."
+  }
+}

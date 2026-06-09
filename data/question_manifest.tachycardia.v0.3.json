@@ -1,0 +1,623 @@
+{
+  "manifest_version": "tachycardia.v0.3",
+  "case_id": "demo-tachycardia-live-001",
+  "clinical_scope": "staff_review_intake_support",
+  "expected_total": 7,
+  "questions": [
+    {
+      "id": "tachy-chief-concern",
+      "registry_refs": [
+        "TACHY-001"
+      ],
+      "source_refs": [
+        "DUOBAO-DEMO-DESIGN-20260520",
+        "DUOBAO-AFRVR-TACHY-QA-20260525",
+        "IMEDTAC-POST-MEETING-PROGRESS-20260521",
+        "LOCAL-PROTOCOL-TBD"
+      ],
+      "evidence_status": "clinical-review-needed",
+      "review_owner": "clinical_reviewer_tbd",
+      "type": "single_choice",
+      "ui_template": "single_choice",
+      "text": "What is the main reason you are using the kiosk today?",
+      "options": [
+        {
+          "id": "heart_racing",
+          "label": "Heart racing / palpitations",
+          "synonyms": [
+            "heart racing",
+            "palpitations",
+            "心跳很快",
+            "心悸"
+          ]
+        },
+        {
+          "id": "chest_tightness",
+          "label": "Chest tightness / pressure",
+          "synonyms": [
+            "chest tightness",
+            "chest pressure",
+            "胸悶",
+            "胸口悶"
+          ]
+        },
+        {
+          "id": "breathing_or_dizzy",
+          "label": "Shortness of breath or dizziness",
+          "synonyms": [
+            "shortness of breath",
+            "dizzy",
+            "喘",
+            "頭暈"
+          ]
+        },
+        {
+          "id": "other_or_not_sure",
+          "label": "Other / not sure",
+          "synonyms": [
+            "not sure",
+            "unsure",
+            "不知道",
+            "不確定"
+          ]
+        }
+      ],
+      "option_count": 4,
+      "none_option_id": null,
+      "required": true,
+      "allow_not_sure": true,
+      "allow_skip": false,
+      "max_selections": 1,
+      "trigger_reason_codes": [
+        "post_measurement_tachycardia_live_demo"
+      ],
+      "summary_effect": "Adds the main cardiopulmonary concern to the staff-review summary.",
+      "rendering_constraints": {
+        "requires_no_scroll": true,
+        "max_visible_options_without_scroll": 9
+      },
+      "evidence_refs": [
+        "DUOBAO-AFRVR-TACHY-QA-20260525",
+        "LOCAL-PROTOCOL-TBD"
+      ],
+      "demo_allowed": true,
+      "demo_boundary": "Synthetic-data demo question for staff-review intake support."
+    },
+    {
+      "id": "tachy-onset",
+      "registry_refs": [
+        "TACHY-002"
+      ],
+      "source_refs": [
+        "DUOBAO-DEMO-DESIGN-20260520",
+        "DUOBAO-AFRVR-TACHY-QA-20260525",
+        "LOCAL-PROTOCOL-TBD"
+      ],
+      "evidence_status": "clinical-review-needed",
+      "review_owner": "clinical_reviewer_tbd",
+      "type": "single_choice",
+      "ui_template": "single_choice",
+      "text": "When did this start?",
+      "options": [
+        {
+          "id": "within_1_hour",
+          "label": "Within the last hour",
+          "synonyms": [
+            "within one hour",
+            "剛剛",
+            "一小時內"
+          ]
+        },
+        {
+          "id": "few_hours",
+          "label": "A few hours ago",
+          "synonyms": [
+            "a few hours",
+            "幾小時"
+          ]
+        },
+        {
+          "id": "half_day",
+          "label": "About half a day",
+          "synonyms": [
+            "half day",
+            "半天"
+          ]
+        },
+        {
+          "id": "more_than_1_day_or_not_sure",
+          "label": "More than one day / not sure",
+          "synonyms": [
+            "more than one day",
+            "not sure",
+            "超過一天",
+            "不確定"
+          ]
+        }
+      ],
+      "option_count": 4,
+      "none_option_id": null,
+      "required": true,
+      "allow_not_sure": true,
+      "allow_skip": false,
+      "max_selections": 1,
+      "trigger_reason_codes": [
+        "reported_palpitations"
+      ],
+      "summary_effect": "Adds onset and duration context to the staff-review summary.",
+      "rendering_constraints": {
+        "requires_no_scroll": true,
+        "max_visible_options_without_scroll": 9
+      },
+      "evidence_refs": [
+        "DUOBAO-AFRVR-TACHY-QA-20260525",
+        "LOCAL-PROTOCOL-TBD"
+      ],
+      "demo_allowed": true,
+      "demo_boundary": "Staff should review this answer with the measured vitals."
+    },
+    {
+      "id": "tachy-current-feeling",
+      "registry_refs": [
+        "TACHY-003"
+      ],
+      "source_refs": [
+        "AHA-TACHYCARDIA-FAST-HR",
+        "AHA-HEART-ATTACK",
+        "DUOBAO-DEMO-DESIGN-20260520",
+        "DUOBAO-AFRVR-TACHY-QA-20260525"
+      ],
+      "evidence_status": "source-backed",
+      "review_owner": "clinical_reviewer_tbd",
+      "type": "multi_choice",
+      "ui_template": "multi_choice",
+      "text": "Which descriptions fit what you feel now?",
+      "options": [
+        {
+          "id": "heart_racing",
+          "label": "Heart racing or pounding",
+          "synonyms": [
+            "heart racing",
+            "pounding",
+            "心跳很快",
+            "心悸"
+          ]
+        },
+        {
+          "id": "chest_heavy",
+          "label": "Chest tightness or heaviness",
+          "synonyms": [
+            "chest tightness",
+            "chest heavy",
+            "胸悶",
+            "胸口悶"
+          ]
+        },
+        {
+          "id": "chest_pressure_pain",
+          "label": "Chest pressure or pain",
+          "synonyms": [
+            "chest pressure",
+            "chest pain",
+            "胸痛"
+          ]
+        },
+        {
+          "id": "burning_sharp_or_not_sure",
+          "label": "Burning, sharp discomfort, or not sure",
+          "synonyms": [
+            "burning",
+            "sharp",
+            "not sure",
+            "刺痛",
+            "不確定"
+          ]
+        }
+      ],
+      "option_count": 4,
+      "none_option_id": null,
+      "required": true,
+      "allow_not_sure": true,
+      "allow_skip": false,
+      "max_selections": 4,
+      "trigger_reason_codes": [
+        "reported_palpitations",
+        "reported_chest_tightness"
+      ],
+      "summary_effect": "Adds current palpitation and chest-tightness descriptors to the staff-review summary.",
+      "rendering_constraints": {
+        "requires_no_scroll": true,
+        "max_visible_options_without_scroll": 9
+      },
+      "evidence_refs": [
+        "DUOBAO-AFRVR-TACHY-QA-20260525",
+        "LOCAL-PROTOCOL-TBD"
+      ],
+      "demo_allowed": true,
+      "demo_boundary": "Synthetic-data demo question for staff-review intake support."
+    },
+    {
+      "id": "tachy-associated-symptoms",
+      "registry_refs": [
+        "TACHY-004"
+      ],
+      "source_refs": [
+        "AHA-TACHYCARDIA-FAST-HR",
+        "AHA-HEART-ATTACK",
+        "MEDLINEPLUS-AFIB",
+        "DUOBAO-AFRVR-TACHY-QA-20260525"
+      ],
+      "evidence_status": "source-backed",
+      "review_owner": "clinical_reviewer_tbd",
+      "type": "multi_choice",
+      "ui_template": "multi_choice",
+      "text": "Are any of these happening with it?",
+      "options": [
+        {
+          "id": "short_breath",
+          "label": "Shortness of breath",
+          "synonyms": [
+            "shortness of breath",
+            "short of breath",
+            "breathless",
+            "喘",
+            "喘不過氣"
+          ]
+        },
+        {
+          "id": "sweating_nausea_fatigue",
+          "label": "Sweating, nausea, or unusual fatigue",
+          "synonyms": [
+            "sweating",
+            "nausea",
+            "fatigue",
+            "冒汗",
+            "噁心",
+            "很累"
+          ]
+        },
+        {
+          "id": "dizzy_faint",
+          "label": "Dizziness, lightheadedness, or fainting",
+          "synonyms": [
+            "dizzy",
+            "lightheaded",
+            "faint",
+            "almost fainted",
+            "頭暈",
+            "快昏倒"
+          ]
+        },
+        {
+          "id": "none_of_these",
+          "label": "None of these",
+          "synonyms": [
+            "none",
+            "none of these",
+            "沒有",
+            "沒有這些症狀"
+          ]
+        }
+      ],
+      "option_count": 4,
+      "none_option_id": "none_of_these",
+      "required": true,
+      "allow_not_sure": true,
+      "allow_skip": false,
+      "max_selections": 4,
+      "trigger_reason_codes": [
+        "associated_warning_symptom_screen"
+      ],
+      "summary_effect": "Adds associated warning-symptom positives or negatives to the staff-review summary.",
+      "rendering_constraints": {
+        "requires_no_scroll": true,
+        "max_visible_options_without_scroll": 9
+      },
+      "evidence_refs": [
+        "DUOBAO-AFRVR-TACHY-QA-20260525",
+        "LOCAL-PROTOCOL-TBD"
+      ],
+      "demo_allowed": true,
+      "demo_boundary": "Synthetic-data demo question for staff-review intake support."
+    },
+    {
+      "id": "tachy-warning-symptom-review",
+      "registry_refs": [
+        "TACHY-008"
+      ],
+      "source_refs": [
+        "AHA-TACHYCARDIA-FAST-HR",
+        "AHA-HEART-ATTACK",
+        "MEDLINEPLUS-AFIB",
+        "DUOBAO-AFRVR-TACHY-QA-20260525",
+        "LOCAL-PROTOCOL-TBD"
+      ],
+      "evidence_status": "source-backed",
+      "review_owner": "clinical_reviewer_tbd",
+      "type": "single_choice",
+      "ui_template": "single_choice",
+      "text": "Please tell staff how those symptoms feel right now.",
+      "options": [
+        {
+          "id": "symptoms_still_present",
+          "label": "Still happening",
+          "synonyms": [
+            "still happening",
+            "still present",
+            "還在",
+            "還有"
+          ]
+        },
+        {
+          "id": "symptoms_improving",
+          "label": "Getting better",
+          "synonyms": [
+            "better",
+            "improving",
+            "有改善"
+          ]
+        },
+        {
+          "id": "need_staff_help",
+          "label": "Need staff help now",
+          "synonyms": [
+            "need help",
+            "staff help",
+            "需要協助"
+          ]
+        },
+        {
+          "id": "not_sure",
+          "label": "Not sure, staff should confirm",
+          "synonyms": [
+            "not sure",
+            "unsure",
+            "不確定"
+          ]
+        }
+      ],
+      "option_count": 4,
+      "none_option_id": null,
+      "required": true,
+      "allow_not_sure": true,
+      "allow_skip": false,
+      "max_selections": 1,
+      "trigger_reason_codes": [
+        "associated_warning_symptom_selected"
+      ],
+      "summary_effect": "Adds a staff-confirmation cue after associated cardiopulmonary symptoms are selected.",
+      "rendering_constraints": {
+        "requires_no_scroll": true,
+        "max_visible_options_without_scroll": 9
+      },
+      "evidence_refs": [
+        "DUOBAO-AFRVR-TACHY-QA-20260525",
+        "LOCAL-PROTOCOL-TBD"
+      ],
+      "demo_allowed": true,
+      "demo_boundary": "Staff-review confirmation question; no diagnosis, treatment, order, or formal triage level is produced."
+    },
+    {
+      "id": "tachy-post-vital-heart-rate-cue",
+      "registry_refs": [
+        "TACHY-005"
+      ],
+      "source_refs": [
+        "AHA-TACHYCARDIA-FAST-HR",
+        "MEDLINEPLUS-AFIB",
+        "DUOBAO-DEMO-DESIGN-20260520",
+        "DUOBAO-AFRVR-TACHY-QA-20260525"
+      ],
+      "evidence_status": "source-backed",
+      "review_owner": "clinical_reviewer_tbd",
+      "type": "single_choice",
+      "ui_template": "single_choice",
+      "text": "The kiosk received a high heart-rate reading for this demo. How do you feel right now?",
+      "options": [
+        {
+          "id": "still_racing",
+          "label": "My heart still feels fast",
+          "synonyms": [
+            "heart still fast",
+            "still racing",
+            "還是很快"
+          ]
+        },
+        {
+          "id": "chest_still_heavy",
+          "label": "My chest still feels heavy / tight",
+          "synonyms": [
+            "chest still heavy",
+            "chest tight",
+            "胸悶"
+          ]
+        },
+        {
+          "id": "both",
+          "label": "Both",
+          "synonyms": [
+            "both",
+            "兩個都有"
+          ]
+        },
+        {
+          "id": "neither_or_not_sure",
+          "label": "Neither now / not sure",
+          "synonyms": [
+            "neither",
+            "not sure",
+            "都沒有",
+            "不確定"
+          ]
+        }
+      ],
+      "option_count": 4,
+      "none_option_id": "neither_or_not_sure",
+      "required": true,
+      "allow_not_sure": true,
+      "allow_skip": false,
+      "max_selections": 1,
+      "trigger_reason_codes": [
+        "measured_elevated_heart_rate_demo"
+      ],
+      "summary_effect": "Adds the post-vital current heart-racing / chest-heaviness status to the staff-review summary.",
+      "rendering_constraints": {
+        "requires_no_scroll": true,
+        "max_visible_options_without_scroll": 9
+      },
+      "evidence_refs": [
+        "DUOBAO-AFRVR-TACHY-QA-20260525",
+        "LOCAL-PROTOCOL-TBD"
+      ],
+      "demo_allowed": true,
+      "demo_boundary": "Post-vital heart-rate cue follow-up for staff-review context."
+    },
+    {
+      "id": "tachy-heart-history-meds",
+      "registry_refs": [
+        "TACHY-006"
+      ],
+      "source_refs": [
+        "MEDLINEPLUS-AFIB",
+        "ENA-ESI-V5",
+        "DUOBAO-AFRVR-TACHY-QA-20260525",
+        "LOCAL-PROTOCOL-TBD"
+      ],
+      "evidence_status": "source-family",
+      "review_owner": "clinical_reviewer_tbd",
+      "type": "multi_choice",
+      "ui_template": "multi_choice",
+      "text": "Have you been told you have a heart rhythm problem, or do you take heart / blood-pressure medicine?",
+      "options": [
+        {
+          "id": "known_rhythm_problem",
+          "label": "Known rhythm problem",
+          "synonyms": [
+            "rhythm problem",
+            "arrhythmia",
+            "心律不整"
+          ]
+        },
+        {
+          "id": "heart_bp_medicine",
+          "label": "Heart or blood-pressure medicine",
+          "synonyms": [
+            "blood pressure medicine",
+            "heart medicine",
+            "血壓藥",
+            "心臟藥"
+          ]
+        },
+        {
+          "id": "no_known",
+          "label": "No known history / medicine",
+          "synonyms": [
+            "no known",
+            "沒有"
+          ]
+        },
+        {
+          "id": "staff_confirm",
+          "label": "Not sure, staff should confirm",
+          "synonyms": [
+            "not sure",
+            "staff confirm",
+            "不確定"
+          ]
+        }
+      ],
+      "option_count": 4,
+      "none_option_id": "no_known",
+      "required": true,
+      "allow_not_sure": true,
+      "allow_skip": false,
+      "max_selections": 4,
+      "trigger_reason_codes": [
+        "history_medication_context"
+      ],
+      "summary_effect": "Adds rhythm-history and heart/blood-pressure medication context for staff confirmation.",
+      "rendering_constraints": {
+        "requires_no_scroll": true,
+        "max_visible_options_without_scroll": 9
+      },
+      "evidence_refs": [
+        "DUOBAO-AFRVR-TACHY-QA-20260525",
+        "LOCAL-PROTOCOL-TBD"
+      ],
+      "demo_allowed": true,
+      "demo_boundary": "Synthetic-data demo question for staff-review intake support."
+    },
+    {
+      "id": "tachy-medication-allergy-confirm",
+      "registry_refs": [
+        "TACHY-007"
+      ],
+      "source_refs": [
+        "LOCAL-PROTOCOL-TBD",
+        "DUOBAO-DEMO-DESIGN-20260520",
+        "DUOBAO-AFRVR-TACHY-QA-20260525"
+      ],
+      "evidence_status": "clinical-review-needed",
+      "review_owner": "clinical_reviewer_tbd",
+      "type": "multi_choice",
+      "ui_template": "multi_choice",
+      "text": "Do you have medication allergies or medicines staff should confirm?",
+      "options": [
+        {
+          "id": "med_allergy",
+          "label": "Medication allergy",
+          "synonyms": [
+            "allergy",
+            "drug allergy",
+            "藥物過敏"
+          ]
+        },
+        {
+          "id": "regular_medicines",
+          "label": "Regular medicines",
+          "synonyms": [
+            "regular medicines",
+            "medication",
+            "固定用藥"
+          ]
+        },
+        {
+          "id": "none_known",
+          "label": "No known medication allergy",
+          "synonyms": [
+            "no allergy",
+            "沒有過敏"
+          ]
+        },
+        {
+          "id": "not_sure",
+          "label": "Not sure",
+          "synonyms": [
+            "not sure",
+            "不確定"
+          ]
+        }
+      ],
+      "option_count": 4,
+      "none_option_id": "none_known",
+      "required": true,
+      "allow_not_sure": true,
+      "allow_skip": false,
+      "max_selections": 4,
+      "trigger_reason_codes": [
+        "medication_allergy_context"
+      ],
+      "summary_effect": "Adds medication and allergy uncertainty to the staff-review summary.",
+      "rendering_constraints": {
+        "requires_no_scroll": true,
+        "max_visible_options_without_scroll": 9
+      },
+      "evidence_refs": [
+        "DUOBAO-AFRVR-TACHY-QA-20260525",
+        "LOCAL-PROTOCOL-TBD"
+      ],
+      "demo_allowed": true,
+      "demo_boundary": "Synthetic-data demo question for staff-review intake support."
+    }
+  ]
+}

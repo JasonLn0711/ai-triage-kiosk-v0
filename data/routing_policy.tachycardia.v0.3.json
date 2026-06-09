@@ -1,0 +1,43 @@
+{
+  "policy_version": "tachycardia.v0.3",
+  "expected_total": 7,
+  "start_question_id": "tachy-chief-concern",
+  "summary_after_question_ids": ["tachy-medication-allergy-confirm"],
+  "default_next_question_by_id": {
+    "tachy-chief-concern": "tachy-onset",
+    "tachy-onset": "tachy-current-feeling",
+    "tachy-current-feeling": "tachy-associated-symptoms",
+    "tachy-warning-symptom-review": "tachy-heart-history-meds",
+    "tachy-post-vital-heart-rate-cue": "tachy-heart-history-meds",
+    "tachy-heart-history-meds": "tachy-medication-allergy-confirm"
+  },
+  "dynamic_rules": [
+    {
+      "id": "associated-warning-symptom-path",
+      "priority": 1,
+      "from_question_id": "tachy-associated-symptoms",
+      "any_effects": ["associated_short_breath", "associated_sweating_nausea_fatigue", "associated_dizzy_faint"],
+      "candidate_question_ids": ["tachy-warning-symptom-review", "tachy-post-vital-heart-rate-cue", "tachy-heart-history-meds"],
+      "selected_next_question_id": "tachy-warning-symptom-review",
+      "reason_codes": ["associated_warning_symptom_selected"],
+      "phase_reason": "Associated cardiopulmonary symptoms were selected, so the backend asks a staff-confirmation question before the history and medication context."
+    },
+    {
+      "id": "associated-none-path",
+      "priority": 2,
+      "from_question_id": "tachy-associated-symptoms",
+      "all_effects": ["associated_symptoms_none_selected"],
+      "candidate_question_ids": ["tachy-post-vital-heart-rate-cue", "tachy-heart-history-meds"],
+      "selected_next_question_id": "tachy-post-vital-heart-rate-cue",
+      "reason_codes": ["no_listed_associated_symptoms_selected", "measured_elevated_heart_rate_demo"],
+      "phase_reason": "No listed associated symptoms were selected, so the backend uses the measured heart-rate cue and then asks history / medication context."
+    }
+  ],
+  "thresholds": {
+    "elevated_heart_rate_bpm_demo": 120
+  },
+  "fallback": {
+    "ai_status": "not_configured_deterministic_fallback",
+    "reason_codes": ["deterministic_policy_fallback"]
+  }
+}
