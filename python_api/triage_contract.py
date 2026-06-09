@@ -15,14 +15,12 @@ try:
     from .triage_v1.question_registry import QuestionRegistry, question_to_dict
     from .triage_v1.response_builder import question_response, summary_response
     from .triage_v1.session_store import SessionStore
-    from .triage_v1.tachycardia_questions import tachycardia_questions
 except ImportError:  # pragma: no cover - supports running main.py from python_api/
     from triage_v1.constants import DEMO_BOUNDARY, SESSION_TTL_SECONDS
     from triage_v1.flow_router import build_initial_flow, next_question, record_answer, validate_answer
     from triage_v1.question_registry import QuestionRegistry, question_to_dict
     from triage_v1.response_builder import question_response, summary_response
     from triage_v1.session_store import SessionStore
-    from triage_v1.tachycardia_questions import tachycardia_questions
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
@@ -56,7 +54,6 @@ contract_fields = {
 
 _registry = QuestionRegistry(
     PROJECT_ROOT / "Question_DB" / "symptom_questions.csv",
-    seed_questions=tachycardia_questions(PROJECT_ROOT),
     initial_csv_path=PROJECT_ROOT / "Question_DB" / "Initial_questions.csv",
     universal_csv_path=PROJECT_ROOT / "Question_DB" / "Universal_questions.csv",
 )

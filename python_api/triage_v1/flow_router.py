@@ -173,7 +173,6 @@ def _module_for_initial_answers(flow_state: FlowState, registry: QuestionRegistr
         return "Neuro/weakness_fatigue.md"
     if "limb pain" in complaint or "swelling" in complaint:
         return "Pain/limb_pain_swelling.md"
-    return BRANCH_MODULES["palpitation"]
 
 
 def _maybe_expand_initial_intake(flow_state: FlowState, registry: QuestionRegistry) -> None:

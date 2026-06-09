@@ -6,12 +6,50 @@ from pathlib import Path
 
 from .models import Question, QuestionOption
 
+TACHYCARDIA_OPTION_IDS = {
+    ("tachy-chief-concern", "Heart racing / palpitations"): "heart_racing",
+    ("tachy-chief-concern", "Chest tightness / pressure"): "chest_tightness",
+    ("tachy-chief-concern", "Shortness of breath or dizziness"): "breathing_or_dizzy",
+    ("tachy-chief-concern", "Other / not sure"): "other_or_not_sure",
+    ("tachy-onset", "Within the last hour"): "within_1_hour",
+    ("tachy-onset", "A few hours ago"): "few_hours",
+    ("tachy-onset", "About half a day"): "half_day",
+    ("tachy-onset", "More than one day / not sure"): "more_than_1_day_or_not_sure",
+    ("tachy-current-feeling", "Heart racing or pounding"): "heart_racing",
+    ("tachy-current-feeling", "Chest tightness or heaviness"): "chest_heavy",
+    ("tachy-current-feeling", "Chest pressure or pain"): "chest_pressure_pain",
+    ("tachy-current-feeling", "Burning, sharp discomfort, or not sure"): "burning_sharp_or_not_sure",
+    ("tachy-associated-symptoms", "Shortness of breath"): "short_breath",
+    ("tachy-associated-symptoms", "Sweating, nausea, or unusual fatigue"): "sweating_nausea_fatigue",
+    ("tachy-associated-symptoms", "Dizziness, lightheadedness, or fainting"): "dizzy_faint",
+    ("tachy-associated-symptoms", "None of these"): "none_of_these",
+    ("tachy-post-vital-heart-rate-cue", "My heart still feels fast"): "still_racing",
+    ("tachy-post-vital-heart-rate-cue", "My chest still feels heavy / tight"): "chest_still_heavy",
+    ("tachy-post-vital-heart-rate-cue", "Both"): "both",
+    ("tachy-post-vital-heart-rate-cue", "Neither now / not sure"): "neither_or_not_sure",
+    ("tachy-heart-history-meds", "Known rhythm problem"): "known_rhythm_problem",
+    ("tachy-heart-history-meds", "Heart or blood-pressure medicine"): "heart_bp_medicine",
+    ("tachy-heart-history-meds", "No known history / medicine"): "no_known",
+    ("tachy-heart-history-meds", "Not sure, staff should confirm"): "staff_confirm",
+    ("tachy-medication-allergy-confirm", "Medication allergy"): "med_allergy",
+    ("tachy-medication-allergy-confirm", "Regular medicines"): "regular_medicines",
+    ("tachy-medication-allergy-confirm", "No known medication allergy"): "none_known",
+    ("tachy-medication-allergy-confirm", "Not sure"): "not_sure",
+}
+
+TACHYCARDIA_NONE_OPTION_IDS = {
+    "tachy-associated-symptoms": "none_of_these",
+    "tachy-post-vital-heart-rate-cue": "neither_or_not_sure",
+}
+
 
 class RegistryError(ValueError):
     pass
 
 
 def option_id(question_id: str, label: str) -> str:
+    if (question_id, label) in TACHYCARDIA_OPTION_IDS:
+        return TACHYCARDIA_OPTION_IDS[(question_id, label)]
     slug = re.sub(r"[^a-z0-9]+", "_", label.lower()).strip("_")
     return f"{question_id.lower()}_{slug or 'option'}"
 
@@ -107,7 +145,10 @@ class QuestionRegistry:
                     continue
                 labels = [part.strip() for part in (row.get("answer_options") or "").split(";") if part.strip()]
                 options = [QuestionOption(option_id(question_id, label), label) for label in labels]
-                none_option = next((option.id for option in options if option.label.lower() == "none"), None)
+                none_option = TACHYCARDIA_NONE_OPTION_IDS.get(
+                    question_id,
+                    next((option.id for option in options if option.label.lower() == "none"), None),
+                )
                 question_type = _question_type(row.get("question_type") or "", labels)
                 question = Question(
                     id=question_id,
@@ -125,6 +166,8 @@ class QuestionRegistry:
                 )
                 module_key = module_key_override or (row.get("module_file") or "").strip()
                 self.add(question, module_key=module_key)
+                if module_key == "Heart/tachycardia.md":
+                    self.add(question, module_key="tachycardia_compatibility")
 
     def get(self, question_id: str) -> Question:
         try:
