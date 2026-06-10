@@ -80,6 +80,14 @@ def _question_type(value: str, labels: list[str]) -> str:
     return "multi_choice"
 
 
+def _display_labels(row: dict[str, str], option_values: list[str]) -> list[str]:
+    raw_answers = row.get("answers") or ""
+    labels = [part.strip() for part in re.findall(r"\[[ xX]\]\s*([^\[]+)", raw_answers) if part.strip()]
+    if len(labels) == len(option_values):
+        return labels
+    return option_values
+
+
 def question_to_dict(question: Question) -> dict:
     return {
         "registry_refs": question.registry_refs,
@@ -143,8 +151,12 @@ class QuestionRegistry:
                 text = (row.get("question") or "").strip()
                 if not question_id or not text:
                     continue
-                labels = [part.strip() for part in (row.get("answer_options") or "").split(";") if part.strip()]
-                options = [QuestionOption(option_id(question_id, label), label) for label in labels]
+                option_values = [part.strip() for part in (row.get("answer_options") or "").split(";") if part.strip()]
+                labels = _display_labels(row, option_values)
+                options = [
+                    QuestionOption(option_id(question_id, option_value), label)
+                    for option_value, label in zip(option_values, labels)
+                ]
                 none_option = TACHYCARDIA_NONE_OPTION_IDS.get(
                     question_id,
                     next((option.id for option in options if option.label.lower() == "none"), None),
@@ -165,6 +177,8 @@ class QuestionRegistry:
                     none_option_id=none_option,
                 )
                 module_key = module_key_override or (row.get("module_file") or "").strip()
+                if module_key_override == "initial_intake" and question_id.startswith("INIT-3A-"):
+                    module_key = "initial_detail"
                 self.add(question, module_key=module_key)
                 if module_key == "Heart/tachycardia.md":
                     self.add(question, module_key="tachycardia_compatibility")

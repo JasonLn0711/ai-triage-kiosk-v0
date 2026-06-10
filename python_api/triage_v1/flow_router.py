@@ -9,6 +9,18 @@ from .vital_normalizer import normalize_vitals
 from .vital_rules import evaluate_vitals, has_staff_notify_flag
 
 
+INITIAL_DETAIL_BY_GROUP_OPTION = {
+    "init-3_fever_cold": "INIT-3A-FEVER",
+    "init-3_gi": "INIT-3A-GI",
+    "init-3_gu_back": "INIT-3A-GU-BACK",
+    "init-3_neuro_general": "INIT-3A-NEURO",
+    "init-3_injury_wound_limb": "INIT-3A-OTHER",
+    "init-3_skin_allergy_eye_ent": "INIT-3A-OTHER",
+    "init-3_medication_follow_up": "INIT-3A-OTHER",
+    "init-3_other_not_sure": "INIT-3A-OTHER",
+}
+
+
 def has_flag(flow_state: FlowState, code: str) -> bool:
     return any(flag.code == code for flag in flow_state.flags)
 
@@ -147,9 +159,48 @@ def _display_label_for_selected(question: Question, selected: list[str]) -> str:
     return " ".join(labels).strip()
 
 
-def _module_for_initial_answers(flow_state: FlowState, registry: QuestionRegistry) -> str:
+def _initial_complaint_text(flow_state: FlowState, registry: QuestionRegistry) -> str:
+    detail_answer = next((answer for answer in flow_state.answers if answer.question_id.startswith("INIT-3A-")), None)
+    if detail_answer:
+        detail = _label_for_selected(registry.get(detail_answer.question_id), detail_answer.selected_option_ids)
+        if detail and "not sure" not in detail:
+            return detail
     complaint_answer = next((answer for answer in flow_state.answers if answer.question_id == "INIT-3"), None)
-    complaint = _label_for_selected(registry.get("INIT-3"), complaint_answer.selected_option_ids) if complaint_answer else ""
+    return _label_for_selected(registry.get("INIT-3"), complaint_answer.selected_option_ids) if complaint_answer else ""
+
+
+def _module_for_initial_answers(flow_state: FlowState, registry: QuestionRegistry) -> str:
+    complaint = _initial_complaint_text(flow_state, registry)
+    if "cardiorespiratory" in complaint:
+        return BRANCH_MODULES["palpitation"]
+    if "fever/cold" in complaint:
+        return BRANCH_MODULES["fever"]
+    if complaint == "gi":
+        return "Pain/abdominal_pain.md"
+    if "gu/back" in complaint:
+        return "Renal&GU/urinary_symptoms.md"
+    if "neuro/general" in complaint:
+        return "Pain/Headache.md"
+    if "injury/wound/limb" in complaint:
+        return "Trauma/trauma.md"
+    if "skin/allergy/eye/ent" in complaint:
+        return "Skin/skin_infection.md"
+    if "medication/follow-up" in complaint or "other/not sure" in complaint:
+        return "chronic_follow_up.md"
+    if "chest / breathing / heartbeat" in complaint or "heartbeat" in complaint:
+        return BRANCH_MODULES["palpitation"]
+    if "stomach or bowel" in complaint:
+        return "Pain/abdominal_pain.md"
+    if "urinary or back pain" in complaint:
+        return "Renal&GU/urinary_symptoms.md"
+    if "headache, dizziness, or weakness" in complaint:
+        return "Pain/Headache.md"
+    if "injury, wound, or limb pain" in complaint:
+        return "Trauma/trauma.md"
+    if "skin, allergy, eye, ear, or nose" in complaint:
+        return "Skin/skin_infection.md"
+    if "medication" in complaint or "follow-up" in complaint:
+        return "chronic_follow_up.md"
     if "chest pain" in complaint:
         return "Pain/chest_pain.md"
     if "shortness of breath" in complaint:
@@ -178,7 +229,9 @@ def _module_for_initial_answers(flow_state: FlowState, registry: QuestionRegistr
         return "Eye/eye.md"
     if "ear" in complaint or "nose" in complaint or "throat" in complaint or "sore throat" in complaint:
         return "ENT/ent.md"
-    if "skin" in complaint or "allergy" in complaint:
+    if "allergy" in complaint:
+        return "allergy.md"
+    if "skin" in complaint:
         return "Skin/skin_infection.md"
     if "trauma" in complaint:
         return "Trauma/trauma.md"
@@ -188,15 +241,34 @@ def _module_for_initial_answers(flow_state: FlowState, registry: QuestionRegistr
         return "Neuro/weakness_fatigue.md"
     if "limb pain" in complaint or "swelling" in complaint:
         return "Pain/limb_pain_swelling.md"
+    if "chronic" in complaint or "other concern" in complaint or "not sure" in complaint:
+        return "chronic_follow_up.md"
     return BRANCH_MODULES["palpitation"]
+
+
+def _maybe_insert_initial_detail_question(flow_state: FlowState) -> None:
+    if flow_state.branch != "initial_intake":
+        return
+    complaint_answer = flow_state.answers[-1] if flow_state.answers else None
+    if not complaint_answer or complaint_answer.question_id != "INIT-3":
+        return
+    detail_question_id = next(
+        (INITIAL_DETAIL_BY_GROUP_OPTION[option_id] for option_id in complaint_answer.selected_option_ids
+         if option_id in INITIAL_DETAIL_BY_GROUP_OPTION),
+        None,
+    )
+    if not detail_question_id or detail_question_id in flow_state.question_plan:
+        return
+    flow_state.question_plan.insert(flow_state.current_index, detail_question_id)
 
 
 def _maybe_expand_initial_intake(flow_state: FlowState, registry: QuestionRegistry) -> None:
     if flow_state.branch != "initial_intake":
         return
-    initial_ids = [question.id for question in registry.initial_questions()]
-    if flow_state.current_index < len(initial_ids):
-        return
+    if flow_state.current_index < len(flow_state.question_plan):
+        next_id = flow_state.question_plan[flow_state.current_index]
+        if next_id.startswith("INIT-"):
+            return
     module_key = _module_for_initial_answers(flow_state, registry)
     added_questions = registry.questions_for_module(module_key) + registry.universal_questions()
     flow_state.question_plan.extend(question.id for question in added_questions)
@@ -270,7 +342,13 @@ def record_answer(flow_state: FlowState, body: dict[str, Any], question: Questio
         chief_concern = _display_label_for_selected(question, selected)
         flow_state.patient.chief_concern = chief_concern
         flow_state.patient_context["chief_concern"] = chief_concern
+    if question.id.startswith("INIT-3A-") and selected:
+        chief_concern = _display_label_for_selected(question, selected)
+        if chief_concern and chief_concern.lower() != "not sure":
+            flow_state.patient.chief_concern = chief_concern
+            flow_state.patient_context["chief_concern"] = chief_concern
     flow_state.current_index += 1
+    _maybe_insert_initial_detail_question(flow_state)
     _maybe_staff_notify_from_answer(flow_state, question, selected)
     if flow_state.state == "staff_notify_ready":
         return

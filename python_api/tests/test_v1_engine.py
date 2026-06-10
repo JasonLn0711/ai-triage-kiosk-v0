@@ -115,7 +115,7 @@ def test_low_spo2_context_starts_csv_backed_respiratory_branch():
     assert response.status_code == 200
     assert body["status"] == "question"
     assert body["question"]["id"] == "HYP-1"
-    assert body["progress"]["expected_total"] == 4
+    assert body["progress"]["expected_total"] == 5
 
 
 

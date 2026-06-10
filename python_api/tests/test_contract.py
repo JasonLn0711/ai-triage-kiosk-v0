@@ -165,7 +165,7 @@ def test_start_session_routes_from_imvs_low_spo2_vital_rules():
     assert response.status_code == 200
     assert body["question"]["id"] == "HYP-1"
     assert body["question_phase"] == "symptom_specific"
-    assert body["progress"]["expected_total"] == 4
+    assert body["progress"]["expected_total"] == 5
 
 
 def test_normal_vitals_start_initial_questions_even_with_payload_chief_concern():
@@ -232,10 +232,12 @@ def test_normal_vitals_start_initial_questions_then_route_to_symptom_module_and_
     age_answer["answer"]["numeric_value"] = 40
     age = client.post(f"/api/triage-demo/sessions/{session_key}/answers", json=age_answer).json()
     assert age["question"]["id"] == "INIT-3"
+    assert len(age["question"]["options"]) == 9
+    assert age["question"]["options"][0] == {"id": "init-3_fever_cold", "label": "Fever or cold symptoms"}
 
     complaint = client.post(
         f"/api/triage-demo/sessions/{session_key}/answers",
-        json=answer_body(age["question"], ["init-3_chest_pain"], "idem-normal-init-3"),
+        json=answer_body(age["question"], ["init-3_cardiorespiratory"], "idem-normal-init-3"),
     ).json()
     assert complaint["question"]["id"] == "INIT-4"
 
@@ -243,9 +245,9 @@ def test_normal_vitals_start_initial_questions_then_route_to_symptom_module_and_
     duration_answer["answer"]["text_value"] = "Today"
     symptom = client.post(f"/api/triage-demo/sessions/{session_key}/answers", json=duration_answer).json()
 
-    assert symptom["question"]["id"] == "CP-1"
+    assert symptom["question"]["id"] == "PAL-1"
     assert symptom["question_phase"] == "symptom_specific"
-    assert symptom["progress"]["expected_total"] == 11
+    assert symptom["progress"]["expected_total"] == 10
 
 
 def test_initial_gender_answer_overrides_start_payload_sex_in_summary():
@@ -275,7 +277,7 @@ def test_initial_gender_answer_overrides_start_payload_sex_in_summary():
 
     complaint = client.post(
         f"/api/triage-demo/sessions/{session_key}/answers",
-        json=answer_body(age["question"], ["init-3_chest_pain"], "idem-gender-override-init-3"),
+        json=answer_body(age["question"], ["init-3_cardiorespiratory"], "idem-gender-override-init-3"),
     ).json()
 
     duration_answer = answer_body(complaint["question"], [], "idem-gender-override-init-4")
@@ -295,6 +297,57 @@ def test_initial_gender_answer_overrides_start_payload_sex_in_summary():
     summary = current["staff_review_summary"]
     assert summary["patient_record"]["sex"] == "Male"
     assert "40 y/o Male" in summary["soap_note"]["subjective"]
+
+
+def test_grouped_initial_complaint_inserts_detail_question_and_routes_from_detail():
+    start = client.post(
+        "/api/triage-demo/sessions",
+        json=start_body(
+            idempotency_key="idem-grouped-initial-start",
+            vitals={
+                "heart_rate_bpm": {"value": 78, "unit": "bpm"},
+                "temperature_c": {"value": 36.6, "unit": "C"},
+                "spo2_percent": {"value": 98, "unit": "%"},
+            },
+        ),
+    )
+    body = start.json()
+    session_key = body["session_key"]
+
+    gender = client.post(
+        f"/api/triage-demo/sessions/{session_key}/answers",
+        json=answer_body(body["question"], ["init-1_female"], "idem-grouped-initial-1"),
+    ).json()
+
+    age_answer = answer_body(gender["question"], [], "idem-grouped-initial-2")
+    age_answer["answer"]["numeric_value"] = 40
+    age = client.post(f"/api/triage-demo/sessions/{session_key}/answers", json=age_answer).json()
+
+    detail = client.post(
+        f"/api/triage-demo/sessions/{session_key}/answers",
+        json=answer_body(
+            age["question"],
+            ["init-3_gi"],
+            "idem-grouped-initial-3",
+        ),
+    ).json()
+
+    assert detail["question"]["id"] == "INIT-3A-GI"
+    assert len(detail["question"]["options"]) < 9
+
+    duration = client.post(
+        f"/api/triage-demo/sessions/{session_key}/answers",
+        json=answer_body(detail["question"], ["init-3a-gi_diarrhea"], "idem-grouped-initial-3a"),
+    ).json()
+
+    assert duration["question"]["id"] == "INIT-4"
+
+    duration_answer = answer_body(duration["question"], [], "idem-grouped-initial-4")
+    duration_answer["answer"]["text_value"] = "Today"
+    symptom = client.post(f"/api/triage-demo/sessions/{session_key}/answers", json=duration_answer).json()
+
+    assert symptom["question"]["id"] == "DC-1"
+    assert symptom["question_phase"] == "symptom_specific"
 
 
 def test_same_answer_idempotency_key_retry_returns_same_response_without_advancing_flow():
