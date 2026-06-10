@@ -124,9 +124,28 @@ def test_start_session_routes_from_fever_vital_rules():
     body = response.json()
 
     assert response.status_code == 200
-    assert body["question"]["id"] == "FEV-1"
+    assert body["question"]["id"] == "FEV-2"
     assert body["question_phase"] == "symptom_specific"
-    assert body["progress"]["expected_total"] == 11
+    assert body["progress"]["expected_total"] == 3
+
+
+def test_start_session_staff_notify_threshold_returns_terminal_status():
+    response = client.post(
+        "/api/triage-demo/sessions",
+        json=start_body(
+            idempotency_key="idem-high-fever-staff-notify",
+            vitals={"temperature_c": {"value": 39, "unit": "C"}},
+        ),
+    )
+    body = response.json()
+
+    assert response.status_code == 200
+    assert body["status"] == "staff_notify"
+    assert body["session_state"] == "staff_notify_ready"
+    assert body["screen_text"] == "Please notify staff."
+    assert body["question_phase"] == "staff_notify"
+    assert body["staff_review_flags"]
+    assert "question" not in body
 
 
 def test_start_session_routes_from_imvs_low_spo2_vital_rules():
@@ -144,9 +163,9 @@ def test_start_session_routes_from_imvs_low_spo2_vital_rules():
     body = response.json()
 
     assert response.status_code == 200
-    assert body["question"]["id"] == "SOB-1"
+    assert body["question"]["id"] == "HYP-1"
     assert body["question_phase"] == "symptom_specific"
-    assert body["progress"]["expected_total"] == 11
+    assert body["progress"]["expected_total"] == 4
 
 
 def test_normal_vitals_start_initial_questions_even_with_payload_chief_concern():
@@ -226,7 +245,7 @@ def test_normal_vitals_start_initial_questions_then_route_to_symptom_module_and_
 
     assert symptom["question"]["id"] == "CP-1"
     assert symptom["question_phase"] == "symptom_specific"
-    assert symptom["progress"]["expected_total"] == 15
+    assert symptom["progress"]["expected_total"] == 11
 
 
 def test_initial_gender_answer_overrides_start_payload_sex_in_summary():
@@ -386,7 +405,7 @@ def test_answering_final_question_returns_staff_review_summary():
     start = client.post("/api/triage-demo/sessions", json=start_body(
         vitals={
             "temperature_c": {"value": 36.5, "unit": "C"},
-            "heart_rate_bpm": {"value": 150, "unit": "bpm"},
+            "heart_rate_bpm": {"value": 130, "unit": "bpm"},
             "respiratory_rate_per_min": {"value": 16, "unit": "/min"},
             "spo2_percent": {"value": 98, "unit": "%"},
             "blood_pressure_systolic_mm_hg": {"value": 102, "unit": "mmHg"},
@@ -430,7 +449,7 @@ def test_answering_final_question_returns_staff_review_summary():
     assert "C.C.: Palpitation and chest tightness for half day" in soap["subjective"]
     assert "Past history: arrhythmia, hyperlipidemia" in soap["subjective"]
     assert "Allergy: peanut" in soap["subjective"]
-    assert "Vital sign: T/P/R: 36.5/150/16 SpO2: 98% BP 102/68 mmHg" in soap["objective"]
+    assert "Vital sign: T/P/R: 36.5/130/16 SpO2: 98% BP 102/68 mmHg" in soap["objective"]
     assert "Demo review level: 2" in soap["assessment"]
     assert "vital sign: t/p/r" in summary["soap_text"].lower()
 

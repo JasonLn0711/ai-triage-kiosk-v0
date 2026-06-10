@@ -13,13 +13,13 @@ try:
     from .triage_v1.constants import DEMO_BOUNDARY, SESSION_TTL_SECONDS
     from .triage_v1.flow_router import build_initial_flow, next_question, record_answer, validate_answer
     from .triage_v1.question_registry import QuestionRegistry, question_to_dict
-    from .triage_v1.response_builder import question_response, summary_response
+    from .triage_v1.response_builder import question_response, staff_notify_response, summary_response
     from .triage_v1.session_store import SessionStore
 except ImportError:  # pragma: no cover - supports running main.py from python_api/
     from triage_v1.constants import DEMO_BOUNDARY, SESSION_TTL_SECONDS
     from triage_v1.flow_router import build_initial_flow, next_question, record_answer, validate_answer
     from triage_v1.question_registry import QuestionRegistry, question_to_dict
-    from triage_v1.response_builder import question_response, summary_response
+    from triage_v1.response_builder import question_response, staff_notify_response, summary_response
     from triage_v1.session_store import SessionStore
 
 
@@ -216,6 +216,9 @@ def create_session(body: dict[str, Any] | None = None) -> dict[str, Any]:
     def compute() -> dict[str, Any]:
         flow_state = build_initial_flow(body, _registry, _next_session_key(), _expiry_from())
         _sessions.put(flow_state)
+        if flow_state.state == "staff_notify_ready":
+            return {"statusCode": 200, "body": staff_notify_response(body, flow_state, None, contract_fields, _next_response_id)}
+
         question = next_question(flow_state, _registry)
         if not question:
             flow_state.state = "summary_ready"
@@ -251,6 +254,13 @@ def submit_answer(session_key: str | None, body: dict[str, Any] | None = None) -
                 "session_key": flow_state.session_key,
                 "session_expires_at": flow_state.session_expires_at,
             })
+        if flow_state.state == "staff_notify_ready":
+            return error_result(409, body, "session_staff_notify_ready", "The session has already reached staff-notify status; staff should review before another answer path.", {
+                "retryable": False,
+                "session_key": flow_state.session_key,
+                "session_expires_at": flow_state.session_expires_at,
+                "session_state": flow_state.state,
+            })
 
         question = next_question(flow_state, _registry)
         if not question:
@@ -270,6 +280,9 @@ def submit_answer(session_key: str | None, body: dict[str, Any] | None = None) -
             })
 
         record_answer(flow_state, body, question, _registry)
+        if flow_state.state == "staff_notify_ready":
+            return {"statusCode": 200, "body": staff_notify_response(body, flow_state, question.id, contract_fields, _next_response_id)}
+
         if flow_state.current_index >= len(flow_state.question_plan):
             flow_state.state = "summary_ready"
             return {"statusCode": 200, "body": summary_response(body, flow_state, question.id, _registry, contract_fields, _next_response_id)}

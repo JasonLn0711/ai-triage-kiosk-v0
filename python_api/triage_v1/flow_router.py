@@ -3,10 +3,10 @@ from __future__ import annotations
 from typing import Any
 
 from .constants import BRANCH_MODULES
-from .models import AnswerRecord, FlowState, Patient, Question
+from .models import AnswerRecord, FlowState, Patient, Question, ReviewFlag
 from .question_registry import QuestionRegistry
 from .vital_normalizer import normalize_vitals
-from .vital_rules import evaluate_vitals
+from .vital_rules import evaluate_vitals, has_staff_notify_flag
 
 
 def has_flag(flow_state: FlowState, code: str) -> bool:
@@ -21,16 +21,24 @@ def _requested_chief_concern(body: dict[str, Any]) -> str:
 def choose_branch(body: dict[str, Any], flags: list) -> str:
     flag_codes = {flag.code for flag in flags}
     chief_concern = _requested_chief_concern(body)
+    if has_staff_notify_flag(flags):
+        return "staff_notify"
     if not flags:
         return "initial_intake"
-    if "tachycardia_staff_review_demo" in flag_codes:
-        return "palpitation"
-    if "low_spo2_review_demo" in flag_codes:
+    if "bradycardia_module" in flag_codes:
+        return "bradycardia"
+    if "tachycardia_module" in flag_codes:
+        return "tachycardia"
+    if "low_spo2_review" in flag_codes:
+        return "hypoxia_cyanosis"
+    if "respiratory_module" in flag_codes:
         return "shortness_of_breath"
-    if "measured_fever_context_demo" in flag_codes:
+    if "respiratory_depression_module" in flag_codes:
+        return "respiratory_depression"
+    if "hypertension_module" in flag_codes:
+        return "hypertension"
+    if "measured_fever_context" in flag_codes:
         return "fever"
-    if "measured_elevated_heart_rate_demo" in flag_codes:
-        return "palpitation"
     if any(term in chief_concern for term in ("palpitation", "heart racing", "tachycardia", "chest")):
         return "palpitation"
     if any(term in chief_concern for term in ("fever", "temperature", "chills")):
@@ -40,24 +48,30 @@ def choose_branch(body: dict[str, Any], flags: list) -> str:
     return "palpitation"
 
 
+def _questions_for_branch(branch: str, registry: QuestionRegistry) -> list[Question]:
+    if branch == "initial_intake":
+        return registry.initial_questions()
+    if branch == "staff_notify":
+        return []
+    if branch == "tachycardia":
+        return registry.questions_for_module("tachycardia_compatibility")
+    return registry.questions_for_module(BRANCH_MODULES[branch])
+
+
 def build_initial_flow(body: dict[str, Any], registry: QuestionRegistry, session_key: str, expires_at: str) -> FlowState:
     raw_vitals = body.get("vitals") or {}
     vitals = normalize_vitals(raw_vitals)
     flags = evaluate_vitals(vitals)
     branch = choose_branch(body, flags)
     patient_context = body.get("patient_context") if isinstance(body.get("patient_context"), dict) else {}
-    if branch == "initial_intake":
-        questions = registry.initial_questions()
-    elif branch == "palpitation":
-        questions = registry.questions_for_module("tachycardia_compatibility")
-    else:
-        questions = registry.questions_for_module(BRANCH_MODULES[branch]) + registry.universal_questions()
+    questions = _questions_for_branch(branch, registry)
+    state = "staff_notify_ready" if branch == "staff_notify" else "active"
 
     return FlowState(
         session_key=session_key,
         case_id=f"vital-routed-{branch}",
         flow_version="vital-rules-router-v1-demo",
-        current_phase=questions[0].phase if questions else "summary",
+        current_phase=questions[0].phase if questions else branch,
         question_plan=[question.id for question in questions],
         current_index=0,
         vitals=vitals,
@@ -66,6 +80,7 @@ def build_initial_flow(body: dict[str, Any], registry: QuestionRegistry, session
         answers=[],
         flags=flags,
         branch=branch,
+        state=state,
         session_expires_at=expires_at,
         start_request=dict(body),
     )
@@ -173,6 +188,7 @@ def _module_for_initial_answers(flow_state: FlowState, registry: QuestionRegistr
         return "Neuro/weakness_fatigue.md"
     if "limb pain" in complaint or "swelling" in complaint:
         return "Pain/limb_pain_swelling.md"
+    return BRANCH_MODULES["palpitation"]
 
 
 def _maybe_expand_initial_intake(flow_state: FlowState, registry: QuestionRegistry) -> None:
@@ -186,6 +202,48 @@ def _maybe_expand_initial_intake(flow_state: FlowState, registry: QuestionRegist
     flow_state.question_plan.extend(question.id for question in added_questions)
     flow_state.branch = module_key
     flow_state.case_id = f"vital-routed-{module_key.replace('/', '-').replace('.md', '')}"
+
+
+def _selected_labels(question: Question, selected: list[str]) -> list[str]:
+    return [option.label for option in question.options if option.id in selected]
+
+
+def _hypertension_answer_requires_staff(question: Question, selected: list[str]) -> bool:
+    if not selected:
+        return False
+    labels = _selected_labels(question, selected)
+    combined = " ".join(labels).lower()
+    if not combined or all(label.lower() in {"none", "not sure", "none / not sure"} for label in labels):
+        return False
+    symptom_terms = (
+        "chest",
+        "shortness",
+        "trouble breathing",
+        "severe headache",
+        "blurred",
+        "vision",
+        "weakness",
+        "confusion",
+        "faint",
+        "neurologic",
+        "numbness",
+        "speech",
+    )
+    return any(term in combined for term in symptom_terms)
+
+
+def _maybe_staff_notify_from_answer(flow_state: FlowState, question: Question, selected: list[str]) -> None:
+    if flow_state.branch != "hypertension":
+        return
+    if not _hypertension_answer_requires_staff(question, selected):
+        return
+    if has_staff_notify_flag(flow_state.flags):
+        flow_state.state = "staff_notify_ready"
+        flow_state.current_phase = "staff_notify"
+        return
+    flow_state.flags.append(ReviewFlag("staff_notify_hypertension_symptoms"))
+    flow_state.state = "staff_notify_ready"
+    flow_state.current_phase = "staff_notify"
 
 
 def record_answer(flow_state: FlowState, body: dict[str, Any], question: Question, registry: QuestionRegistry | None = None) -> None:
@@ -213,6 +271,9 @@ def record_answer(flow_state: FlowState, body: dict[str, Any], question: Questio
         flow_state.patient.chief_concern = chief_concern
         flow_state.patient_context["chief_concern"] = chief_concern
     flow_state.current_index += 1
+    _maybe_staff_notify_from_answer(flow_state, question, selected)
+    if flow_state.state == "staff_notify_ready":
+        return
     if registry:
         _maybe_expand_initial_intake(flow_state, registry)
     next_id = flow_state.question_plan[flow_state.current_index] if flow_state.current_index < len(flow_state.question_plan) else None

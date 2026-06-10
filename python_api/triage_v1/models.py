@@ -122,10 +122,10 @@ def _context_list(context: dict[str, Any], *keys: str) -> list[str]:
 @dataclass(frozen=True)
 class ReviewFlag:
     code: str
-    label: str
-    source: str
-    summary_text: str
-    triggered_by: list[str]
+    label: str = ""
+    source: str = ""
+    summary_text: str = ""
+    triggered_by: list[str] = field(default_factory=list)
 
 
 @dataclass

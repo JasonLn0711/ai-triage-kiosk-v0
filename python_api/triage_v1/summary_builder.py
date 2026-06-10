@@ -35,8 +35,8 @@ def _join_or_nil(values: list[str]) -> str:
 
 
 def _patient_header(patient: Patient) -> str:
-    age = f"{patient.age} y/o" if patient.age not in (None, "") else "Age not supplied"
-    sex = patient.sex or "sex not supplied"
+    age = f"{patient.age} y/o" if patient.age not in (None, "") else ""
+    sex = patient.sex or ""
     return f"{age} {sex}"
 
 

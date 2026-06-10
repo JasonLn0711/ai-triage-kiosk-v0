@@ -45,6 +45,37 @@ def question_response(
     }
 
 
+def staff_notify_response(
+    body: dict[str, Any],
+    flow_state: FlowState,
+    last_question_id: str | None,
+    contract_fields: dict[str, Any],
+    next_response_id: Callable[[str], str],
+) -> dict[str, Any]:
+    return {
+        **base_response(body, flow_state, contract_fields, next_response_id("staff-notify")),
+        "flow_version": flow_state.flow_version,
+        "case_id": flow_state.case_id,
+        "session_state": "staff_notify_ready",
+        "last_question_id": last_question_id,
+        "status": "staff_notify",
+        "question_phase": "staff_notify",
+        "progress": {"current": flow_state.current_index, "expected_total": len(flow_state.question_plan)},
+        "screen_text": "Please notify staff.",
+        "handoff_required": True,
+        "handoff_reason_codes": [flag.code for flag in flow_state.flags],
+        "staff_review_flags": [
+            {
+                "code": flag.code,
+                "label": flag.label,
+                "summary_text": flag.summary_text,
+                "triggered_by": flag.triggered_by,
+            }
+            for flag in flow_state.flags
+        ],
+    }
+
+
 def summary_response(
     body: dict[str, Any],
     flow_state: FlowState,

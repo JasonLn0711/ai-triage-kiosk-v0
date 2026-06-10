@@ -65,6 +65,95 @@ iMVS vital-sign measurement complete
 -> receive next question or staff_review_summary
 ```
 
+## Directory Organization
+
+`python_api/` is organized around a small FastAPI adapter, a demo-contract
+compatibility layer, and a versioned triage engine. The runtime keeps the
+external API contract stable while the `triage_v1/` package owns vital-aware
+question routing and staff-review summary generation.
+
+```mermaid
+flowchart TD
+  Client[iMVS UI or local browser test page]
+  Client --> Main[main.py<br/>FastAPI routes, CORS, bearer-token gate]
+  Main --> Contract[triage_contract.py<br/>API contract adapter, idempotency, sessions]
+  Contract --> Engine[triage_v1/<br/>vital-aware intake engine]
+
+  Engine --> Models[models.py<br/>runtime data objects]
+  Engine --> Store[session_store.py<br/>in-memory demo session state]
+  Engine --> Normalizer[vital_normalizer.py<br/>normalize iMVS and demo vital payloads]
+  Normalizer --> Rules[vital_rules.py<br/>demo review flags and routing cues]
+  Rules --> Router[flow_router.py<br/>branch selection and answer progression]
+  Router --> Registry[question_registry.py<br/>CSV-backed question lookup]
+  Registry --> QuestionDB[../Question_DB/*.csv<br/>initial, symptom, universal questions]
+  Router --> Response[response_builder.py<br/>question and summary envelopes]
+  Response --> Summary[summary_builder.py<br/>staff-review SOAP-style summary]
+  Summary --> Constants[constants.py<br/>demo boundary and scope controls]
+
+  Static[static/<br/>local API checker UI] --> Main
+  Tests[tests/<br/>contract and engine tests] --> Main
+  Tests --> Engine
+```
+
+The request path for the demo runtime is:
+
+```mermaid
+sequenceDiagram
+  participant UI as Browser or iMVS UI
+  participant API as main.py
+  participant Contract as triage_contract.py
+  participant Engine as triage_v1 engine
+  participant DB as Question_DB CSVs
+
+  UI->>API: POST /api/triage-demo/sessions with measured vitals
+  API->>Contract: create_session(body)
+  Contract->>Engine: normalize vitals, evaluate demo flags, choose branch
+  Engine->>DB: load initial / symptom / universal questions
+  Engine-->>Contract: first governed question
+  Contract-->>API: contract-shaped question response
+  API-->>UI: session_key + question
+
+  UI->>API: POST /api/triage-demo/sessions/{session_key}/answers
+  API->>Contract: submit_answer(session_key, body)
+  Contract->>Engine: validate answer and advance flow
+  Engine-->>Contract: next question or staff-review summary
+  Contract-->>API: contract-shaped response
+  API-->>UI: next question or staff_review_summary
+```
+
+The main files are:
+
+```text
+python_api/
+|-- main.py                     FastAPI app, HTTP routes, static page serving,
+|                               CORS, JSON parsing, and bearer-token checks.
+|-- triage_contract.py          Stable demo API contract, idempotency handling,
+|                               response ids, session lifecycle, and bridge into
+|                               the v1 triage engine.
+|-- triage_v1/
+|   |-- constants.py            Demo boundary text, scope controls, branch map,
+|   |                           and session TTL.
+|   |-- models.py               FlowState, Patient, Question, normalized vitals,
+|   |                           answers, and review flags.
+|   |-- vital_normalizer.py     Converts iMVS-style and normalized payloads into
+|   |                           runtime vital fields.
+|   |-- vital_rules.py          Demo review cues from measured vitals; these are
+|   |                           validation gates, not production clinical rules.
+|   |-- flow_router.py          Initial branch selection, answer validation,
+|   |                           question progression, and dynamic module expansion.
+|   |-- question_registry.py    Loads CSV question banks and converts questions
+|   |                           into API response shape.
+|   |-- response_builder.py     Builds question and summary response envelopes.
+|   |-- summary_builder.py      Builds staff-only SOAP-style review summaries.
+|   `-- session_store.py        In-memory demo session storage.
+|-- static/                     Browser API checker used for local demo testing.
+|-- tests/                      FastAPI contract tests and v1 engine tests.
+|-- requirements.txt            Runtime and test dependency list for uv pip.
+|-- pyproject.toml              Python project metadata.
+|-- uv.lock                     Locked Python dependency resolution.
+`-- PlanMD/                     Internal implementation planning notes.
+```
+
 ## Demo Bearer Token
 
 By default, local bearer-token checking is disabled.

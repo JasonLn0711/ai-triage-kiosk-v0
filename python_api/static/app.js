@@ -65,7 +65,7 @@ const presets = {
   fever: {
     heartRate: 96,
     spo2: 97,
-    temperature: 39,
+    temperature: 38.5,
     systolic: 118,
     diastolic: 76,
     respiratoryRate: 18,
@@ -125,26 +125,37 @@ function collectVitals() {
 }
 
 function predictedRoute(vitals) {
-  if (vitals.heartRate !== null && vitals.heartRate >= 130) return "tachycardia";
-  if (vitals.spo2 !== null && vitals.spo2 < 94) return "shortness of breath";
-  if (vitals.temperature !== null && vitals.temperature >= 37.5) return "fever";
-  if (vitals.heartRate !== null && vitals.heartRate >= 120) return "palpitation";
+  if (vitals.temperature !== null && (vitals.temperature >= 39 || vitals.temperature <= 35)) return "please notify staff";
+  if (vitals.spo2 !== null && vitals.spo2 <= 91) return "please notify staff";
+  if (vitals.heartRate !== null && (vitals.heartRate <= 40 || vitals.heartRate >= 131)) return "please notify staff";
+  if (vitals.systolic !== null && (vitals.systolic <= 90 || vitals.systolic >= 220)) return "please notify staff";
+  if (vitals.respiratoryRate !== null && (vitals.respiratoryRate <= 8 || vitals.respiratoryRate >= 25)) return "please notify staff";
+  if (vitals.heartRate !== null && vitals.heartRate >= 41 && vitals.heartRate <= 50) return "bradycardia";
+  if (vitals.heartRate !== null && vitals.heartRate > 120) return "tachycardia";
+  if (vitals.spo2 !== null && vitals.spo2 < 94) return "hypoxia";
+  if (vitals.respiratoryRate !== null && vitals.respiratoryRate >= 21 && vitals.respiratoryRate <= 24) return "shortness of breath";
+  if (vitals.respiratoryRate !== null && vitals.respiratoryRate >= 9 && vitals.respiratoryRate <= 11) return "respiratory depression";
+  if (vitals.systolic !== null && vitals.systolic >= 180) return "hypertension";
+  if (vitals.temperature !== null && vitals.temperature >= 38) return "fever";
   return "initial intake";
 }
 
 function chiefConcernForRoute(route) {
   if (route === "tachycardia" || route === "palpitation") return "heart racing";
-  if (route === "shortness of breath") return "shortness of breath";
+  if (route === "shortness of breath" || route === "hypoxia" || route === "respiratory depression") return "shortness of breath";
   if (route === "fever") return "fever";
+  if (route === "bradycardia") return "slow heart rate";
+  if (route === "hypertension") return "high blood pressure";
   return "";
 }
 
 function qualityFlag(value, kind) {
   if (value === null) return "missing";
-  if (kind === "heartRate" && value >= 120) return "needs_review";
+  if (kind === "heartRate" && (value <= 50 || value > 120)) return "needs_review";
   if (kind === "spo2" && value < 94) return "needs_review";
-  if (kind === "temperature" && value >= 37.5) return "needs_review";
-  if (kind === "systolic" && (value < 90 || value > 180)) return "needs_review";
+  if (kind === "temperature" && (value <= 35 || value >= 38)) return "needs_review";
+  if (kind === "systolic" && (value <= 90 || value >= 180)) return "needs_review";
+  if (kind === "respiratoryRate" && (value <= 11 || value >= 21)) return "needs_review";
   return "ok";
 }
 
@@ -224,8 +235,6 @@ function buildStartBody() {
     },
     patient_context: {
       demo_patient_id: "DEMO-VITAL-001",
-      age: 68,
-      sex: "female",
       identity_mode: "demo",
       chief_concern: chiefConcernForRoute(route)
     },
@@ -501,6 +510,32 @@ function handlePadAction(action) {
   else updateNumberPad();
 }
 
+function renderStaffNotify(data) {
+  state.currentQuestion = null;
+  state.selectedOptionIds = [];
+  state.answerValue = null;
+  elements.statusPill.textContent = "staff_notify";
+  elements.progressLabel.textContent = "Staff notification";
+  elements.questionText.textContent = data.screen_text || "Please notify staff.";
+  elements.sessionMeta.textContent = `Session: ${data.session_key} | staff_notify_ready`;
+  elements.optionsMount.innerHTML = "";
+  elements.submitButton.disabled = true;
+  elements.answerFirstButton.disabled = true;
+  elements.autoAnswerButton.disabled = true;
+
+  const flags = data.staff_review_flags || [];
+  elements.summaryMount.classList.remove("empty");
+  elements.summaryMount.innerHTML = `
+    <section class="soap-section">
+      <div class="soap-label" aria-hidden="true">!</div>
+      <div>
+        <h3>Please notify staff.</h3>
+        ${renderSoapContent(flags.map((flag) => `${flag.label}: ${flag.summary_text}`))}
+      </div>
+    </section>
+  `;
+}
+
 function renderSummary(data) {
   state.currentQuestion = null;
   state.selectedOptionIds = [];
@@ -641,7 +676,8 @@ async function startSession() {
   refreshPayload();
   const data = await postJson("/api/triage-demo/sessions", startBodyFromEditor());
   state.sessionKey = data.session_key;
-  if (data.status === "summary") renderSummary(data);
+  if (data.status === "staff_notify") renderStaffNotify(data);
+  else if (data.status === "summary") renderSummary(data);
   else renderQuestion(data);
 }
 
@@ -656,7 +692,8 @@ function hasAnswerReady() {
 async function submitAnswer() {
   if (!state.sessionKey || !state.currentQuestion || !hasAnswerReady()) return;
   const data = await postJson(`/api/triage-demo/sessions/${encodeURIComponent(state.sessionKey)}/answers`, answerBody());
-  if (data.status === "summary") renderSummary(data);
+  if (data.status === "staff_notify") renderStaffNotify(data);
+  else if (data.status === "summary") renderSummary(data);
   else renderQuestion(data);
 }
 
