@@ -191,6 +191,52 @@ The tests cover:
 - invalid session error response,
 - CORS preflight behavior.
 
+## Docker And Render Deployment
+
+The repository includes a Dockerfile for the canonical Python/FastAPI backend.
+Render should use this repo as a Docker Web Service rather than treating the
+service as a Node runtime.
+
+Local Docker build:
+
+```bash
+docker build -t ai-triage-kiosk-v0-render-check .
+```
+
+Local container run:
+
+```bash
+docker run --rm -p 18080:8000 ai-triage-kiosk-v0-render-check
+```
+
+Health check:
+
+```bash
+curl -sS http://127.0.0.1:18080/healthz
+```
+
+CORS preflight check:
+
+```bash
+curl -sS -X OPTIONS http://127.0.0.1:18080/api/triage-demo/sessions \
+  -H 'Origin: http://localhost:5174' -i
+```
+
+Recommended Render settings:
+
+```text
+Service type: Web Service
+Runtime: Docker
+Branch: main
+Health check path: /healthz
+Environment: DEMO_BEARER_TOKEN=<private token, only if bearer gate is enabled>
+```
+
+The Docker image copies `python_api/`, `Question_DB/`, and
+`handoff/api-examples/` because `triage_contract.py` uses the sent API examples
+to preserve external contract fields. Real bearer tokens and private tunnel
+credentials must stay in Render environment variables, not in Git.
+
 ## Implementation Notes
 
 - `main.py` defines the FastAPI app and HTTP routes.

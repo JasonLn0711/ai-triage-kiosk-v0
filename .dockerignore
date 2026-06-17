@@ -1,0 +1,17 @@
+.git
+.gitignore
+.pytest_cache
+.venv
+__pycache__
+*.py[cod]
+node_modules
+dist
+.vercel
+.local
+.env
+*.log
+python_api/.pytest_cache
+python_api/.venv
+python_api/**/__pycache__
+python_api/**/*.py[cod]
+JS/node_modules

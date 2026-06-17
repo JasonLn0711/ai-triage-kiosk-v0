@@ -118,16 +118,27 @@ npm start
    and a single_choice first question
 ```
 
-Docker compose verification was not available on this local machine:
+Docker deployment verification now uses the repo Dockerfile directly:
 
 ```text
-docker compose config -> docker: unknown command: docker compose
-docker-compose config -> zsh:1: command not found: docker-compose
+docker build -t ai-triage-kiosk-v0-render-check .
+docker run --rm -p 18080:8000 ai-triage-kiosk-v0-render-check
+curl -sS http://127.0.0.1:18080/healthz
+curl -sS -X OPTIONS http://127.0.0.1:18080/api/triage-demo/sessions \
+  -H 'Origin: http://localhost:5174' -i
 ```
 
-The Dockerfile and compose files have been updated to the Python/FastAPI
-runtime path, but container validation needs a machine with Docker Compose
-installed.
+Expected result:
+
+```text
+/healthz returns status ok
+OPTIONS /api/triage-demo/sessions returns 204
+Access-Control-Allow-Origin echoes http://localhost:5174
+```
+
+Render should use this repository as a Docker Web Service with `/healthz` as
+the health check path. Store `DEMO_BEARER_TOKEN` only in Render environment
+variables if the bearer gate is enabled.
 
 Release note: do not send an imedtac testing notice until these gates pass and
 the private bearer-token delivery path is ready.
