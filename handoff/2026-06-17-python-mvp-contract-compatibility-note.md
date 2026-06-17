@@ -99,7 +99,7 @@ Executed verification on `2026-06-17`:
 
 ```text
 npm run test:python
--> 31 passed, 1 Starlette/httpx deprecation warning
+-> 39 passed, 1 Starlette/httpx deprecation warning
 
 npm test
 -> 33 JS unit tests passed
