@@ -49,6 +49,8 @@ Current detailed discussion artifacts:
 - `handoff/2026-06-17-traceable-doebow-python-contract-migration-goal-prompt.md`
 - `handoff/2026-06-17-python-mvp-contract-compatibility-note.md`
 - `handoff/2026-06-17-imedtac-python-mvp-test-note-draft.md`
+- `handoff/2026-06-17-imedtac-online-smoke-test-plan.md`
+- `handoff/2026-06-17-render-deploy-and-smoke-test-record.md`
 - `decisions/2026-06-17-cors-origin-configuration-boundary.md`
 - `docs/2026-05-19-two-phase-question-flow-design.md`
 - `docs/version-control-policy.md`
@@ -104,6 +106,11 @@ Current v0.2 freeze-gate additions:
   NYCU Render service initiated outbound calls. They are not needed for the
   current iMVS browser -> NYCU API path unless a future imedtac backend
   allowlist requires NYCU service egress ranges.
+- The `2026-06-17` Render/FastAPI deploy is live at the same public base URL.
+  The public checks passed for `/healthz`, CORS preflight, unknown-origin
+  non-echo behavior, and no-token bearer-gate rejection. The repo now includes
+  `npm run smoke:online` for live public checks and real-token authenticated
+  full-loop verification when the private token is available in shell.
 
 Post-sync `2026-05-21` update:
 

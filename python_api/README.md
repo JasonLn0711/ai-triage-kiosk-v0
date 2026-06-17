@@ -255,6 +255,31 @@ after confirming the actual `Origin` header. The runtime ignores `*` wildcard
 configuration so the bearer-token protected demo API keeps a bounded browser
 surface.
 
+## Online Smoke Verification
+
+Live public checks for the Render rehearsal API are available from the repo
+root:
+
+```bash
+npm run smoke:online
+```
+
+The command targets
+`https://nycu-imedtac-triage-demo-api.onrender.com` by default and verifies
+`/healthz`, CORS preflight for `http://localhost:5174`, unknown-origin
+non-echo behavior, and bearer-gate posture without storing any token.
+
+When the private demo token is available through the agreed private channel,
+run the authenticated full answer loop with a shell-only environment variable:
+
+```bash
+DEMO_BEARER_TOKEN='<private token from agreed channel>' npm run smoke:online
+```
+
+Do not store bearer tokens in Git, Markdown, screenshots, logs, or shell
+history captures. The `2026-06-17` deployment and smoke-test record is preserved
+in `handoff/2026-06-17-render-deploy-and-smoke-test-record.md`.
+
 ## Implementation Notes
 
 - `main.py` defines the FastAPI app and HTTP routes.

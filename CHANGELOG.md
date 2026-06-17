@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased - 2026-06-17
+
+- Recorded the successful Render/FastAPI deployment and repo-safe live smoke
+  verification for
+  `https://nycu-imedtac-triage-demo-api.onrender.com`.
+- Added `npm run smoke:online` for public online checks and bearer-token
+  authenticated answer-loop verification when `DEMO_BEARER_TOKEN` is provided
+  through a private shell environment.
+- Added the imedtac online smoke-test plan and the Render deploy / smoke-test
+  record under `handoff/`.
+- Preserved the deploy and verification source evidence under
+  `source/2026-06-17-render-deploy-and-smoke-verification/` without storing any
+  token or credential.
+
 ## Unreleased - 2026-06-08
 
 - Added the 2026-06-08 dynamic-engine SDD / implementation / test spec to
