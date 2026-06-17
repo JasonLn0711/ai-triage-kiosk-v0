@@ -107,6 +107,23 @@ def assert_mvp_question_contract(question):
 def setup_function():
     contract.reset_mock_state()
     os.environ.pop("DEMO_BEARER_TOKEN", None)
+    os.environ.pop("DEMO_ALLOWED_ORIGINS", None)
+
+
+def teardown_function():
+    os.environ.pop("DEMO_BEARER_TOKEN", None)
+    os.environ.pop("DEMO_ALLOWED_ORIGINS", None)
+
+
+def cors_preflight(path="/api/triage-demo/sessions", origin="http://127.0.0.1:5174"):
+    return client.options(
+        path,
+        headers={
+            "Origin": origin,
+            "Access-Control-Request-Method": "POST",
+            "Access-Control-Request-Headers": "content-type,authorization",
+        },
+    )
 
 
 def test_demo_bearer_token_gate_is_disabled_until_configured():
@@ -673,12 +690,69 @@ def test_invalid_session_returns_stable_error_response():
     assert data["session_key"] == "missing-session"
 
 
-def test_options_preflight_returns_cors_headers():
-    response = client.options(
-        "/api/triage-demo/sessions",
-        headers={"Origin": "http://localhost:5174"},
-    )
+def test_options_preflight_keeps_localhost_origin_enabled():
+    response = cors_preflight(origin="http://localhost:5174")
 
     assert response.status_code == 204
     assert response.headers["Access-Control-Allow-Origin"] == "http://localhost:5174"
     assert response.headers["Access-Control-Allow-Methods"] == "POST, OPTIONS"
+
+
+def test_options_preflight_allows_local_127_origin_for_sessions():
+    response = cors_preflight(origin="http://127.0.0.1:5174")
+
+    assert response.status_code == 204
+    assert response.headers["Access-Control-Allow-Origin"] == "http://127.0.0.1:5174"
+    assert response.headers["Access-Control-Allow-Headers"] == "Content-Type, Authorization"
+
+
+def test_options_preflight_allows_local_127_origin_for_answers():
+    response = cors_preflight(
+        "/api/triage-demo/sessions/test-session/answers",
+        origin="http://127.0.0.1:5174",
+    )
+
+    assert response.status_code == 204
+    assert response.headers["Access-Control-Allow-Origin"] == "http://127.0.0.1:5174"
+
+
+def test_options_preflight_does_not_open_unknown_origin():
+    response = cors_preflight(origin="https://unknown-origin.example")
+
+    assert response.status_code == 204
+    assert "Access-Control-Allow-Origin" not in response.headers
+
+
+def test_options_preflight_allows_render_configured_origins():
+    os.environ["DEMO_ALLOWED_ORIGINS"] = "https://imedtac-test.example, http://192.168.0.10:5174 "
+
+    https_response = cors_preflight(origin="https://imedtac-test.example")
+    local_network_response = cors_preflight(origin="http://192.168.0.10:5174")
+
+    assert https_response.status_code == 204
+    assert https_response.headers["Access-Control-Allow-Origin"] == "https://imedtac-test.example"
+    assert local_network_response.status_code == 204
+    assert local_network_response.headers["Access-Control-Allow-Origin"] == "http://192.168.0.10:5174"
+
+
+def test_options_preflight_ignores_wildcard_origin_configuration():
+    os.environ["DEMO_ALLOWED_ORIGINS"] = "*"
+
+    response = cors_preflight(origin="https://not-open.example")
+
+    assert response.status_code == 204
+    assert "Access-Control-Allow-Origin" not in response.headers
+
+
+def test_bearer_auth_error_includes_cors_header_for_allowed_origin():
+    os.environ["DEMO_BEARER_TOKEN"] = "unit-test-demo-token"
+
+    response = client.post(
+        "/api/triage-demo/sessions",
+        json=start_body(idempotency_key="idem-cors-auth"),
+        headers={"Origin": "http://127.0.0.1:5174"},
+    )
+
+    assert response.status_code == 401
+    assert response.headers["Access-Control-Allow-Origin"] == "http://127.0.0.1:5174"
+    assert response.json()["error"]["code"] == "demo_bearer_token_required"
