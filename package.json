@@ -16,6 +16,7 @@
     "static:start": "python3 -m http.server 4183 -d JS",
     "smoke": "node JS/scripts/checks/smoke-demo.js",
     "smoke:online": "node JS/scripts/checks/online-api-smoke.js",
+    "smoke:online:doebow": "node JS/scripts/checks/online-doebow-question-db-smoke.js",
     "test": "npm run test:unit && npm run test:contract",
     "test:all": "npm run test:python && npm test",
     "test:unit": "node --test JS/tests/unit/*.test.js",
