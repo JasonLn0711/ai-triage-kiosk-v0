@@ -222,6 +222,9 @@ class QuestionRegistry:
         except KeyError as exc:
             raise RegistryError(f"Unknown question_id {question_id}") from exc
 
+    def all_questions(self) -> list[Question]:
+        return list(self._questions.values())
+
     def questions_for_module(self, module_key: str) -> list[Question]:
         return [self.get(question_id) for question_id in self._module_index.get(module_key, [])]
 

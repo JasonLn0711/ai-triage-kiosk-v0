@@ -16,6 +16,9 @@ from python_api.triage_v1.vital_rules import evaluate_vitals
 client = TestClient(app)
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CSV_PATH = PROJECT_ROOT / "Question_DB" / "symptom_questions.csv"
+INITIAL_CSV_PATH = PROJECT_ROOT / "Question_DB" / "Initial_questions.csv"
+UNIVERSAL_CSV_PATH = PROJECT_ROOT / "Question_DB" / "Universal_questions.csv"
+MVP_QUESTION_TYPES = {"single_choice", "multi_choice"}
 
 
 def setup_function():
@@ -70,8 +73,47 @@ def test_question_registry_loads_csv_and_stable_option_ids():
         registry.get("missing-question")
 
 
+def test_full_question_db_renders_only_imedtac_mvp_choice_questions():
+    registry = QuestionRegistry(
+        CSV_PATH,
+        initial_csv_path=INITIAL_CSV_PATH,
+        universal_csv_path=UNIVERSAL_CSV_PATH,
+    )
+
+    questions = registry.all_questions()
+    assert len(questions) >= 180
+    assert all(question.type in MVP_QUESTION_TYPES for question in questions)
+    assert all(1 <= len(question.options) <= 9 for question in questions)
+    assert all(question.max_selections >= 1 for question in questions)
+
+
+def test_initial_age_and_duration_are_bucketed_from_unsupported_source_types():
+    registry = QuestionRegistry(CSV_PATH, initial_csv_path=INITIAL_CSV_PATH)
+    age = registry.get("INIT-2")
+    duration = registry.get("INIT-4")
+
+    assert age.type == "single_choice"
+    assert [option.label for option in age.options] == [
+        "Under 18",
+        "18-39",
+        "40-64",
+        "65-79",
+        "80 or older",
+        "Not sure",
+    ]
+    assert duration.type == "single_choice"
+    assert [option.label for option in duration.options] == [
+        "Today",
+        "1-3 days",
+        "4-7 days",
+        "More than 1 week",
+        "Long-term issue",
+        "Not sure",
+    ]
+
+
 def test_duration_csv_questions_render_as_single_choice_buckets_for_mvp():
-    registry = QuestionRegistry(CSV_PATH, initial_csv_path=PROJECT_ROOT / "Question_DB" / "Initial_questions.csv")
+    registry = QuestionRegistry(CSV_PATH, initial_csv_path=INITIAL_CSV_PATH)
     question = registry.get("INIT-4")
 
     assert question.type == "single_choice"
