@@ -41,6 +41,8 @@ Verified live behavior:
 - No-token `POST /api/triage-demo/sessions` returns HTTP `401` /
   `demo_bearer_token_required`, confirming the bearer gate is active.
 - The reusable online smoke runner is now recorded as `npm run smoke:online`.
+- The doebow `Question_DB/` online smoke runner is now recorded as
+  `npm run smoke:online:doebow`.
 
 ## Contract Preserved
 
@@ -79,7 +81,10 @@ clinical decision system.
 | JS unit/contract tests | `npm test` | 33 unit + 41 contract passed |
 | Repo smoke | `npm run smoke` | passed |
 | Online public smoke | `npm run smoke:online` without token | passed public checks |
+| Online doebow public gate | `npm run smoke:online:doebow` without token | passed public reachability, CORS, and bearer-gate checks; authenticated route skipped |
 | Local authenticated full loop | `DEMO_API_BASE_URL=http://127.0.0.1:8000 DEMO_BEARER_TOKEN=<temporary test token> npm run smoke:online` | 7-answer loop reached summary |
+| Local authenticated doebow route | `DEMO_API_BASE_URL=http://127.0.0.1:8000 DEMO_BEARER_TOKEN=<temporary test token> npm run smoke:online:doebow` | `INIT-1 -> INIT-2 -> INIT-3 -> INIT-4 -> PAL-1 -> PAL-2 -> PAL-6 -> UNIV-1 -> UNIV-3 -> UNIV-4 -> summary` |
+| doebow CSV compatibility | `npm run test:python -- -k "full_question_db_renders_only_imedtac_mvp_choice_questions or normal_vitals_start_initial_questions_then_route_to_symptom_module_and_universal_csv"` | 2 selected tests passed |
 | Whitespace hygiene | `git diff --check` | passed |
 
 ## New Repo Test Command
@@ -106,6 +111,13 @@ DEMO_BEARER_TOKEN='<private token from agreed channel>' \
 npm run smoke:online
 ```
 
+doebow `Question_DB/` route smoke, only after the private demo token is
+available in shell:
+
+```bash
+DEMO_BEARER_TOKEN='<private token from agreed channel>' npm run smoke:online:doebow
+```
+
 The smoke runner checks:
 
 - health endpoint;
@@ -117,6 +129,17 @@ The smoke runner checks:
 - full answer loop to terminal `status=summary`;
 - `summary_visibility=staff_only`;
 - `staff_review_summary` presence and scope-control safety.
+
+The doebow runner checks:
+
+- public health, CORS, unknown-origin, and bearer-gate behavior;
+- normal-vital start session begins with `INIT-1` from `Initial_questions.csv`;
+- selected option ids route through `INIT-2`, `INIT-3`, and bucketed `INIT-4`;
+- `Chest / breathing / heartbeat` routes into `PAL-*` from
+  `symptom_questions.csv`;
+- final phase includes `UNIV-*` from `Universal_questions.csv`;
+- final response reaches `status=summary` and includes every selected answer in
+  `staff_review_summary.patient_record.answers`.
 
 ## What To Send To imedtac
 
@@ -146,14 +169,18 @@ logs, or captured terminal output.
 
 ## Remaining Gate
 
-The only gate not run against Render in this repo session is the real-token
-authenticated full loop, because the private bearer token was not available in
-the shell. The same full-loop path passed locally with a temporary shell-only
-test token. Once the real token is available, run:
+The only gates not run against Render in this repo session are the real-token
+authenticated full loop and the real-token authenticated doebow `Question_DB/`
+route, because the private bearer token was not available in the shell. The same
+full-loop paths passed locally with a temporary shell-only test token. Once the
+real token is available, run:
 
 ```bash
 DEMO_BEARER_TOKEN='<private token from agreed channel>' npm run smoke:online
+DEMO_BEARER_TOKEN='<private token from agreed channel>' npm run smoke:online:doebow
 ```
 
 Pass criteria: the command prints `Completed authenticated answer loop in 7
-answer request(s).` and `Online authenticated smoke checks passed.`
+answer request(s).` / `Online authenticated smoke checks passed.` for the
+tachycardia contract loop, and prints the doebow route ending in `UNIV-4 ->
+summary` for the `Question_DB/` route.

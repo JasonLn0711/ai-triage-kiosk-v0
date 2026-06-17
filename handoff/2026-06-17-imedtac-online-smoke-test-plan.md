@@ -54,6 +54,7 @@ Run before asking imedtac to test:
 npm run test:python
 npm run smoke
 npm run smoke:online
+npm run smoke:online:doebow
 git diff --check
 ```
 
@@ -64,11 +65,15 @@ Expected result:
 - Public online smoke checks pass.
 - `npm run smoke:online` reports that authenticated checks are skipped unless
   `DEMO_BEARER_TOKEN` is available locally.
+- `npm run smoke:online:doebow` reports public reachability / bearer-gate pass
+  and skips the authenticated doebow route unless `DEMO_BEARER_TOKEN` is
+  available locally.
 
 Token-required full loop:
 
 ```bash
 DEMO_BEARER_TOKEN='<private token from agreed channel>' npm run smoke:online
+DEMO_BEARER_TOKEN='<private token from agreed channel>' npm run smoke:online:doebow
 ```
 
 Expected authenticated result:
@@ -86,6 +91,17 @@ Expected authenticated result:
   `idempotency_conflict`.
 - Answer loop reaches `status=summary` with `summary_visibility=staff_only` and
   `staff_review_summary`.
+- doebow `Question_DB/` loop reaches:
+
+```text
+INIT-1 -> INIT-2 -> INIT-3 -> INIT-4 -> PAL-1 -> PAL-2 -> PAL-6
+-> UNIV-1 -> UNIV-3 -> UNIV-4 -> summary
+```
+
+- Every doebow question remains `single_choice` or `multi_choice`, exposes
+  stable option ids, stays within the `9` option no-scroll limit, and carries
+  the expected source refs from `Initial_questions.csv`,
+  `symptom_questions.csv`, or `Universal_questions.csv`.
 
 ## Gate 1: Public Deployment And Health
 

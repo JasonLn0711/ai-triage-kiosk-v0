@@ -8,6 +8,10 @@
 - Added `npm run smoke:online` for public online checks and bearer-token
   authenticated answer-loop verification when `DEMO_BEARER_TOKEN` is provided
   through a private shell environment.
+- Added `npm run smoke:online:doebow` for the doebow `Question_DB/` online
+  route smoke: normal vitals start at `INIT-*`, selected answers route into
+  `PAL-*`, the loop reaches `UNIV-*`, and the terminal response returns
+  `staff_review_summary` when a private bearer token is available.
 - Added the imedtac online smoke-test plan and the Render deploy / smoke-test
   record under `handoff/`.
 - Preserved the deploy and verification source evidence under
