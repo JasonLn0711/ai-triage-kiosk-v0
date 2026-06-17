@@ -1,31 +1,13 @@
 services:
-  redis:
-    image: redis:7-alpine
-    command: ["redis-server", "--save", "", "--appendonly", "no"]
-    ports:
-      - "6379:6379"
-
   ai-triage-demo-api:
     build: .
-    depends_on:
-      - redis
     ports:
-      - "4193:4193"
+      - "8000:8000"
     environment:
-      PORT: "4193"
+      PORT: "8000"
       DEMO_BEARER_TOKEN: "${DEMO_BEARER_TOKEN:-}"
-      DEMO_ALLOWED_ORIGINS: "${DEMO_ALLOWED_ORIGINS:-http://localhost,http://localhost:5174}"
-      DEMO_REDIS_URL: "redis://redis:6379/0"
-      DEMO_REDIS_KEY_PREFIX: "ai-triage-demo:session:"
-      DEMO_SESSION_STORE_FILE: "/app/.runtime/session-store.json"
-      DEMO_AUDIT_LOG_PATH: "/app/.runtime/audit.jsonl"
-    volumes:
-      - ai-triage-demo-runtime:/app/.runtime
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:4193/healthz"]
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/healthz').read()"]
       interval: 10s
       timeout: 3s
       retries: 5
-
-volumes:
-  ai-triage-demo-runtime:

@@ -11,9 +11,14 @@ const REQUIRED_FILES = [
   "JS/app/triage-kiosk/triage-kiosk.js",
   "JS/app/shared/styles.css",
   "JS/core/triage_engine/index.js",
-  "JS/api/lib/triage-demo-contract.js",
-  "JS/api/triage-demo/sessions.js",
-  "JS/api/triage-demo/sessions/[session_key]/answers.js",
+  "Question_DB/Initial_questions.csv",
+  "Question_DB/symptom_questions.csv",
+  "Question_DB/Universal_questions.csv",
+  "python_api/main.py",
+  "python_api/triage_contract.py",
+  "python_api/triage_v1/question_registry.py",
+  "python_api/triage_v1/response_builder.py",
+  "python_api/tests/test_contract.py",
   "JS/tests/contract/triage-demo-api.test.js",
   "JS/fixtures/chest-pain-high-bp-low-spo2.json",
   "JS/fixtures/fever-urinary.json",
@@ -38,10 +43,11 @@ for (const relativePath of REQUIRED_FILES) {
 const html = read("JS/app/triage-kiosk/index.html");
 const script = read("JS/app/triage-kiosk/triage-kiosk.js");
 const packageJson = JSON.parse(read("package.json"));
-const mockApiServer = read("JS/scripts/mock-api-server.js");
-const contractSource = read("JS/api/lib/triage-demo-contract.js");
+const pythonMain = read("python_api/main.py");
+const pythonContract = read("python_api/triage_contract.py");
+const questionRegistry = read("python_api/triage_v1/question_registry.py");
+const contractTests = read("python_api/tests/test_contract.py");
 const engine = require(path.join(ROOT, "JS/core/triage_engine/index.js"));
-const contract = require(path.join(ROOT, "JS/api/lib/triage-demo-contract.js"));
 
 assert(html.includes("AI Triage Kiosk Demo"), "Demo HTML should expose the English product title.");
 assert(html.includes("../../core/triage_engine/index.js"), "Demo HTML should load the triage engine.");
@@ -55,14 +61,22 @@ assert(engine.QUESTION_BANK.length >= 8, "The governed question bank is too smal
 assert(engine.CASES.every((demoCase) => demoCase.profile && demoCase.profile.age && demoCase.profile.sex), "Every case should include synthetic patient profile metadata.");
 assert(engine.CASES.some((demoCase) => demoCase.id === "respiratory-low-spo2-early-handoff"), "Respiratory handoff case should be wired into the runtime.");
 assert(engine.CASES.some((demoCase) => demoCase.id === "demo-tachycardia-live-001"), "Tachycardia live case should be wired into the runtime.");
-assert(contract.expectedTotal === 7, "Contract API should expose the tachycardia expected_total denominator.");
-assert(contract.questionSequence.some((question) => question.id === "tachy-post-vital-heart-rate-cue"), "Contract API should include the post-vital HR cue question.");
-assert(packageJson.scripts["render:start"] === "node JS/scripts/mock-api-server.js", "Render start script should launch the API server, not the static frontend.");
-assert(packageJson.scripts["render:build"].includes("npm test"), "Render build script should run contract tests before deploy.");
-assert(mockApiServer.includes('req.method === "GET" && req.url === "/healthz"'), "Render API server should expose GET /healthz for HTTP health checks.");
-assert(mockApiServer.includes("process.env.PORT"), "Render API server should bind to the PORT environment variable.");
-assert(contractSource.includes("DEMO_BEARER_TOKEN"), "Contract API should support env-controlled demo bearer token auth.");
-assert(mockApiServer.includes("requireDemoBearerAuth"), "Render API server should enforce demo bearer token auth when configured.");
+assert(packageJson.scripts["start"] === "npm run api:start", "Default start script should launch the canonical Python FastAPI backend.");
+assert(packageJson.scripts["mock:api"] === "npm run api:start", "mock:api should route to the canonical Python FastAPI backend.");
+assert(packageJson.scripts["render:start"] === "npm run api:start:render", "Render start script should launch the Python FastAPI API server.");
+assert(packageJson.scripts["render:build"].includes("npm run test:python"), "Render build script should run Python contract tests before deploy.");
+assert(packageJson.scripts["static:start"].includes("-d JS"), "Static viewer should remain an explicit non-canonical command.");
+assert(pythonMain.includes("@app.get(\"/healthz\")"), "FastAPI server should expose GET /healthz for HTTP health checks.");
+assert(pythonMain.includes("@app.post(\"/api/triage-demo/sessions\")"), "FastAPI server should expose the unchanged start-session endpoint.");
+assert(pythonMain.includes("@app.post(\"/api/triage-demo/sessions/{session_key}/answers\")"), "FastAPI server should expose the unchanged answer endpoint.");
+assert(pythonMain.includes("@app.options(\"/api/triage-demo/sessions\")"), "FastAPI server should expose start-session OPTIONS preflight.");
+assert(pythonMain.includes("@app.options(\"/api/triage-demo/sessions/{session_key}/answers\")"), "FastAPI server should expose answer OPTIONS preflight.");
+assert(pythonContract.includes("DEMO_BEARER_TOKEN"), "Python contract API should support env-controlled demo bearer token auth.");
+assert(pythonContract.includes("require_demo_bearer_auth"), "Python contract API should enforce demo bearer token auth when configured.");
+assert(questionRegistry.includes("MVP_BUCKET_LABELS"), "Question registry should render unsupported doebow question types through MVP buckets.");
+assert(questionRegistry.includes("IMEDTAC_MVP_TYPES"), "Question registry should gate imedtac-facing question types.");
+assert(contractTests.includes("START_EXAMPLE"), "Python tests should load the externally sent start-session example.");
+assert(contractTests.includes("SUMMARY_EXAMPLE"), "Python tests should load the externally sent summary example.");
 assert(engine.CASES.every((demoCase) => !demoCase.questionLimit || demoCase.questionLimit <= 7), "June demo cases should keep visible questions under 8.");
 assert(!html.includes("<textarea"), "Demo runtime should stay choice-only and not expose free-text input.");
 assert(engine.QUESTION_BANK.every((question) => question.type !== "text"), "Question bank should not include free-text questions.");
@@ -105,6 +119,10 @@ const expertForbiddenPhrases = [
 ];
 const runtimeAndApiExamples = [
   serializedDemo,
+  pythonMain,
+  pythonContract,
+  questionRegistry,
+  read("python_api/triage_v1/summary_builder.py"),
   ...fs.readdirSync(path.join(ROOT, "JS/fixtures")).filter((file) => file.endsWith(".json")).map((file) => read(path.join("JS/fixtures", file))),
   ...fs.readdirSync(path.join(ROOT, "handoff/api-examples")).filter((file) => file.endsWith(".json")).map((file) => read(path.join("handoff/api-examples", file)))
 ].join("\n");

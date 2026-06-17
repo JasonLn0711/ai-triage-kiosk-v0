@@ -17,4 +17,8 @@ BRANCH_MODULES = {
 }
 
 SCOPE_CONTROLS = [
+    "Staff-review intake support",
+    "Human review workflow",
+    "Synthetic-data demo context",
+    "Production integration managed through a separate validation path",
 ]

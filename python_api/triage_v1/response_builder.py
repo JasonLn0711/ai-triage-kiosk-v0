@@ -33,8 +33,6 @@ def question_response(
 ) -> dict[str, Any]:
     return {
         **base_response(body, flow_state, contract_fields, next_response_id(f"question-{flow_state.current_index + 1}")),
-        "flow_version": flow_state.flow_version,
-        "case_id": flow_state.case_id,
         "session_state": "active",
         "last_question_id": last_question_id,
         "status": "question",
@@ -54,8 +52,6 @@ def staff_notify_response(
 ) -> dict[str, Any]:
     return {
         **base_response(body, flow_state, contract_fields, next_response_id("staff-notify")),
-        "flow_version": flow_state.flow_version,
-        "case_id": flow_state.case_id,
         "session_state": "staff_notify_ready",
         "last_question_id": last_question_id,
         "status": "staff_notify",
@@ -86,8 +82,6 @@ def summary_response(
 ) -> dict[str, Any]:
     return {
         **base_response(body, flow_state, contract_fields, next_response_id("summary")),
-        "flow_version": flow_state.flow_version,
-        "case_id": flow_state.case_id,
         "session_state": "summary_ready",
         "last_question_id": last_question_id,
         "status": "summary",

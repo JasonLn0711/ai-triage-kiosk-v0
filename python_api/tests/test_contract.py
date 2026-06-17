@@ -1,6 +1,8 @@
 from __future__ import annotations
 
+import json
 import os
+from pathlib import Path
 
 from fastapi.testclient import TestClient
 
@@ -11,6 +13,24 @@ from python_api.triage_v1.summary_builder import build_summary
 
 
 client = TestClient(app)
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+START_EXAMPLE = json.loads(
+    (PROJECT_ROOT / "handoff/api-examples/2026-05-21-start-session-response-question.json").read_text(encoding="utf-8")
+)
+SUMMARY_EXAMPLE = json.loads(
+    (PROJECT_ROOT / "handoff/api-examples/2026-05-21-summary-response-demo-tachycardia.json").read_text(encoding="utf-8")
+)
+CONTRACT_FIELD_KEYS = (
+    "api_version",
+    "schema_version",
+    "flow_version",
+    "case_id",
+    "case_version",
+    "fixture_version",
+    "question_set_version",
+    "wording_version",
+)
+MVP_QUESTION_TYPES = {"single_choice", "multi_choice"}
 
 
 def start_body(**overrides):
@@ -64,6 +84,26 @@ def first_option_ids(question):
     return [question["options"][0]["id"]]
 
 
+def option_id_by_label(question, label):
+    for option in question["options"]:
+        if option["label"] == label:
+            return option["id"]
+    raise AssertionError(f"{question['id']} does not contain option label {label!r}")
+
+
+def assert_contract_fields(body, example=START_EXAMPLE):
+    for key in CONTRACT_FIELD_KEYS:
+        assert body[key] == example[key]
+
+
+def assert_mvp_question_contract(question):
+    assert question["type"] in MVP_QUESTION_TYPES
+    assert question["ui_template"] in MVP_QUESTION_TYPES
+    assert question["option_count"] == len(question["options"])
+    assert len(question["options"]) <= 9
+    assert question["rendering_constraints"]["max_visible_options_without_scroll"] == 9
+
+
 def setup_function():
     contract.reset_mock_state()
     os.environ.pop("DEMO_BEARER_TOKEN", None)
@@ -102,12 +142,27 @@ def test_start_session_returns_first_question_and_progress_expected_total():
     body = response.json()
 
     assert response.status_code == 200
+    assert_contract_fields(body)
     assert body["status"] == "question"
     assert body["session_key"]
     assert body["progress"]["current"] == 1
     assert body["progress"]["expected_total"] == 7
     assert body["question"]["id"] == "tachy-chief-concern"
-    assert body["question"]["rendering_constraints"]["max_visible_options_without_scroll"] == 9
+    assert_mvp_question_contract(body["question"])
+
+
+def test_start_session_keeps_external_golden_contract_fields():
+    response = client.post("/api/triage-demo/sessions", json=start_body(max_questions=99))
+    body = response.json()
+
+    assert response.status_code == 200
+    assert_contract_fields(body, START_EXAMPLE)
+    assert body["workflow_mode"] == START_EXAMPLE["workflow_mode"]
+    assert body["measurement_state"] == START_EXAMPLE["measurement_state"]
+    assert body["vitals_ready"] == START_EXAMPLE["vitals_ready"]
+    assert body["question"]["id"] == START_EXAMPLE["question"]["id"]
+    assert body["question"]["type"] == START_EXAMPLE["question"]["type"]
+    assert body["question"]["options"] == START_EXAMPLE["question"]["options"]
 
 
 def test_start_session_routes_from_fever_vital_rules():
@@ -226,28 +281,39 @@ def test_normal_vitals_start_initial_questions_then_route_to_symptom_module_and_
         json=answer_body(body["question"], ["init-1_female"], "idem-normal-init-1"),
     ).json()
     assert gender["question"]["id"] == "INIT-2"
-    assert gender["question"]["type"] == "number"
+    assert gender["question"]["type"] == "single_choice"
+    assert_mvp_question_contract(gender["question"])
 
-    age_answer = answer_body(gender["question"], [], "idem-normal-init-2")
-    age_answer["answer"]["numeric_value"] = 40
+    age_answer = answer_body(
+        gender["question"],
+        [option_id_by_label(gender["question"], "40-64")],
+        "idem-normal-init-2",
+    )
     age = client.post(f"/api/triage-demo/sessions/{session_key}/answers", json=age_answer).json()
     assert age["question"]["id"] == "INIT-3"
     assert len(age["question"]["options"]) == 9
     assert age["question"]["options"][0] == {"id": "init-3_fever_cold", "label": "Fever or cold symptoms"}
+    assert_mvp_question_contract(age["question"])
 
     complaint = client.post(
         f"/api/triage-demo/sessions/{session_key}/answers",
         json=answer_body(age["question"], ["init-3_cardiorespiratory"], "idem-normal-init-3"),
     ).json()
     assert complaint["question"]["id"] == "INIT-4"
+    assert complaint["question"]["type"] == "single_choice"
+    assert_mvp_question_contract(complaint["question"])
 
-    duration_answer = answer_body(complaint["question"], [], "idem-normal-init-4")
-    duration_answer["answer"]["text_value"] = "Today"
+    duration_answer = answer_body(
+        complaint["question"],
+        [option_id_by_label(complaint["question"], "Today")],
+        "idem-normal-init-4",
+    )
     symptom = client.post(f"/api/triage-demo/sessions/{session_key}/answers", json=duration_answer).json()
 
     assert symptom["question"]["id"] == "PAL-1"
     assert symptom["question_phase"] == "symptom_specific"
     assert symptom["progress"]["expected_total"] == 10
+    assert_mvp_question_contract(symptom["question"])
 
 
 def test_initial_gender_answer_overrides_start_payload_sex_in_summary():
@@ -271,8 +337,11 @@ def test_initial_gender_answer_overrides_start_payload_sex_in_summary():
         json=answer_body(body["question"], ["init-1_male"], "idem-gender-override-init-1"),
     ).json()
 
-    age_answer = answer_body(gender["question"], [], "idem-gender-override-init-2")
-    age_answer["answer"]["numeric_value"] = 40
+    age_answer = answer_body(
+        gender["question"],
+        [option_id_by_label(gender["question"], "40-64")],
+        "idem-gender-override-init-2",
+    )
     age = client.post(f"/api/triage-demo/sessions/{session_key}/answers", json=age_answer).json()
 
     complaint = client.post(
@@ -280,8 +349,11 @@ def test_initial_gender_answer_overrides_start_payload_sex_in_summary():
         json=answer_body(age["question"], ["init-3_cardiorespiratory"], "idem-gender-override-init-3"),
     ).json()
 
-    duration_answer = answer_body(complaint["question"], [], "idem-gender-override-init-4")
-    duration_answer["answer"]["text_value"] = "Today"
+    duration_answer = answer_body(
+        complaint["question"],
+        [option_id_by_label(complaint["question"], "Today")],
+        "idem-gender-override-init-4",
+    )
     current = client.post(f"/api/triage-demo/sessions/{session_key}/answers", json=duration_answer).json()
 
     for index in range(20):
@@ -296,7 +368,7 @@ def test_initial_gender_answer_overrides_start_payload_sex_in_summary():
 
     summary = current["staff_review_summary"]
     assert summary["patient_record"]["sex"] == "Male"
-    assert "40 y/o Male" in summary["soap_note"]["subjective"]
+    assert "40-64 y/o Male" in summary["soap_note"]["subjective"]
 
 
 def test_grouped_initial_complaint_inserts_detail_question_and_routes_from_detail():
@@ -319,8 +391,11 @@ def test_grouped_initial_complaint_inserts_detail_question_and_routes_from_detai
         json=answer_body(body["question"], ["init-1_female"], "idem-grouped-initial-1"),
     ).json()
 
-    age_answer = answer_body(gender["question"], [], "idem-grouped-initial-2")
-    age_answer["answer"]["numeric_value"] = 40
+    age_answer = answer_body(
+        gender["question"],
+        [option_id_by_label(gender["question"], "40-64")],
+        "idem-grouped-initial-2",
+    )
     age = client.post(f"/api/triage-demo/sessions/{session_key}/answers", json=age_answer).json()
 
     detail = client.post(
@@ -341,9 +416,14 @@ def test_grouped_initial_complaint_inserts_detail_question_and_routes_from_detai
     ).json()
 
     assert duration["question"]["id"] == "INIT-4"
+    assert duration["question"]["type"] == "single_choice"
+    assert_mvp_question_contract(duration["question"])
 
-    duration_answer = answer_body(duration["question"], [], "idem-grouped-initial-4")
-    duration_answer["answer"]["text_value"] = "Today"
+    duration_answer = answer_body(
+        duration["question"],
+        [option_id_by_label(duration["question"], "Today")],
+        "idem-grouped-initial-4",
+    )
     symptom = client.post(f"/api/triage-demo/sessions/{session_key}/answers", json=duration_answer).json()
 
     assert symptom["question"]["id"] == "DC-1"
@@ -488,6 +568,7 @@ def test_answering_final_question_returns_staff_review_summary():
 
     body = result.json()
     assert result.status_code == 200
+    assert_contract_fields(body, SUMMARY_EXAMPLE)
     assert body["status"] == "summary"
     assert body["session_state"] == "summary_ready"
     assert body["progress"]["current"] == 7
@@ -503,8 +584,80 @@ def test_answering_final_question_returns_staff_review_summary():
     assert "Past history: arrhythmia, hyperlipidemia" in soap["subjective"]
     assert "Allergy: peanut" in soap["subjective"]
     assert "Vital sign: T/P/R: 36.5/130/16 SpO2: 98% BP 102/68 mmHg" in soap["objective"]
-    assert "Demo review level: 2" in soap["assessment"]
+    assert "Demo script review marker: 2" in soap["assessment"]
     assert "vital sign: t/p/r" in summary["soap_text"].lower()
+
+
+def test_high_heart_rate_path_only_returns_mvp_supported_question_types():
+    start = client.post("/api/triage-demo/sessions", json=start_body()).json()
+    session_key = start["session_key"]
+    body = start
+
+    for index in range(contract.expected_total):
+        assert body["status"] == "question"
+        assert_mvp_question_contract(body["question"])
+        selected = [body["question"]["none_option_id"]] if body["question"].get("none_option_id") else first_option_ids(body["question"])
+        response = client.post(
+            f"/api/triage-demo/sessions/{session_key}/answers",
+            json=answer_body(body["question"], selected, f"idem-mvp-question-type-{index + 1}"),
+        )
+        body = response.json()
+
+    assert body["status"] == "summary"
+    assert_contract_fields(body, SUMMARY_EXAMPLE)
+
+
+def test_initial_age_and_duration_questions_render_as_single_choice_buckets():
+    start = client.post(
+        "/api/triage-demo/sessions",
+        json=start_body(
+            idempotency_key="idem-initial-bucket-rendering",
+            vitals={
+                "heart_rate_bpm": {"value": 78, "unit": "bpm"},
+                "temperature_c": {"value": 36.6, "unit": "C"},
+                "spo2_percent": {"value": 98, "unit": "%"},
+            },
+        ),
+    ).json()
+    session_key = start["session_key"]
+
+    age = client.post(
+        f"/api/triage-demo/sessions/{session_key}/answers",
+        json=answer_body(start["question"], ["init-1_female"], "idem-initial-bucket-gender"),
+    ).json()
+
+    assert age["question"]["id"] == "INIT-2"
+    assert age["question"]["type"] == "single_choice"
+    assert [option["label"] for option in age["question"]["options"]] == [
+        "Under 18",
+        "18-39",
+        "40-64",
+        "65-79",
+        "80 or older",
+        "Not sure",
+    ]
+    assert_mvp_question_contract(age["question"])
+
+    complaint = client.post(
+        f"/api/triage-demo/sessions/{session_key}/answers",
+        json=answer_body(age["question"], [option_id_by_label(age["question"], "40-64")], "idem-initial-bucket-age"),
+    ).json()
+    duration = client.post(
+        f"/api/triage-demo/sessions/{session_key}/answers",
+        json=answer_body(complaint["question"], ["init-3_cardiorespiratory"], "idem-initial-bucket-complaint"),
+    ).json()
+
+    assert duration["question"]["id"] == "INIT-4"
+    assert duration["question"]["type"] == "single_choice"
+    assert [option["label"] for option in duration["question"]["options"]] == [
+        "Today",
+        "1-3 days",
+        "4-7 days",
+        "More than 1 week",
+        "Long-term issue",
+        "Not sure",
+    ]
+    assert_mvp_question_contract(duration["question"])
 
 
 def test_invalid_session_returns_stable_error_response():

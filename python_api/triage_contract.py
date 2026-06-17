@@ -41,16 +41,18 @@ def clone(value: Any) -> Any:
 
 start_question_example = _read_json("handoff/api-examples/2026-05-21-start-session-response-question.json")
 
-contract_fields = {
-    "api_version": start_question_example["api_version"],
-    "schema_version": start_question_example["schema_version"],
-    "flow_version": "vital-rules-router-v1-demo",
-    "case_id": "vital-routed-session",
-    "case_version": "vital-rules-router-v1",
-    "fixture_version": "not_applicable",
-    "question_set_version": "vital-routed-question-set-v1",
-    "wording_version": start_question_example["wording_version"],
-}
+CONTRACT_FIELD_KEYS = (
+    "api_version",
+    "schema_version",
+    "flow_version",
+    "case_id",
+    "case_version",
+    "fixture_version",
+    "question_set_version",
+    "wording_version",
+)
+
+contract_fields = {key: start_question_example[key] for key in CONTRACT_FIELD_KEYS}
 
 _registry = QuestionRegistry(
     PROJECT_ROOT / "Question_DB" / "symptom_questions.csv",

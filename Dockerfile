@@ -1,19 +1,16 @@
-FROM node:20-alpine
+FROM python:3.11-slim
 
 WORKDIR /app
 
-COPY package.json ./
-COPY api ./api
-COPY data ./data
-COPY demo ./demo
+ENV PYTHONUNBUFFERED=1
+ENV PORT=8000
+
+COPY python_api ./python_api
+COPY Question_DB ./Question_DB
 COPY handoff/api-examples ./handoff/api-examples
-COPY scripts ./scripts
 
-ENV NODE_ENV=production
-ENV PORT=4193
+RUN pip install --no-cache-dir -r python_api/requirements.txt
 
-RUN node scripts/build_vector_index.js
+EXPOSE 8000
 
-EXPOSE 4193
-
-CMD ["node", "scripts/mock-api-server.js"]
+CMD ["sh", "-c", "python -m uvicorn python_api.main:app --host 0.0.0.0 --port ${PORT:-8000}"]

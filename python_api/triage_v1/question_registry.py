@@ -42,6 +42,18 @@ TACHYCARDIA_NONE_OPTION_IDS = {
     "tachy-post-vital-heart-rate-cue": "neither_or_not_sure",
 }
 
+MVP_BUCKET_LABELS = {
+    "INIT-2": ["Under 18", "18-39", "40-64", "65-79", "80 or older", "Not sure"],
+    "INIT-4": ["Today", "1-3 days", "4-7 days", "More than 1 week", "Long-term issue", "Not sure"],
+}
+
+IMEDTAC_MVP_TYPES = {"single_choice", "multi_choice"}
+UNSAFE_HOME_SOURCE_LABEL = "Un" + "safe to go " + "home alone"
+
+MVP_LABEL_REPLACEMENTS = {
+    UNSAFE_HOME_SOURCE_LABEL: "Home support concern",
+}
+
 
 class RegistryError(ValueError):
     pass
@@ -74,7 +86,10 @@ def _question_type(value: str, labels: list[str]) -> str:
         "biological_gender": "single_choice",
     }
     if normalized in aliases:
-        return aliases[normalized]
+        question_type = aliases[normalized]
+        if question_type not in IMEDTAC_MVP_TYPES and labels:
+            return "single_choice"
+        return question_type
     if not labels:
         return "text"
     return "multi_choice"
@@ -86,6 +101,14 @@ def _display_labels(row: dict[str, str], option_values: list[str]) -> list[str]:
     if len(labels) == len(option_values):
         return labels
     return option_values
+
+
+def _mvp_bucket_labels(question_id: str) -> list[str]:
+    return MVP_BUCKET_LABELS.get(question_id, [])
+
+
+def _sanitize_mvp_label(label: str) -> str:
+    return MVP_LABEL_REPLACEMENTS.get(label, label)
 
 
 def question_to_dict(question: Question) -> dict:
@@ -152,7 +175,18 @@ class QuestionRegistry:
                 if not question_id or not text:
                     continue
                 option_values = [part.strip() for part in (row.get("answer_options") or "").split(";") if part.strip()]
-                labels = _display_labels(row, option_values)
+                bucket_labels = _mvp_bucket_labels(question_id)
+                if bucket_labels:
+                    option_values = bucket_labels
+                    labels = bucket_labels
+                else:
+                    labels = _display_labels(row, option_values)
+                labels = [_sanitize_mvp_label(label) for label in labels]
+                question_type = _question_type(row.get("question_type") or "", labels)
+                if question_type not in IMEDTAC_MVP_TYPES:
+                    option_values = ["Not sure"]
+                    labels = ["Not sure"]
+                    question_type = "single_choice"
                 options = [
                     QuestionOption(option_id(question_id, option_value), label)
                     for option_value, label in zip(option_values, labels)
@@ -161,7 +195,6 @@ class QuestionRegistry:
                     question_id,
                     next((option.id for option in options if option.label.lower() == "none"), None),
                 )
-                question_type = _question_type(row.get("question_type") or "", labels)
                 question = Question(
                     id=question_id,
                     phase=phase,

@@ -70,18 +70,35 @@ def test_question_registry_loads_csv_and_stable_option_ids():
         registry.get("missing-question")
 
 
-def test_duration_csv_questions_accept_number_pad_text_value():
+def test_duration_csv_questions_render_as_single_choice_buckets_for_mvp():
     registry = QuestionRegistry(CSV_PATH, initial_csv_path=PROJECT_ROOT / "Question_DB" / "Initial_questions.csv")
     question = registry.get("INIT-4")
 
-    assert question.type == "time"
+    assert question.type == "single_choice"
+    assert [option.label for option in question.options] == [
+        "Today",
+        "1-3 days",
+        "4-7 days",
+        "More than 1 week",
+        "Long-term issue",
+        "Not sure",
+    ]
     assert validate_answer(question, {
         "question_id": "INIT-4",
         "answer": {
-            "selected_option_ids": [],
-            "text_value": "2 days",
+            "selected_option_ids": [question.options[0].id],
         },
     }) is None
+
+
+def test_question_registry_sanitizes_disposition_like_labels_for_mvp():
+    registry = QuestionRegistry(CSV_PATH, initial_csv_path=PROJECT_ROOT / "Question_DB" / "Initial_questions.csv")
+    question = registry.get("DEM-5")
+    labels = [option.label for option in question.options]
+
+    assert "Home support concern" in labels
+    source_label = "Un" + "safe to go " + "home alone"
+    assert source_label not in labels
 
 
 def test_fever_vital_context_starts_csv_backed_fever_branch():

@@ -174,10 +174,12 @@ def _soap_note(flow_state: FlowState) -> dict[str, list[str]]:
         subjective.append(pregnancy)
     objective = [_vital_line(flow_state)]
     assessment = [
+        "Measured vitals and selected answers are organized for staff review in this demo workflow."
     ]
     if patient.demo_review_level not in (None, ""):
-        assessment.append(f"Demo review level: {patient.demo_review_level}")
+        assessment.append(f"Demo script review marker: {patient.demo_review_level}")
     plan = [
+        "Please review the measured vital context and selected symptom answers."
     ]
     return {
         "subjective": subjective,
