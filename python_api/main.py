@@ -29,7 +29,7 @@ def cors_headers(request: Request) -> dict[str, str]:
         "Access-Control-Max-Age": "600",
     }
     origin = request.headers.get("origin")
-    if origin in contract.ALLOWED_ORIGINS:
+    if origin in contract.configured_allowed_origins():
         headers["Access-Control-Allow-Origin"] = origin
         headers["Vary"] = "Origin"
     return headers

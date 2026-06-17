@@ -24,7 +24,13 @@ except ImportError:  # pragma: no cover - supports running main.py from python_a
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-ALLOWED_ORIGINS = {"http://localhost", "http://localhost:5174"}
+DEFAULT_ALLOWED_ORIGINS = {
+    "http://localhost",
+    "http://localhost:5174",
+    "http://127.0.0.1",
+    "http://127.0.0.1:5174",
+}
+ALLOWED_ORIGINS = DEFAULT_ALLOWED_ORIGINS
 
 _idempotency_records: dict[str, dict[str, Any]] = {}
 _response_counter = 0
@@ -66,6 +72,16 @@ expected_total = len(question_sequence)
 def configured_demo_bearer_token() -> str | None:
     token = os.environ.get("DEMO_BEARER_TOKEN", "").strip()
     return token or None
+
+
+def configured_allowed_origins() -> set[str]:
+    origins = set(DEFAULT_ALLOWED_ORIGINS)
+    raw = os.environ.get("DEMO_ALLOWED_ORIGINS", "")
+    for origin in raw.split(","):
+        normalized = origin.strip().rstrip("/")
+        if normalized and normalized != "*":
+            origins.add(normalized)
+    return origins
 
 
 def bearer_token_from_header(value: str | None) -> str | None:
