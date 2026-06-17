@@ -10,18 +10,17 @@ clinical decision support, or HIS / EMR / FHIR writeback.
 
 ## Run Locally
 
-Create a virtual environment and install dependencies with `uv`:
+From the repo root, create the project environment and install dependencies
+with `uv`:
 
 ```bash
-uv venv .venv
-. .venv/bin/activate
-uv pip install -r python_api/requirements.txt
+uv sync --project python_api
 ```
 
-Start the FastAPI server:
+Start the canonical FastAPI server from the repo root:
 
 ```bash
-uv run python -m uvicorn main:app --host 127.0.0.1 --port 8000 --reload
+uv run --project python_api python -m uvicorn python_api.main:app --host 127.0.0.1 --port 8000 --reload
 ```
 
 Open the API test page:
@@ -162,7 +161,7 @@ To require a demo bearer token:
 
 ```bash
 export DEMO_BEARER_TOKEN="replace-with-local-demo-token"
-uv run python -m uvicorn python_api.main:app --host 127.0.0.1 --port 8000 --reload
+uv run --project python_api python -m uvicorn python_api.main:app --host 127.0.0.1 --port 8000 --reload
 ```
 
 Requests must then include:
@@ -179,7 +178,7 @@ live hospital integration details in tracked files.
 Run the Python contract tests:
 
 ```bash
-uv run python -m pytest python_api/tests
+uv run --project python_api python -m pytest python_api/tests
 ```
 
 The tests cover:
@@ -195,8 +194,8 @@ The tests cover:
 ## Implementation Notes
 
 - `main.py` defines the FastAPI app and HTTP routes.
-- `triage_contract.py` ports the current JavaScript demo contract behavior into
-  Python.
+- `triage_contract.py` preserves the externally discussed imedtac two-endpoint
+  contract while routing requests into Python.
 - `static/` contains the browser test page served by FastAPI.
 - `tests/` contains HTTP-level contract tests using FastAPI `TestClient`.
 

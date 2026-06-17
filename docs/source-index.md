@@ -26,6 +26,8 @@ demo lane and its direct upstream Prof. Wu context.
 | `2026-05-21` | `source/2026-05-21-zhidewan-public-profile/` | Public-source dossier on 智德萬 / AItewan for the imedtac protection lane. Records official company framing, public registration snapshot, DeepBT TFDA / FDA K252190 footprint, public patent / trademark signals, and the operational implication that deeper imedtac method transfer should route through Prof. Wu / 智德萬 legal or patent review, with NYCU checked only for university-owned or university-resource-derived material. |
 | `2026-05-25` | `source/2026-05-25-duobao-afrvr-tachycardia-case/` | 多寶's Case 2 AfRVR-style tachycardia question-answer demo input. Confirms the measured-first tachycardia / palpitation / middle chest-tightness lane with HR `130`, SpO2 `98%`, BP `102/68`, RR `16`, T `36.5 C`, selected `none` associated symptoms, arrhythmia / hypertension history, medication context, and no allergy; closes the Monday first-lane case input for the imedtac API response package while preserving the demo-only staff-review boundary. |
 | `2026-05-23 to 2026-05-25` | `source/2026-05-23-to-2026-05-25-imedtac-teams-ui-api-followup/` | Teams follow-up after the API email and case handoff. Records Jason's Friday API / skip reply, Johnny's skip acknowledgement, 多寶's Case Tachy link, Ben's `request_id` / `idempotency_key` and `capabilities.max_questions` questions, imedtac's browser-direct demo environment and CORS origins, Johnny / UI-team signals on `I'm not sure`, no static `None of these`, and up to `9` short options without user scroll, plus Johnny's request to confirm whether the returned summary can be shown through an existing preview page. It now also records Jason's `2026-05-25 20:09` group reply freezing the first-rehearsal CORS/auth/progress/idempotency/summary positions, Jason's follow-up that NYCU-provided UI may affect visual consistency / device-operation completeness and therefore needs discussion, and Jason's `2026-05-25 20:13` private bearer-token handoff to Ben with the credential redacted from tracked files. |
+| `2026-06-09 to 2026-06-17` | `source/2026-06-09-to-2026-06-17-duobao-line-architecture-mvp-sync/` | Internal LINE sync between Jason and 多寶 / doebow on repo privacy, the Python/FastAPI API branch, question-bank expansion beyond tachycardia, staged AI release, the V1/V1.5/V2/V2.5/V3 MVP ladder, backend framework alignment around Python, the `2026-05-22` / `2026-06-11` imedtac API contract as the compatibility baseline, and the need to avoid surprising imedtac with uncommunicated API changes before testing doebow/Python work. |
+| `2026-06-11 to 2026-06-16` | `source/2026-06-16-imedtac-teams-question-option-adjustment/` | Teams follow-up on question-type constraints and tachycardia demo expectations. Records 多寶's duration-widget question, Johnny's confirmation that the current imedtac UI scope remains single-choice / multi-choice because engineering resources are now mainly bug-fix oriented, 多寶's agreement to convert duration content into selectable options, Johnny's request for updated question-design status, the high-heart-rate demo expectation that different measured data should drive different questions, the final-report expectation that measured vitals are used in the summary, and 多寶's note that an updated version exists but had not yet been pushed as of `2026-06-16 16:42`. |
 | `2026-05-15 16:42` | `source/2026-05-15-imedtac-second-sync-and-duobao-followup/duobao-demo-case-draft.md` | 多寶's first clinical case draft and LINE handoff. Provides four diagnosis-shaped design anchors: acute cholecystitis, AfRVR, pneumonia, and URI, to be converted into demo-safe clinician-review summaries rather than diagnosis outputs. |
 | `2026-05-19 16:52` | `source/2026-05-19-johnny-ai-triage-product-spec/` | Johnny Fang's email plus the linked `iMVS AI Triage 智慧檢傷分流系統_20260515` product spec. Later Downloads copies are archived here too: the standalone PDF was verified as byte-identical to the archived product-spec PDF, the DOCX is preserved as the editable-format copy, and the `2026-05-20` Gmail PDF preserves the later thread / forwarded-message view. Confirms mid-June customer-demo priority, HIS summary writeback as out-of-scope for this demo, voice input as conditional, and the immediate API contract need: iMVS vital payload -> NYCU typed question/session response -> iMVS answer/session loop -> next question or demo staff-summary output. |
 | `2026-05-19 16:56-18:06` | `source/2026-05-19-johnny-line-thursday-engineering-sync/` | Johnny's LINE group follow-up after sending the product spec. User clarified the LINE times are afternoon / PM. Johnny says engineers need an API design document, asks when it can be provided, and asks to discuss progress on Thursday with the engineering design team. Jason added 許桓瑜（多寶） to the group. Johnny later confirmed Thursday `2026-05-21 10:00` on Microsoft Teams and provided meeting access details, preserved local-only in the source. |
@@ -86,6 +88,8 @@ Derived analysis:
 - `source/2026-05-21-zhidewan-public-profile/source.md`
 - `source/2026-05-25-duobao-afrvr-tachycardia-case/source.md`
 - `source/2026-05-23-to-2026-05-25-imedtac-teams-ui-api-followup/source.md`
+- `source/2026-06-09-to-2026-06-17-duobao-line-architecture-mvp-sync/source.md`
+- `source/2026-06-16-imedtac-teams-question-option-adjustment/source.md`
 - `source/2026-05-15-imedtac-second-sync-and-duobao-followup/duobao-demo-case-draft.md`
 - `workstreams/08-june-demo-case-and-integration-plan.md`
 - `handoff/2026-05-15-june-demo-case-pack-v0.md`
@@ -129,8 +133,15 @@ Derived analysis:
 - `handoff/2026-06-08-dynamic-engine-test-report.md`
 - `handoff/2026-06-08-dynamic-engine-deployment-notice-draft.md`
 - `handoff/2026-06-08-dynamic-engine-external-release-gate-closeout.md`
-- `api/lib/triage-demo-contract.js`
-- `api/lib/dynamic-engine/`
+- `handoff/2026-06-17-contract-compatible-python-mvp-goal-prompt.md`
+- `handoff/2026-06-17-python-mvp-contract-compatibility-note.md`
+- `handoff/2026-06-17-imedtac-python-mvp-test-note-draft.md`
+- `python_api/main.py`
+- `python_api/triage_contract.py`
+- `python_api/triage_v1/`
+- `Question_DB/`
+- `JS/api/lib/triage-demo-contract.js` legacy/reference path after Python MVP transition
+- `JS/api/lib/dynamic-engine/` legacy/reference path after Python MVP transition
 - `data/question_manifest.tachycardia.v0.3.json`
 - `data/answer_effects.tachycardia.v0.3.json`
 - `data/routing_policy.tachycardia.v0.3.json`

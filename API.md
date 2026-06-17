@@ -1,7 +1,8 @@
 # AI Triage Demo API
 
-本文整理目前 `api/` 實作與 `spec/iMVS_AI_Triage_20260515.pdf` 的對應關係，作為
-慧誠智醫（imedtac Co., Ltd.）六月 AI Triage kiosk demo 的 API 規格說明。
+本文整理目前 Python/FastAPI runtime（`python_api/`）與
+`spec/iMVS_AI_Triage_20260515.pdf` 的對應關係，作為慧誠智醫
+（imedtac Co., Ltd.）六月 AI Triage kiosk demo 的 API 規格說明。
 
 本版 API 是 synthetic-data demo contract。API output 定位為 staff-review intake
 support 與 workflow support，不是診斷、治療建議、final triage level、production
@@ -34,7 +35,7 @@ point 後才應升版納入。
 
 ## Base URL
 
-Local/mock server 或 Vercel function path 使用：
+Local Python API server 或 deployment path 使用：
 
 ```text
 /api/triage-demo
@@ -113,15 +114,16 @@ context，然後回傳第一題 `question`。
 
 ### Request Body
 
-Runtime 目前只強制驗證 `case_id`、`measurement_state` 與 `vitals_ready` 的核心
-邏輯；下表同時列出 integration baseline 建議欄位，方便 imedtac frontend 完整串接。
+Runtime 目前強制驗證 `workflow_mode`、`measurement_state` 與 `vitals_ready` 的
+核心邏輯；下表同時列出 integration baseline 建議欄位，方便 imedtac frontend
+完整串接。
 
 | Field | Type | Required | Runtime rule / integration meaning |
 | --- | --- | --- | --- |
 | `api_version` | string | recommended | Contract 對齊欄位。Runtime 可由 NYCU response 管理。 |
 | `schema_version` | string | recommended | Schema 對齊欄位。 |
 | `flow_version` | string | recommended | Demo flow version。Tachycardia lane 使用 `tachycardia-live-demo-flow-v0.2-draft`。 |
-| `case_id` | string | optional in code, recommended | 若提供，必須是 `demo-tachycardia-live-001`；其他值回 `422 invalid_start_session_request`。 |
+| `case_id` | string | optional in code, recommended | External version field remains aligned with the shared examples; branch selection is driven by measured vital payload and demo context inside the Python adapter. |
 | `case_version` | string | recommended | Case content version。 |
 | `fixture_version` | string | recommended | Rehearsal fixture version。 |
 | `question_set_version` | string | recommended | Question set version。 |
@@ -831,27 +833,29 @@ follows:
   idempotency records.
 - `session_expires_at` is generated as now + 30 minutes, but current in-memory
   lookup does not actively reject expired sessions.
-- Current implementation supports one tachycardia live demo lane through
-  `demo-tachycardia-live-001`.
-- If Endpoint 1 omits `vitals`, runtime uses the tachycardia fixture vitals.
-  For real rehearsal clarity, imedtac should send explicit measured or synthetic
-  demo vitals.
-- `GET /healthz` may exist in the mock/deployment server, but it is deployment
-  health infrastructure, not part of the two main triage-demo API endpoints
-  documented here.
+- Current implementation supports the tachycardia live demo lane plus
+  contract-compatible doebow Question_DB branches for fixed-question MVP
+  rehearsal.
+- If Endpoint 1 omits `vitals`, the runtime starts from the initial intake
+  branch. For real rehearsal clarity, imedtac should send explicit measured or
+  synthetic demo vitals.
+- `GET /healthz` exists in the FastAPI server as deployment health
+  infrastructure, not part of the two main triage-demo API endpoints documented
+  here.
 
 ## Source Files
 
 Primary runtime files:
 
-- `api/lib/triage-demo-contract.js`
-- `api/triage-demo/sessions.js`
-- `api/triage-demo/sessions/[session_key]/answers.js`
+- `python_api/main.py`
+- `python_api/triage_contract.py`
+- `python_api/triage_v1/`
+- `Question_DB/`
 
 Primary contract and example files:
 
 - `handoff/2026-05-21-imedtac-two-endpoint-api-reply.md`
 - `handoff/api-examples/`
-- `demo/fixtures/tachycardia-live-demo.json`
-- `tests/contract/triage-demo-api.test.js`
+- `python_api/tests/test_contract.py`
+- `python_api/tests/test_v1_engine.py`
 - `spec/iMVS_AI_Triage_20260515.pdf`

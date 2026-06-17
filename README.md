@@ -35,9 +35,11 @@ go-to-market 與美國客戶展示，還不是正式醫療決策產品。
 
 | Path | Purpose |
 | --- | --- |
-| `app/triage-kiosk/` | English static AI triage kiosk demo adapted from the urology previsit demo pattern |
-| `core/triage_engine/` | Pure JavaScript governed-question ranking and staff-summary logic |
-| `api/lib/dynamic-engine/` | Backend dynamic tachycardia engine: effects, derived flags, deterministic routing, answer candidates, trace, and summary assembly |
+| `python_api/` | Canonical Python/FastAPI imedtac demo API runtime for the unchanged two-endpoint contract |
+| `Question_DB/` | Canonical doebow question bank for initial, symptom-specific, and universal questions |
+| `JS/app/triage-kiosk/` | English static AI triage kiosk viewer adapted from the urology previsit demo pattern |
+| `JS/core/triage_engine/` | Legacy/static JavaScript governed-question viewer logic retained for frontend reference and tests |
+| `JS/api/` | Legacy JavaScript mock API path; not the canonical imedtac backend after the Python MVP transition |
 | `scripts/checks/smoke-demo.js` | Runtime smoke check for the English demo |
 | `tests/unit/triage-engine.test.js` | Focused tests for question ranking and demo-only safety boundaries |
 | `tests/contract/tachycardia-dynamic-path.test.js` | Backend dynamic-path, summary consistency, routing trace, and answer-candidate tests |
@@ -59,6 +61,8 @@ go-to-market 與美國客戶展示，還不是正式醫療決策產品。
 | `source/2026-05-21-imedtac-post-meeting-progress-record/` | Johnny's post-meeting Gmail record confirming measure-first flow, Endpoint 1/3 merge, single/multi-choice UI, no voice, tachycardia live-demo preference, and NYCU action items |
 | `source/2026-05-21-imedtac-teams-api-followup/` | Microsoft Teams follow-up with Ben / Lauren / Johnny asking for the two-endpoint API document, preset questions/options, and not-sure answer-behavior guidance; includes Jason's `2026-05-22 12:24` reply confirming the email-sent API packet, Monday preset question/option target, and no-generic-skip direction |
 | `source/2026-05-22-nycu-sent-api-reply-email/` | Jason's sent Gmail reply with the API packet, preserving the externally communicated small fixed June implementation baseline and `not_sure` answer-behavior position |
+| `source/2026-06-09-to-2026-06-17-duobao-line-architecture-mvp-sync/` | Internal LINE sync with 多寶 / doebow covering repo privacy, the Python/FastAPI branch, broader fixed-question coverage, staged AI release, the V1/V1.5/V2/V2.5/V3 MVP ladder, and the need to keep imedtac testing contract-compatible |
+| `source/2026-06-16-imedtac-teams-question-option-adjustment/` | Microsoft Teams follow-up confirming the current imedtac UI stays within single-choice / multi-choice questions, duration content should be converted into selectable options, the high-heart-rate demo should show data-dependent question flow, and the final staff-review summary should use measured vital data |
 | `source/2026-05-21-duobao-post-imedtac-internal-sync/` | Internal Jason / 多寶 post-meeting sync: full corrected transcript and notes confirming no formal triage-level output, AI placement in vital-aware question selection / summary, UI template requirements, and need for an actual iMVS machine review |
 | `source/2026-05-21-wu-line-ai-triage-patent-protection/` | Prof. Wu LINE instruction to discuss patents with Tomi and protect NYCU's patent/IP position before teaching imedtac the full reusable method |
 | `source/2026-05-21-wu-ai-triage-ip-and-career-call/` | Prof. Wu phone call confirming lab API as know-how boundary, idea-attribution requirements, product co-development contract questions, postdoc/personnel-cost runway, and June deep-cultivation proposal framing |
@@ -128,45 +132,62 @@ The earlier two-phase design remains a future optimized path. After the
 `2026-05-21` imedtac engineering sync, the June integration default is
 post-measurement-only to minimize iMVS UI changes before the customer demo.
 
-## Backend Dynamic Engine Frame
+## Canonical Backend Frame
 
-The `2026-06-08` dynamic-engine slice keeps the imedtac-facing session API
-stable while moving answer effects, derived flags, routing policy,
-`routing_trace`, answer-candidate matching, approved summary-template
-retrieval, and summary assembly into the NYCU backend.
+The `2026-06-17` Python MVP keeps the imedtac-facing session API stable while
+moving the canonical backend runtime to FastAPI. The runtime reads doebow's
+`Question_DB/` CSV question bank, preserves the two externally discussed
+endpoints, converts unsupported MVP question types into selectable buckets, and
+returns staff-review summaries using the measured vital payload and selected
+answers.
 
 ```text
 iMVS frontend
 -> POST /api/triage-demo/sessions
 -> POST /api/triage-demo/sessions/{session_key}/answers
--> optional GET /summary or POST /answer-candidates helper
--> backend dynamic engine v0.3
+-> Python FastAPI contract adapter
+-> Question_DB-backed triage_v1 engine
 -> staff_review_summary
 ```
 
-Internal v0.3 dynamic-engine files:
+Canonical Python runtime files:
 
 ```text
-data/question_manifest.tachycardia.v0.3.json
-data/answer_effects.tachycardia.v0.3.json
-data/routing_policy.tachycardia.v0.3.json
-data/summary_templates.tachycardia.v0.3.json
-api/lib/dynamic-engine/
+python_api/main.py
+python_api/triage_contract.py
+python_api/triage_v1/
+Question_DB/
 ```
 
-The external v0.2 API version fields remain unchanged because those were
-already communicated as the June demo baseline. The v0.3 label is internal to
-the dynamic routing implementation until a recorded change request promotes it.
+The older JavaScript dynamic-engine files remain historical / static-viewer
+references during the transition. They are not the canonical imedtac backend
+runtime after the Python MVP transition.
+
+The external v0.2 API version fields remain unchanged because those were already
+communicated as the June demo baseline. Internal routing metadata stays behind
+the Python adapter unless a recorded change request promotes it.
 
 ## Demo Mainline
 
-Start the local static demo server:
+Start the canonical local FastAPI API server:
 
 ```bash
 npm start
 ```
 
-Open the English kiosk demo:
+Open the local API test page:
+
+```text
+http://127.0.0.1:8000/
+```
+
+Start the legacy/static English kiosk viewer when needed:
+
+```bash
+npm run static:start
+```
+
+Open the static viewer:
 
 ```text
 http://localhost:4183/app/triage-kiosk/
@@ -214,18 +235,11 @@ Useful backend environment variables:
 
 ```text
 DEMO_BEARER_TOKEN        optional bearer-token gate
-DEMO_ALLOWED_ORIGINS     comma-separated CORS allowlist, defaults to localhost origins
-DEMO_REDIS_URL           optional Redis session-store URL for cloud restart continuity
-DEMO_REDIS_KEY_PREFIX    optional Redis key prefix, default ai-triage-demo:session:
-DEMO_SESSION_STORE_FILE  optional persistent session-store JSON file
-DEMO_AUDIT_LOG_PATH      optional append-only JSONL audit log
-DEMO_MAX_JSON_BODY_BYTES request body size limit, default 32768
-DEMO_AI_FORCE_FAILURE    set to 1 to rehearse deterministic AI fallback
 ```
 
-`docker-compose.yml` starts Redis and configures `DEMO_REDIS_URL` for the API
-container. The JSON session-store file remains a local/demo fallback for runs
-that do not enable Redis.
+`docker-compose.yml` starts the Python FastAPI container on port `8000`. The
+current MVP uses in-memory synthetic demo sessions; persistent cloud session
+storage remains a future production validation layer.
 
 The runtime demo is intentionally narrow: synthetic measurement-time intake ->
 synthetic vital payload -> governed English choice-only follow-up questions ->
@@ -234,12 +248,10 @@ multi-choice answers show visible selection order before saving. It does not
 diagnose, recommend treatment, assign a final triage level, order emergency
 care, or write to HIS / EMR / FHIR.
 
-The contract API now also supports backend dynamic tachycardia routing: same
-vitals plus different associated-symptom answers can select different next
-questions and produce different staff-review summary content. The optional
-answer-candidate helper only maps ephemeral transcript text to the current
-question's allowed option ids and still requires confirmation through
-`/answers`.
+The contract API now uses the Python `triage_v1` engine: measured vitals select
+the contract-compatible question branch, doebow's `Question_DB/` provides the
+fixed question bank, and unsupported MVP question types are rendered as
+single-choice option buckets before they reach the imedtac-facing API.
 
 Current runnable case set: chest pressure, fever / urinary symptoms, and the
 Duobao-aligned respiratory early-handoff flow. The respiratory runtime still
