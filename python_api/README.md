@@ -220,6 +220,16 @@ CORS preflight check:
 ```bash
 curl -sS -X OPTIONS http://127.0.0.1:18080/api/triage-demo/sessions \
   -H 'Origin: http://localhost:5174' -i
+
+curl -sS -X OPTIONS http://127.0.0.1:18080/api/triage-demo/sessions \
+  -H 'Origin: http://127.0.0.1:5174' \
+  -H 'Access-Control-Request-Method: POST' \
+  -H 'Access-Control-Request-Headers: content-type,authorization' -i
+
+curl -sS -X OPTIONS http://127.0.0.1:18080/api/triage-demo/sessions/test-session/answers \
+  -H 'Origin: http://127.0.0.1:5174' \
+  -H 'Access-Control-Request-Method: POST' \
+  -H 'Access-Control-Request-Headers: content-type,authorization' -i
 ```
 
 Recommended Render settings:
@@ -230,12 +240,20 @@ Runtime: Docker
 Branch: main
 Health check path: /healthz
 Environment: DEMO_BEARER_TOKEN=<private token, only if bearer gate is enabled>
+Environment: DEMO_ALLOWED_ORIGINS=http://127.0.0.1:5174,https://<imedtac-frontend-origin>
 ```
 
 The Docker image copies `python_api/`, `Question_DB/`, and
 `handoff/api-examples/` because `triage_contract.py` uses the sent API examples
 to preserve external contract fields. Real bearer tokens and private tunnel
 credentials must stay in Render environment variables, not in Git.
+
+CORS origin matching is exact by scheme, host, and port. The default allowlist
+already supports local `localhost` and `127.0.0.1` testing; add imedtac's
+browser, WebView, HTTPS, or local-network origin through `DEMO_ALLOWED_ORIGINS`
+after confirming the actual `Origin` header. The runtime ignores `*` wildcard
+configuration so the bearer-token protected demo API keeps a bounded browser
+surface.
 
 ## Implementation Notes
 

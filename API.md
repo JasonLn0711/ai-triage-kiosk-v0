@@ -69,11 +69,14 @@ CORS:
 | --- | --- |
 | Allowed methods | `POST`, `OPTIONS` |
 | Allowed headers | `Content-Type`, `Authorization` |
-| Allowed browser origins | `http://localhost`, `http://localhost:5174` |
+| Default allowed browser origins | `http://localhost`, `http://localhost:5174`, `http://127.0.0.1`, `http://127.0.0.1:5174` |
+| Deployment allowlist extension | Render can set `DEMO_ALLOWED_ORIGINS` as a comma-separated list of exact browser origins, for example `https://<imedtac-test-origin>` or `http://<local-ip>:5174`. |
 | Preflight | `OPTIONS` 回 `204`，不要求 bearer token。 |
 
 如果測試環境使用 `127.0.0.1`、內網 IP、其他 port、HTTPS domain 或 WebView custom
-origin，需要先提供實際 `Origin` header 再加入 allowlist。
+origin，需要先提供實際 `Origin` header 再加入 allowlist。Allowlist 比對採 exact
+scheme/host/port matching；runtime 不接受 `*` wildcard，避免 demo bearer-token API 被
+開成全域瀏覽器來源。
 
 ## Shared Response Fields
 

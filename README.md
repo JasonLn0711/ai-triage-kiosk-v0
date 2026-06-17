@@ -237,11 +237,18 @@ Useful backend environment variables:
 
 ```text
 DEMO_BEARER_TOKEN        optional bearer-token gate
+DEMO_ALLOWED_ORIGINS     optional comma-separated exact browser Origin allowlist
 ```
 
 `docker-compose.yml` starts the Python FastAPI container on port `8000`. The
 current MVP uses in-memory synthetic demo sessions; persistent cloud session
 storage remains a future production validation layer.
+
+The backend CORS allowlist defaults include local test origins:
+`http://localhost`, `http://localhost:5174`, `http://127.0.0.1`, and
+`http://127.0.0.1:5174`. Render or imedtac rehearsal deployments should add
+the exact frontend origin through `DEMO_ALLOWED_ORIGINS`, using explicit
+scheme/host/port values and no wildcard.
 
 The runtime demo is intentionally narrow: synthetic measurement-time intake ->
 synthetic vital payload -> governed English choice-only follow-up questions ->
