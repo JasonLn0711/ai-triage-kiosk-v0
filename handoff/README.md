@@ -147,8 +147,10 @@ Post-Wu patent-protection update:
 - Prof. Wu's follow-up phone call confirms lab API mode can protect know-how,
   MOU is too general for product co-development, and future meeting notes
   should attribute idea origin.
-- Use `handoff/patent/2026-05-22-ai-triage-patent-disclosure-draft.md` as the
-  active protection packet.
+- Use `handoff/patent/2026-06-22-previsit-review-exam-candidate-patent-disclosure-v2.md`
+  as the active Tomi-review protection packet.
+- Route this packet as `PF-2026-003` v2 in `../patent-dossier/`, not a new
+  `PF-2026-004`, unless Tomi / counsel explicitly asks for a split family.
 - Share API-contract details needed for the June demo; keep reusable routing,
   scoring, source-governance, prompt / embedding, and claim-structure details
   internal until Prof. Wu / Tomi clear the cooperation boundary.
