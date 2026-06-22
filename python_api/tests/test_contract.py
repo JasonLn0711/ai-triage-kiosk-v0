@@ -8,6 +8,7 @@ from python_api import triage_contract as contract
 from python_api.main import app
 from python_api.triage_v1.models import FlowState, NormalizedVital, Patient, PatientAnswer
 from python_api.triage_v1.summary_builder import build_summary
+from python_api.triage_v1.llm_summary_client import LlmSubjectiveSummary
 
 
 client = TestClient(app)
@@ -67,6 +68,7 @@ def first_option_ids(question):
 def setup_function():
     contract.reset_mock_state()
     os.environ.pop("DEMO_BEARER_TOKEN", None)
+    os.environ["LLM_SUMMARY_URL"] = ""
 
 
 def test_demo_bearer_token_gate_is_disabled_until_configured():
@@ -467,7 +469,8 @@ def test_summary_builder_formats_subjective_template_fields():
         branch="Pain/abdominal_pain.md",
     )
 
-    subjective = build_summary(flow_state, registry=None)["staff_review_summary"]["subjective"]
+    summary = build_summary(flow_state, registry=None)["staff_review_summary"]
+    subjective = summary["subjective"]
 
     assert "32 y/o Female" in subjective
     assert "C.C.: abdominal pain for 2 days" in subjective
@@ -477,6 +480,112 @@ def test_summary_builder_formats_subjective_template_fields():
     assert "Allergy: No" in subjective
     assert "NRS: 6" in subjective
     assert "Pregnancy: Not sure" in subjective
+    assert summary["subjective_summary_source"] == "deterministic_fallback"
+
+
+def test_summary_builder_replaces_only_subjective_when_llm_returns_valid_response(monkeypatch):
+    vitals = {
+        "temperature_c": NormalizedVital("temperature_c", 37.2, "C", "measured", "ok"),
+    }
+    patient = Patient(
+        patient_id="demo-llm",
+        age=53,
+        sex="M",
+        chief_concern="Fever",
+        vitals=vitals,
+        past_history=["HTN"],
+        answers=[
+            PatientAnswer("INIT-4", "How long have you had fever?", [], "2 days", "initial"),
+            PatientAnswer("ABD-1", "Where is the pain?", ["RUQ blunt pain"], None, "symptom_specific"),
+            PatientAnswer("UNIV-3", "Are you currently taking any medications?", ["No"], None, "universal"),
+            PatientAnswer("UNIV-4", "Do you have any drug allergy?", ["No"], None, "universal"),
+            PatientAnswer("1-1-2", "Rate the pain from 1-10.", [], 6, "symptom_specific"),
+        ],
+    )
+    flow_state = FlowState(
+        session_key="summary-llm-session",
+        case_id="summary-llm-case",
+        flow_version="test",
+        current_phase="summary",
+        question_plan=[],
+        current_index=0,
+        vitals=vitals,
+        patient_context={},
+        patient=patient,
+        answers=[],
+        flags=[],
+        branch="Pain/abdominal_pain.md",
+    )
+
+    def fake_request(payload):
+        assert payload["patient_record"]["age"] == 53
+        assert payload["subjective_template"]
+        return LlmSubjectiveSummary(
+            subjective=[
+                "53 y/o M",
+                "C.C. Fever for 2 days",
+                "Detail: RUQ blunt pain",
+                "Past history: HTN",
+                "Medication: Nil",
+                "Allergy: Nil",
+                "NRS: 6",
+            ],
+            model_id="test/medgemma",
+        )
+
+    monkeypatch.setattr("python_api.triage_v1.summary_builder.request_subjective_summary", fake_request)
+
+    summary = build_summary(flow_state, registry=None)["staff_review_summary"]
+
+    assert summary["subjective"] == [
+        "53 y/o M",
+        "C.C. Fever for 2 days",
+        "Detail: RUQ blunt pain",
+        "Past history: HTN",
+        "Medication: Nil",
+        "Allergy: Nil",
+        "NRS: 6",
+    ]
+    assert summary["soap_note"]["subjective"] == summary["subjective"]
+    assert summary["objective"] == ["Vital sign: T/P/R: 37.2/-/-"]
+    assert "S\n53 y/o M\nC.C. Fever for 2 days" in summary["soap_text"]
+    assert "O\nVital sign: T/P/R: 37.2/-/-" in summary["soap_text"]
+    assert summary["subjective_summary_source"] == "llm"
+    assert summary["subjective_summary_model"] == "test/medgemma"
+
+
+def test_summary_builder_falls_back_when_llm_returns_no_summary(monkeypatch):
+    vitals = {}
+    patient = Patient(
+        patient_id="demo-fallback",
+        age=32,
+        sex="Female",
+        chief_concern="abdominal pain",
+        vitals=vitals,
+        answers=[PatientAnswer("INIT-4", "How long have you had abdominal pain?", [], "2 days", "initial")],
+    )
+    flow_state = FlowState(
+        session_key="summary-fallback-session",
+        case_id="summary-fallback-case",
+        flow_version="test",
+        current_phase="summary",
+        question_plan=[],
+        current_index=0,
+        vitals=vitals,
+        patient_context={},
+        patient=patient,
+        answers=[],
+        flags=[],
+        branch="Pain/abdominal_pain.md",
+    )
+    monkeypatch.setattr("python_api.triage_v1.summary_builder.request_subjective_summary", lambda payload: None)
+
+    summary = build_summary(flow_state, registry=None)["staff_review_summary"]
+
+    assert "32 y/o Female" in summary["subjective"]
+    assert "C.C.: abdominal pain for 2 days" in summary["subjective"]
+    assert summary["subjective_summary_source"] == "deterministic_fallback"
+    assert "subjective_summary_model" not in summary
 
 
 def test_answering_final_question_returns_staff_review_summary():
@@ -587,4 +696,3 @@ def test_options_preflight_returns_cors_headers():
     assert response.status_code == 204
     assert response.headers["Access-Control-Allow-Origin"] == "http://localhost:5174"
     assert response.headers["Access-Control-Allow-Methods"] == "POST, OPTIONS"
-
