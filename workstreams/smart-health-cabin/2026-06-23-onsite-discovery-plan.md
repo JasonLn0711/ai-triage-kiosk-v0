@@ -9,6 +9,7 @@ source:
   - ../../source/2026-06-17-imedtac-smart-health-cabin-requirements/source.md
   - ../../source/2026-06-16-imedtac-teams-question-option-adjustment/source.md
   - ../../source/2026-06-17-smart-health-cabin-expert-tutorial-note/source.md
+  - ../../source/2026-06-19-wu-tomi-ai-triage-smart-health-cabin-ip-sync/meeting-record.md
   - ./external-authority-verification.md
 ---
 
@@ -19,7 +20,8 @@ source:
 The `2026-06-23` onsite visit should produce enough shared facts for NYCU,
 多寶, and 慧誠智醫（imedtac Co., Ltd.）to evaluate feasibility, first-release
 scope, schedule assumptions, and budget assumptions for the Smart Health Cabin
-software modules.
+software modules while preserving the internal patent / IP strategy clarified
+with Prof. Wu and Tomi on `2026-06-19`.
 
 The meeting should cover both:
 
@@ -29,6 +31,11 @@ The meeting should cover both:
 
 These are adjacent lanes. They should be discussed together for context but
 recorded separately for execution control.
+
+The meeting posture is `IP-safe discovery`: ask imedtac to describe equipment,
+workflow, constraints, and ownership needs in their own words; do not
+proactively teach the internal patent claim framing, routing method, or
+complete reusable system design.
 
 ## What Johnny Likely Wants To Discuss
 
@@ -102,6 +109,11 @@ constraints, software architecture, and project delivery.
   - bearer token handling rule;
   - single-choice / multi-choice UI boundary;
   - measured-vital summary expectation.
+- Prepare the internal 6/19 patent discussion artifacts for Prof. Wu / Tomi,
+  not for imedtac:
+  - Smart Health Cabin measured-context block diagram;
+  - Jason specialty-configurable previsit block diagram;
+  - one-page summary of what to listen for on 6/23.
 - Prepare to ask for equipment facts rather than infer them.
 - Confirm whether photos, videos, screenshots, or equipment spec captures are
   allowed during the visit.
@@ -113,6 +125,8 @@ constraints, software architecture, and project delivery.
 
 ## Meeting Control Boundaries
 
+- The team should not proactively disclose patent filing intent, internal claim
+  strategy, or the complete three-state / specialty-configurable method.
 - The meeting can use AI Triage as adjacent context, but it should not silently
   expand the existing two-endpoint AI Triage contract.
 - The meeting can discuss possible technology stacks, but it should not commit
@@ -128,6 +142,10 @@ constraints, software architecture, and project delivery.
 - The meeting should close with a decision on what kind of response is needed:
   internal feasibility memo, imedtac-facing proposal, hospital-facing material,
   quotation input, or design-spec phase.
+- After the meeting, split records into two layers:
+  - internal source / IP analysis for Prof. Wu, Tomi, Jason, and 多寶;
+  - imedtac-facing feasibility material containing only cleared scope,
+    assumptions, owners, schedule basis, and next decisions.
 
 ## Expected Meeting Output
 
@@ -142,6 +160,10 @@ record with:
 - feasibility response assumptions;
 - estimate blockers;
 - next decision request.
+
+Internally, the meeting should also produce an idea-origin record that
+distinguishes imedtac requirements from NYCU / 多寶 / Jason / Tomi / Prof. Wu
+method proposals.
 
 ## Suggested Opening Statement
 

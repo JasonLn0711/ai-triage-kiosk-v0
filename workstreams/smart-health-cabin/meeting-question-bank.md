@@ -13,6 +13,17 @@ source:
 
 # Smart Health Cabin Meeting Question Bank
 
+## IP-Safe Discovery Questions
+
+Use these first so imedtac describes its own target workflow before NYCU fills
+in method details.
+
+1. 這次智慧健康倉，慧誠 / 北市聯醫希望使用者完成後，現場人員實際要收到什麼訊息或報告？
+2. 若生命徵象或問卷結果看起來需要注意，現在預期通知誰：護理人員、醫師、健康中心管理人員，還是一般工作人員？
+3. 在醫務室、醫院、健康中心、長照中心等不同場域，慧誠希望同一套系統維持相同流程，還是依場域調整？
+4. 慧誠目前已經有明確設計方法的部分是哪些？還只是需求目標的部分是哪些？
+5. 6/23 會後希望 NYCU 回覆的是需求釐清、架構建議、feasibility、初步報價，還是正式設計規格？
+
 ## Opening Questions
 
 1. 這次北市聯醫案的第一版成功標準是 demo、pilot、院方驗收，還是正式上線？
