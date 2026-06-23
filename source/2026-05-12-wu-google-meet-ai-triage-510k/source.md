@@ -29,7 +29,7 @@ related:
   - data/projects/2026-05-imedtac-er-triage-ekg-asr.md
   - data/knowledge/personal/sources/2026-05-12-imedtac-company-ai-triage-sync/source.md
   - data/knowledge/personal/sources/2026-05-12-wu-line-lianyi-asr-llm-demo/source.md
-  - ../ai-triage-kiosk-demo/source/2026-05-12-wu-google-meet-ai-triage-510k/
+  - ../imedtac-ai-triage-kiosk-demo/source/2026-05-12-wu-google-meet-ai-triage-510k/
 ---
 
 # 2026-05-12 Prof. Wu Google Meet - AI Triage 510K Direction
@@ -49,7 +49,7 @@ reference.
 - User-provided post-transcript summary: `user-provided-summary.md`
 - User-provided extended analysis: `user-provided-extended-analysis.md`
 - Execution-repo copy:
-  `../ai-triage-kiosk-demo/source/2026-05-12-wu-google-meet-ai-triage-510k/`
+  `../imedtac-ai-triage-kiosk-demo/source/2026-05-12-wu-google-meet-ai-triage-510k/`
 
 ## Source Handling
 

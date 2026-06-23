@@ -1,8 +1,8 @@
 # AI Triage Kiosk Demo
 
 <p>
-  <img src="https://img.shields.io/github/last-commit/JasonLn0711/ai-triage-kiosk-v0?style=for-the-badge&logo=github&color=2563eb" alt="GitHub last commit"/>
-  <img src="https://img.shields.io/github/repo-size/JasonLn0711/ai-triage-kiosk-v0?style=for-the-badge&logo=github&color=0f766e" alt="GitHub repo size"/>
+  <img src="https://img.shields.io/github/last-commit/JasonLn0711/imedtac-ai-triage-kiosk-v0?style=for-the-badge&logo=github&color=2563eb" alt="GitHub last commit"/>
+  <img src="https://img.shields.io/github/repo-size/JasonLn0711/imedtac-ai-triage-kiosk-v0?style=for-the-badge&logo=github&color=0f766e" alt="GitHub repo size"/>
   <img src="https://img.shields.io/badge/runtime-FastAPI-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI runtime"/>
   <img src="https://img.shields.io/badge/deploy-Render%20live-46e3b7?style=for-the-badge&logo=render&logoColor=111827" alt="Render live"/>
   <img src="https://img.shields.io/badge/API-2%20endpoints-4338ca?style=for-the-badge" alt="Two endpoint API"/>
@@ -29,6 +29,12 @@ same two-endpoint June MVP contract; the backend runtime and doebow
 - Product boundary: market demo / product capability demo, not production
   clinical triage, autonomous diagnosis, or a formal HIS / EMR integration.
 - Planning home: `../planning-everything-track/data/projects/2026-05-imedtac-er-triage-ekg-asr.md`.
+
+## Related But Separate Projects
+
+| Project | Canonical home | Boundary |
+| --- | --- | --- |
+| Smart Health Cabin collaboration | `../imedtac-smart-health-cabin-v0` | Owns the hearing, vision, questionnaire, Avatar interaction, adult preventive health form, HPA / WHO STEPS questionnaire MVP, and Smart Health Cabin feasibility lane. This repo references it only when the separate lane affects AI Triage API consistency, demo compatibility, or IP-safe coordination. |
 
 ## Current Interpretation
 

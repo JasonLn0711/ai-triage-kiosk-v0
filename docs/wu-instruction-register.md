@@ -34,10 +34,21 @@ the 慧誠 AI triage kiosk demo lane.
 | `2026-05-21 12:05` | Prof. Wu said MOU is general and product development should eventually have a product co-development agreement covering development responsibility, overlap, profit split, and license/payment logic. | Prepare contract/IP questions for Prof. Wu / Tomi and avoid treating MOU as enough to protect reusable invention logic. |
 | `2026-05-21 12:05` | Prof. Wu linked commissioned projects, product cash flow, BU/new-company possibility, and postdoc salary/personnel-cost runway. | Evaluate AI-Triage and adjacent projects as future funded product/service lanes; protect IP because it affects Jason's postdoc runway and leverage. |
 | `2026-05-21 12:05` | Prof. Wu said deep-cultivation proposal work is for early June and can be drafted study-plan style: background pain point, methods, expected effects/KPI, and budget; AI-Triage can be one subproject and CRM can be a later-year extension. | Do not let deep-cultivation writing displace the 5/22 patent packets; park a June proposal frame with year-1 to year-3 structure. |
-| `2026-06-19 21:29/21:30` | Prof. Wu / Tomi / 多寶 / Jason reframed the `2026-06-23` 慧誠 onsite visit as IP-aware discovery: collect device and workflow facts, listen to imedtac's desired approach, and do not proactively disclose the patent filing direction or internal claim framing. | Treat the onsite meeting as `IP-safe discovery`. Ask about equipment, workflow, ownership, and delivery needs; keep patent-sensitive method details internal until Prof. Wu / Tomi clear them. |
-| `2026-06-19 21:29/21:30` | Tomi recommended prioritizing the Smart Health Cabin / AI Triage invention around multiple vital-sign acquisition followed by three-state handling: urgent, abnormal-but-follow-up, and normal/baseline, with human notification or follow-up questions rather than autonomous clinical action. | Before `2026-06-23`, prepare an internal 1-2 page patent profile and a high-level system block diagram: `multi-vital acquisition -> urgent / abnormal / normal classification -> human notification or targeted questions -> staff-review report`. |
-| `2026-06-19 21:29/21:30` | Tomi distinguished Jason's software direction from the Smart Health Cabin device direction: Jason's stronger patent angle is specialty-configurable previsit questioning that flags patients for early clinician/nurse review or possible pre-visit examination handling. | Prepare a second internal block diagram for Jason's software lane: `specialty selection -> specialty watch items -> questionnaire -> clinician/nurse early-review notification -> visit summary`. Do not present this as an imedtac implementation promise before IP direction is settled. |
-| `2026-06-19 21:29/21:30` | Vision/hearing may be patentable and useful, but the meeting favored staged handling because the mechanics, calibration, cabin design, and delivery timing remain unclear. | Keep Module A in discovery / screening-support language for the onsite visit. Prioritize Module B / measured-context workflow first; avoid committing to clinical-grade vision/hearing measurement before device facts and validation ownership are known. |
+## Separated Smart Health Cabin Context
+
+The `2026-06-19` Prof. Wu / Tomi IP-aware discovery discussion, the `2026-06-23`
+onsite visit, and the adult preventive health questionnaire module now live in:
+
+```text
+../imedtac-smart-health-cabin-v0
+```
+
+Use that sibling workspace for Smart Health Cabin requirements, hearing/vision
+screening questions, questionnaire module design, Avatar interaction, HPA adult
+preventive health form analysis, and related feasibility work. This register
+keeps the AI triage kiosk demo instructions here and treats Smart Health Cabin
+only as adjacent context when it affects API consistency, demo compatibility, or
+IP-safe coordination.
 
 ## Company-Side Clarifications From 2026-05-12
 

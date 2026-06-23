@@ -4,8 +4,10 @@ Date: `2026-05-12`
 
 ## Decision
 
-`ai-triage-kiosk-demo` is the canonical execution home for the 慧誠智醫 AI
-triage kiosk demo lane.
+`imedtac-ai-triage-kiosk-v0` is the canonical execution home for the active
+慧誠智醫 AI triage kiosk v0 lane. Historical May demo artifacts keep their
+`imedtac-ai-triage-kiosk-demo` references where they point to the earlier demo
+repo or deployed demo service.
 
 ## Why
 

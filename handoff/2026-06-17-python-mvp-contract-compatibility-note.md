@@ -121,8 +121,8 @@ npm start
 Docker deployment verification now uses the repo Dockerfile directly:
 
 ```text
-docker build -t ai-triage-kiosk-v0-render-check .
-docker run --rm -p 18080:8000 ai-triage-kiosk-v0-render-check
+docker build -t imedtac-ai-triage-kiosk-v0-render-check .
+docker run --rm -p 18080:8000 imedtac-ai-triage-kiosk-v0-render-check
 curl -sS http://127.0.0.1:18080/healthz
 curl -sS -X OPTIONS http://127.0.0.1:18080/api/triage-demo/sessions \
   -H 'Origin: http://localhost:5174' -i

@@ -16,6 +16,7 @@ Do not turn this repo into:
 - a live patient-data repository,
 - a regulatory submission package,
 - a broad medical AI research repo,
+- the Smart Health Cabin collaboration workspace,
 - a replacement for `../planning-everything-track`.
 
 ## Canonical Ownership
@@ -25,6 +26,10 @@ Do not turn this repo into:
 - This repo also owns copied upstream Prof. Wu context relevant to 慧誠, including
   the 2026-04-16 Wu/Tomi meeting and the 2026-04-20 CDE medical cybersecurity
   source. Treat those as context, not as the triage implementation itself.
+- `../imedtac-smart-health-cabin-v0` owns the separate Smart Health Cabin
+  collaboration lane, including hearing, vision, questionnaire, Avatar
+  interaction, adult preventive health form, and public-health questionnaire
+  module work.
 - `../planning-everything-track` owns priority, capacity, status, deadlines, and
   project locator notes.
 - `../urology-ai-previsit-demo` remains a reference implementation for structured

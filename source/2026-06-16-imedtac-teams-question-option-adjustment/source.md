@@ -15,7 +15,7 @@ related:
   - ../../handoff/2026-06-08-dynamic-engine-external-release-gate-closeout.md
   - ../../data/question_manifest.tachycardia.v0.3.json
   - ../../data/summary_templates.tachycardia.v0.3.json
-  - ../2026-06-17-imedtac-smart-health-cabin-requirements/source.md
+  - ../../../imedtac-smart-health-cabin-v0/source/2026-06-17-imedtac-smart-health-cabin-requirements/source.md
 ---
 
 # imedtac Teams Question-Type, Tachycardia, And Smart Health Cabin Follow-Up
@@ -149,8 +149,9 @@ Johnny Fang 方偉翰, imedtac Corp.:
   planning document to 多寶 and Jason for prior review.
 - Johnny asked whether the team can continue discussion after the equipment
   visit on `2026-06-23`.
-- The `2026-06-17 18:18` Gmail requirements package is recorded separately at
-  `../2026-06-17-imedtac-smart-health-cabin-requirements/source.md`.
+- The `2026-06-17 18:18` Gmail requirements package is recorded in the
+  separate Smart Health Cabin workspace at
+  `../../../imedtac-smart-health-cabin-v0/source/2026-06-17-imedtac-smart-health-cabin-requirements/source.md`.
 
 ### Compatibility With Current Repo State
 
@@ -205,10 +206,10 @@ python3 JS/scripts/check_governance_registries.py
 5. Confirm the final summary path with imedtac: Endpoint 2 returns
    `status=summary` and `staff_review_summary`, and the objective section uses
    measured vital values from the session payload.
-6. Record the Taipei City Hospital / 北市聯醫 requirements as a separate source
-   bundle when Johnny sends the updated scope. Keep that discussion separate
-   from the current June tachycardia demo contract unless a recorded change
-   request explicitly links them.
+6. Record the Taipei City Hospital / 北市聯醫 requirements in
+   `../../../imedtac-smart-health-cabin-v0` when Johnny sends the updated
+   scope. Keep that discussion separate from the current June tachycardia demo
+   contract unless a recorded change request explicitly links them.
 7. Confirm the `2026-06-23` onsite visit details with imedtac: exact time,
    attendees, address/room, available equipment, whether photos or recordings
    are allowed, and whether the post-visit discussion should cover both the

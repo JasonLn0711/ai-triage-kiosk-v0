@@ -7,7 +7,7 @@ version: v2
 patent_dossier_family: "PF-2026-003-ai-triage-staff-review-handoff"
 patent_dossier_decision: "migrate_as_pf_2026_003_v2_not_new_pf_2026_004"
 patent_dossier_target: "../patent-dossier/dossiers/active/PF-2026-003-ai-triage-staff-review-handoff/09_packets/reviewable/2026-06-22-previsit-review-exam-candidate-patent-disclosure-v2.md"
-engineering_source_repo: "ai-triage-kiosk-v0"
+engineering_source_repo: "imedtac-ai-triage-kiosk-v0"
 engineering_source_path: "handoff/patent/2026-06-22-previsit-review-exam-candidate-patent-disclosure-v2.md"
 cross_repo_status: "ready_to_migrate_when_patent_dossier_checkout_is_available"
 source_draft: "handoff/patent/2026-06-21-previsit-review-exam-candidate-patent-disclosure.md"
@@ -88,7 +88,7 @@ level_of_architecture_disclosure: "C4 Level 1 System Context Diagram only"
 ../patent-dossier/dossiers/active/PF-2026-003-ai-triage-staff-review-handoff/09_packets/reviewable/2026-06-22-previsit-review-exam-candidate-patent-disclosure-v2.md
 ```
 
-`ai-triage-kiosk-v0` 保留本檔作為工程來源與可追溯 handoff；`patent-dossier` 回到本機 checkout 後，應複製本檔到上述目標路徑，並在 `portfolio-registry.yaml` 或 PF-2026-003 dossier index 標記為 v2 / 2026-06-22 claim-narrowing packet。若 Tomi 或專利事務所認定檢查候選審閱路徑需要分案，再從 `PF-2026-003` 拆出 child dossier；在正式建議前不先開新 patent family。
+`imedtac-ai-triage-kiosk-v0` 保留本檔作為工程來源與可追溯 handoff；`patent-dossier` 回到本機 checkout 後，應複製本檔到上述目標路徑，並在 `portfolio-registry.yaml` 或 PF-2026-003 dossier index 標記為 v2 / 2026-06-22 claim-narrowing packet。若 Tomi 或專利事務所認定檢查候選審閱路徑需要分案，再從 `PF-2026-003` 拆出 child dossier；在正式建議前不先開新 patent family。
 
 ---
 
