@@ -5,7 +5,7 @@
 Path:
 
 ```text
-../imedtac-ai-triage-kiosk-demo
+../imedtac-ai-triage-kiosk-v0
 ```
 
 Role:
@@ -49,6 +49,28 @@ Role:
   workflow;
 - not the canonical home for urgent-care / all-specialty triage;
 - any reuse should be deliberate and copied/adapted, not silently merged.
+
+## Smart Health Cabin Collaboration Repo
+
+Path:
+
+```text
+../imedtac-smart-health-cabin-v0
+```
+
+Role:
+
+- standalone execution workspace for the separate Smart Health Cabin
+  collaboration lane;
+- owns hearing, vision, questionnaire, Avatar interaction, HPA adult preventive
+  health form, WHO STEPS questionnaire MVP, Smart Health Cabin feasibility, and
+  related source packages;
+- should be linked from planning when it affects priority, capacity, or next
+  stakeholder decisions.
+
+This AI triage kiosk repo may reference the Smart Health Cabin workspace only
+for API consistency, demo compatibility, IP-safe coordination, or explicit
+cross-project decisions.
 
 ## Source Bundles
 

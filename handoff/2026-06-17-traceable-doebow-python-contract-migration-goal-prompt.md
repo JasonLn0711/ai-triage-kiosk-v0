@@ -218,7 +218,7 @@ Copy the following prompt into a fresh Codex goal or execution thread.
 ```text
 Goal: Implement the traceable doebow Question_DB + Python/FastAPI contract
 migration for the AI triage kiosk demo in
-/home/jnln3799/every_on_git_ubuntu/-imedtac-ai-triage-kiosk-v0.
+/home/jnln3799/every_on_git_ubuntu/imedtac-ai-triage-kiosk-v0.
 
 Primary objective:
 Make the Python/FastAPI backend the canonical imedtac-facing runtime, adopt

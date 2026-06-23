@@ -3,7 +3,7 @@
 ## Directory Map
 
 ```text
-imedtac-ai-triage-kiosk-demo/
+imedtac-ai-triage-kiosk-v0/
   README.md
   AGENTS.md
   docs/
@@ -42,6 +42,7 @@ imedtac-ai-triage-kiosk-demo/
 
 - Current execution detail goes here.
 - Planning status goes to `../planning-everything-track/data/projects/2026-05-imedtac-er-triage-ekg-asr.md`.
+- Smart Health Cabin collaboration work goes to `../imedtac-smart-health-cabin-v0`.
 - Urology implementation details stay in `../urology-ai-previsit-demo`.
 - Regulatory-memory details stay in `../tfda-fda-regulatory-advisor`.
 - Medical cybersecurity deck execution stays in its own talk / deck repo.

@@ -8,7 +8,7 @@ type: public-source-dossier
 source: public-web-research
 status: working
 related_project: data/projects/2026-05-imedtac-er-triage-ekg-asr.md
-canonical_execution_repo: ../ai-triage-kiosk-demo/
+canonical_execution_repo: ../imedtac-ai-triage-kiosk-demo/
 planning_source: ../planning-everything-track/data/knowledge/personal/sources/2026-05-21-zhidewan-public-profile/source.md
 ---
 

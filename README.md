@@ -30,6 +30,12 @@ same two-endpoint June MVP contract; the backend runtime and doebow
   clinical triage, autonomous diagnosis, or a formal HIS / EMR integration.
 - Planning home: `../planning-everything-track/data/projects/2026-05-imedtac-er-triage-ekg-asr.md`.
 
+## Related But Separate Projects
+
+| Project | Canonical home | Boundary |
+| --- | --- | --- |
+| Smart Health Cabin collaboration | `../imedtac-smart-health-cabin-v0` | Owns the hearing, vision, questionnaire, Avatar interaction, adult preventive health form, HPA / WHO STEPS questionnaire MVP, and Smart Health Cabin feasibility lane. This repo references it only when the separate lane affects AI Triage API consistency, demo compatibility, or IP-safe coordination. |
+
 ## Current Interpretation
 
 慧誠智醫短期希望在六月前，基於現有 triage prototype，快速做出英文版
