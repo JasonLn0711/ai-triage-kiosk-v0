@@ -200,13 +200,13 @@ service as a Node runtime.
 Local Docker build:
 
 ```bash
-docker build -t ai-triage-kiosk-v0-render-check .
+docker build -t imedtac-ai-triage-kiosk-v0-render-check .
 ```
 
 Local container run:
 
 ```bash
-docker run --rm -p 18080:8000 ai-triage-kiosk-v0-render-check
+docker run --rm -p 18080:8000 imedtac-ai-triage-kiosk-v0-render-check
 ```
 
 Health check:

@@ -5,7 +5,7 @@
 Path:
 
 ```text
-../ai-triage-kiosk-demo
+../imedtac-ai-triage-kiosk-demo
 ```
 
 Role:

@@ -218,7 +218,7 @@ Copy the following prompt into a fresh Codex goal or execution thread.
 ```text
 Goal: Implement the traceable doebow Question_DB + Python/FastAPI contract
 migration for the AI triage kiosk demo in
-/home/jnln3799/every_on_git_ubuntu/-ai-triage-kiosk-v0.
+/home/jnln3799/every_on_git_ubuntu/-imedtac-ai-triage-kiosk-v0.
 
 Primary objective:
 Make the Python/FastAPI backend the canonical imedtac-facing runtime, adopt
@@ -409,8 +409,8 @@ Verification commands:
 - npm test if JS tests still exist
 - npm run demo:ready if package scripts are still maintained
 - git diff --check
-- docker build -t ai-triage-kiosk-v0-render-check .
-- docker run --rm -p 18080:8000 ai-triage-kiosk-v0-render-check
+- docker build -t imedtac-ai-triage-kiosk-v0-render-check .
+- docker run --rm -p 18080:8000 imedtac-ai-triage-kiosk-v0-render-check
 - curl -sS http://127.0.0.1:18080/healthz
 - curl -sS -X OPTIONS http://127.0.0.1:18080/api/triage-demo/sessions \
   -H 'Origin: http://localhost:5174' -i

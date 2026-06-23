@@ -3,7 +3,7 @@
 ## Directory Map
 
 ```text
-ai-triage-kiosk-demo/
+imedtac-ai-triage-kiosk-demo/
   README.md
   AGENTS.md
   docs/

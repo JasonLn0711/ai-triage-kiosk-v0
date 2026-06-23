@@ -12,31 +12,31 @@
 - Upstream thread: follow-up to the 吳老師 / 余總 project discussion; the earlier 余總 `triage` remark refers to this lane.
 - Internal contact window: 林駿亦 and Jason, pending Prof. Wu / company confirmation
 - Status: standalone execution repo created; company follow-up package analyzed; Friday `2026-05-15` research artifact is the next bounded deliverable; implementation remains gated on integration mode, target device, clinical-source confirmation, and the sales-pressure boundary from the `2026-05-11` LINE update. Current protection update as of `2026-05-21`: public-source diligence records 智德萬 / AItewan as an NYCU derivative AI medical-device startup with DeepBT TFDA registrations, FDA 510(k) `K252190`, and public patent / trademark signals. Treat imedtac method transfer as a commercial medical-AI / IP / regulatory collaboration routed through Prof. Wu / 智德萬, not NYCU by default.
-- Canonical execution repo: `../ai-triage-kiosk-demo/`
-- Repo operating contract: `../ai-triage-kiosk-demo/AGENTS.md`
-- Repo relationship note: `../ai-triage-kiosk-demo/docs/repo-relationships.md`
-- Repo project brief: `../ai-triage-kiosk-demo/docs/project-brief.md`
-- Core architecture note: `../ai-triage-kiosk-demo/docs/architecture-insertion-and-clinical-grounding.md`
-- Thursday vital-sign research gate: `../ai-triage-kiosk-demo/workstreams/05-thursday-vital-sign-research-gate.md`
-- First-principles must-do gates: `../ai-triage-kiosk-demo/workstreams/06-first-principles-must-do-gates.md`
-- Source index: `../ai-triage-kiosk-demo/docs/source-index.md`
-- Prof. Wu instruction register: `../ai-triage-kiosk-demo/docs/wu-instruction-register.md`
-- Repo organization: `../ai-triage-kiosk-demo/docs/repo-organization.md`
-- Friday source-governance handoff: `../ai-triage-kiosk-demo/handoff/2026-05-15-vital-aware-triage-feasibility-source-governance.md`
-- Source registry and example flows: `../ai-triage-kiosk-demo/handoff/2026-05-15-source-registry-and-example-flows.md`
-- Friday discussion brief: `../ai-triage-kiosk-demo/handoff/2026-05-15-friday-discussion-brief.md`
-- First-principles gap audit: `../ai-triage-kiosk-demo/handoff/2026-05-15-first-principles-gap-audit-and-action-plan.md`
-- Reviewer packet: `../ai-triage-kiosk-demo/handoff/reviewer-packet/`
-- Governance registries: `../ai-triage-kiosk-demo/data/`
-- Synthetic demo fixtures: `../ai-triage-kiosk-demo/demo/fixtures/`
-- Registry validation script: `../ai-triage-kiosk-demo/scripts/check_governance_registries.py`
+- Canonical execution repo: `../imedtac-ai-triage-kiosk-demo/`
+- Repo operating contract: `../imedtac-ai-triage-kiosk-demo/AGENTS.md`
+- Repo relationship note: `../imedtac-ai-triage-kiosk-demo/docs/repo-relationships.md`
+- Repo project brief: `../imedtac-ai-triage-kiosk-demo/docs/project-brief.md`
+- Core architecture note: `../imedtac-ai-triage-kiosk-demo/docs/architecture-insertion-and-clinical-grounding.md`
+- Thursday vital-sign research gate: `../imedtac-ai-triage-kiosk-demo/workstreams/05-thursday-vital-sign-research-gate.md`
+- First-principles must-do gates: `../imedtac-ai-triage-kiosk-demo/workstreams/06-first-principles-must-do-gates.md`
+- Source index: `../imedtac-ai-triage-kiosk-demo/docs/source-index.md`
+- Prof. Wu instruction register: `../imedtac-ai-triage-kiosk-demo/docs/wu-instruction-register.md`
+- Repo organization: `../imedtac-ai-triage-kiosk-demo/docs/repo-organization.md`
+- Friday source-governance handoff: `../imedtac-ai-triage-kiosk-demo/handoff/2026-05-15-vital-aware-triage-feasibility-source-governance.md`
+- Source registry and example flows: `../imedtac-ai-triage-kiosk-demo/handoff/2026-05-15-source-registry-and-example-flows.md`
+- Friday discussion brief: `../imedtac-ai-triage-kiosk-demo/handoff/2026-05-15-friday-discussion-brief.md`
+- First-principles gap audit: `../imedtac-ai-triage-kiosk-demo/handoff/2026-05-15-first-principles-gap-audit-and-action-plan.md`
+- Reviewer packet: `../imedtac-ai-triage-kiosk-demo/handoff/reviewer-packet/`
+- Governance registries: `../imedtac-ai-triage-kiosk-demo/data/`
+- Synthetic demo fixtures: `../imedtac-ai-triage-kiosk-demo/demo/fixtures/`
+- Registry validation script: `../imedtac-ai-triage-kiosk-demo/scripts/check_governance_registries.py`
 - Source bundle: `data/knowledge/personal/sources/2026-05-11-wu-imedtac-er-triage-ekg-asr/source.md`
 - Meeting record: `data/knowledge/personal/sources/2026-05-11-wu-imedtac-er-triage-ekg-asr/meeting-record.md`
 - Company-sync source bundle: `data/knowledge/personal/sources/2026-05-12-imedtac-company-ai-triage-sync/source.md`
 - Company-sync meeting record: `data/knowledge/personal/sources/2026-05-12-imedtac-company-ai-triage-sync/meeting-record.md`
 - Company-sync demo brief: `data/knowledge/personal/sources/2026-05-12-imedtac-company-ai-triage-sync/demo-brief.md`
 - Company-sync cleaned transcript: `data/knowledge/personal/sources/2026-05-12-imedtac-company-ai-triage-sync/transcript-cleaned.md`
-- Company follow-up materials analysis: `../ai-triage-kiosk-demo/docs/2026-05-12-imedtac-materials-analysis.md`
+- Company follow-up materials analysis: `../imedtac-ai-triage-kiosk-demo/docs/2026-05-12-imedtac-materials-analysis.md`
 - LINE-group context source: `data/knowledge/personal/sources/2026-05-02-12-imedtac-zhidewan-line-thread/source.md`
 - Prof. Wu LINE demo request source: `data/knowledge/personal/sources/2026-05-12-wu-line-lianyi-asr-llm-demo/source.md`
 - Prof. Wu Google Meet 510(k) direction source:
@@ -46,11 +46,11 @@
 - 智德萬 / AItewan public-profile dossier:
   `source/2026-05-21-zhidewan-public-profile/source.md`
 - Execution-repo source copies:
-  - `../ai-triage-kiosk-demo/source/2026-05-11-wu-imedtac-er-triage-ekg-asr/`
-  - `../ai-triage-kiosk-demo/source/2026-05-12-imedtac-company-ai-triage-sync/`
-  - `../ai-triage-kiosk-demo/source/2026-05-12-wu-google-meet-ai-triage-510k/`
-  - `../ai-triage-kiosk-demo/source/upstream-wu-context/2026-04-16-wu-yute-tomi-meeting/`
-  - `../ai-triage-kiosk-demo/source/upstream-wu-context/2026-04-20-cde-prof-wu-clinical-medical-device-it-cybersecurity-speech/`
+  - `../imedtac-ai-triage-kiosk-demo/source/2026-05-11-wu-imedtac-er-triage-ekg-asr/`
+  - `../imedtac-ai-triage-kiosk-demo/source/2026-05-12-imedtac-company-ai-triage-sync/`
+  - `../imedtac-ai-triage-kiosk-demo/source/2026-05-12-wu-google-meet-ai-triage-510k/`
+  - `../imedtac-ai-triage-kiosk-demo/source/upstream-wu-context/2026-04-16-wu-yute-tomi-meeting/`
+  - `../imedtac-ai-triage-kiosk-demo/source/upstream-wu-context/2026-04-20-cde-prof-wu-clinical-medical-device-it-cybersecurity-speech/`
 
 ## FIRST PRINCIPLE Scope
 
@@ -60,7 +60,7 @@
   context must be protected before deeper imedtac method transfer. NYCU is not
   the default contracting route; check NYCU only for university-owned or
   university-resource-derived material.
-- Canonical execution home: `../ai-triage-kiosk-demo/`.
+- Canonical execution home: `../imedtac-ai-triage-kiosk-demo/`.
 - Planning owns status, capacity, open questions, and routing only.
 - Execution repo owns copied source bundles, demo-specific briefs, architecture notes, implementation materials, and future deliverables.
 - Do not merge with `泌尿預診導航`: that lane is urology previsit workflow with synthetic local review. This lane is emergency triage support with EKG / SpO2 / vital signs and possible ASR / LLM interaction.
@@ -103,13 +103,13 @@ The most urgent thinking layer is now the AI triage product architecture:
 - build clinical evidence mapping before product claims;
 - distinguish FDA as software/risk/validation boundary from specialty guidelines and clinical protocols as likely sources for question logic.
 
-Canonical note: `../ai-triage-kiosk-demo/docs/architecture-insertion-and-clinical-grounding.md`.
+Canonical note: `../imedtac-ai-triage-kiosk-demo/docs/architecture-insertion-and-clinical-grounding.md`.
 
 Planning implication: do not schedule broad coding, UI polish, ASR expansion, or all-specialty scope until the insertion workflow, vital-to-question impact table, API boundary, and question provenance template are stable.
 
 ## Execution Repo Created
 
-The standalone repo `../ai-triage-kiosk-demo/` was created as a sibling of
+The standalone repo `../imedtac-ai-triage-kiosk-demo/` was created as a sibling of
 `planning-everything-track` to keep this lane from overloading planning notes.
 
 Initial repo contents:
@@ -121,7 +121,7 @@ Initial repo contents:
 - copied a planning-bridge snapshot of this locator;
 - added `README.md`, `AGENTS.md`, `docs/project-brief.md`, `docs/repo-relationships.md`, `docs/source-index.md`, `docs/repo-organization.md`, `docs/wu-instruction-register.md`, workstream notes, handoff folder, and decision log.
 
-Routing rule from now on: add execution detail in `../ai-triage-kiosk-demo/`
+Routing rule from now on: add execution detail in `../imedtac-ai-triage-kiosk-demo/`
 first, then mirror only status, blockers, capacity impact, and locator updates
 back into this planning file.
 
@@ -176,17 +176,17 @@ Current blocker after the company follow-up package:
 Johnny Fang's company-side follow-up email and two attachments were moved out
 of `~/Downloads` and into the execution repo:
 
-- `../ai-triage-kiosk-demo/source/2026-05-12-imedtac-company-ai-triage-sync/assets/2026-05-12-imedtac-ai-triage-followup-email.pdf`
-- `../ai-triage-kiosk-demo/source/2026-05-12-imedtac-company-ai-triage-sync/assets/2026-05-12-imvs-product-spec-v2.0.4.docx`
-- `../ai-triage-kiosk-demo/source/2026-05-12-imedtac-company-ai-triage-sync/assets/2026-05-12-imvs-api-v1.4-eng.pdf`
+- `../imedtac-ai-triage-kiosk-demo/source/2026-05-12-imedtac-company-ai-triage-sync/assets/2026-05-12-imedtac-ai-triage-followup-email.pdf`
+- `../imedtac-ai-triage-kiosk-demo/source/2026-05-12-imedtac-company-ai-triage-sync/assets/2026-05-12-imvs-product-spec-v2.0.4.docx`
+- `../imedtac-ai-triage-kiosk-demo/source/2026-05-12-imedtac-company-ai-triage-sync/assets/2026-05-12-imvs-api-v1.4-eng.pdf`
 
 Searchable text extracts are preserved under:
 
-- `../ai-triage-kiosk-demo/source/2026-05-12-imedtac-company-ai-triage-sync/extracted/`
+- `../imedtac-ai-triage-kiosk-demo/source/2026-05-12-imedtac-company-ai-triage-sync/extracted/`
 
 Detailed analysis:
 
-- `../ai-triage-kiosk-demo/docs/2026-05-12-imedtac-materials-analysis.md`
+- `../imedtac-ai-triage-kiosk-demo/docs/2026-05-12-imedtac-materials-analysis.md`
 
 Main update:
 
@@ -222,7 +222,7 @@ Rao consultation at `13:00`.
 
 Canonical workplan:
 
-- `../ai-triage-kiosk-demo/workstreams/05-thursday-vital-sign-research-gate.md`
+- `../imedtac-ai-triage-kiosk-demo/workstreams/05-thursday-vital-sign-research-gate.md`
 
 Planning interpretation:
 
@@ -252,7 +252,7 @@ The complete transcript and structured analysis are preserved at:
 
 Execution-repo copy:
 
-- `../ai-triage-kiosk-demo/source/2026-05-12-wu-google-meet-ai-triage-510k/`
+- `../imedtac-ai-triage-kiosk-demo/source/2026-05-12-wu-google-meet-ai-triage-510k/`
 
 Main decision:
 

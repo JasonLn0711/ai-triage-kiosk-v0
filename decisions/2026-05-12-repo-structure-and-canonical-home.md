@@ -4,7 +4,7 @@ Date: `2026-05-12`
 
 ## Decision
 
-`ai-triage-kiosk-demo` is the canonical execution home for the 慧誠智醫 AI
+`imedtac-ai-triage-kiosk-demo` is the canonical execution home for the 慧誠智醫 AI
 triage kiosk demo lane.
 
 ## Why

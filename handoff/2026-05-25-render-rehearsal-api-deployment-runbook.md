@@ -28,7 +28,7 @@ Observed from the Render dashboard on `2026-05-25`:
 | Service type | Web Service |
 | Runtime | Node |
 | Instance type | Free |
-| Repository | `JasonLn0711/ai-triage-kiosk-demo` |
+| Repository | `JasonLn0711/imedtac-ai-triage-kiosk-demo` |
 | Branch | `main` |
 | Render service id | `srv-d8a16je7r5hc73dvp46g` |
 | Public URL | `https://nycu-imedtac-triage-demo-api.onrender.com` |

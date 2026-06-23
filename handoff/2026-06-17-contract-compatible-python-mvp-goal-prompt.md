@@ -144,7 +144,7 @@ Copy the following prompt into a fresh Codex goal or execution thread.
 
 ```text
 Goal: Implement the contract-compatible Python/FastAPI MVP for the AI triage
-kiosk demo in /home/jnclaw/every_on_git_jnclaw/phd-life-system/ai-triage-kiosk-v0.
+kiosk demo in /home/jnclaw/every_on_git_jnclaw/phd-life-system/imedtac-ai-triage-kiosk-v0.
 
 Primary objective:
 Make the Python/FastAPI backend the canonical runtime for the imedtac demo,
