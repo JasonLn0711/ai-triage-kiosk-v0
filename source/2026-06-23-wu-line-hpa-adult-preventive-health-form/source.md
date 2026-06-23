@@ -10,6 +10,8 @@ sender: Prof. Wu / 吳育德老師
 channel: LINE
 raw_files:
   - 2026-06-23-hpa-adult-preventive-health-service-check-record-result-form-agent-readable.md
+derived_analysis:
+  - ../../workstreams/smart-health-cabin/hpa-adult-preventive-health-questionnaire-mvp-design-note.md
 related:
   - ../../workstreams/smart-health-cabin/module-b-questionnaire-triage-discovery.md
   - ../../workstreams/smart-health-cabin/post-meeting-decision-log.md
@@ -70,3 +72,16 @@ For first-release Smart Health Cabin planning, the working use is to identify
 which parts are suitable for user-facing structured intake, which parts require
 staff or clinician entry, and which result/advice fields require clinical
 ownership before appearing in reports.
+
+## Expert MVP Design Note
+
+The expert analysis supplied after this form was archived is preserved in:
+
+```text
+../../workstreams/smart-health-cabin/hpa-adult-preventive-health-questionnaire-mvp-design-note.md
+```
+
+Its core recommendation is to avoid inventing a new questionnaire. Use the HPA
+adult preventive health service form as the Taiwan public-sector backbone,
+WHO STEPS as the international public-health backbone, and add standardized
+modules by age and service context.

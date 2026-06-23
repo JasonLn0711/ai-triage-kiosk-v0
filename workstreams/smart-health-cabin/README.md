@@ -71,6 +71,7 @@ commitment, or implementation, create a separate execution repo such as
 | `module-a-vision-hearing-discovery.md` | Discovery plan for the vision and hearing self-measurement module. |
 | `module-b-questionnaire-triage-discovery.md` | Discovery plan for the questionnaire triage / department guidance module. |
 | `module-c-avatar-interaction-discovery.md` | Discovery note for the Avatar voice interaction module added in the `2026-06-23` onsite meeting. |
+| `hpa-adult-preventive-health-questionnaire-mvp-design-note.md` | Expert record and MVP design note for using HPA adult preventive health fields plus WHO STEPS and standardized modules. |
 | `meeting-question-bank.md` | Questions to bring to Johnny, Jason Miao, imedtac engineering, and clinical/content owners. |
 | `feasibility-response-outline.md` | Draft structure for the post-visit feasibility, schedule, and budget response. |
 | `reuse-from-ai-triage.md` | Reusable AI Triage assets and boundaries that should remain separate. |
@@ -129,6 +130,8 @@ Key preserved files:
   `source/2026-06-23-imedtac-onsite-visit-smart-health-cabin/2026-06-23-imedtac-onsite-visit-smart-health-cabin-transcript-corrected-verified-agent-readable.md`
 - Prof. Wu LINE adult preventive health form:
   `source/2026-06-23-wu-line-hpa-adult-preventive-health-form/2026-06-23-hpa-adult-preventive-health-service-check-record-result-form-agent-readable.md`
+- Expert MVP design note for the adult preventive health questionnaire path:
+  `workstreams/smart-health-cabin/hpa-adult-preventive-health-questionnaire-mvp-design-note.md`
 - Expert tutorial note:
   `source/2026-06-17-smart-health-cabin-expert-tutorial-note/source.md`
 - External authority verification:

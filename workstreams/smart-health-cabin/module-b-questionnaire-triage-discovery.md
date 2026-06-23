@@ -9,6 +9,7 @@ source:
   - ../../source/2026-06-17-imedtac-smart-health-cabin-requirements/source.md
   - ../../source/2026-06-23-imedtac-onsite-visit-smart-health-cabin/source.md
   - ../../source/2026-06-23-wu-line-hpa-adult-preventive-health-form/source.md
+  - ./hpa-adult-preventive-health-questionnaire-mvp-design-note.md
   - ../../source/2026-06-17-smart-health-cabin-expert-tutorial-note/source.md
   - ../../decisions/2026-05-22-api-contract-freeze-and-change-control.md
   - ./external-authority-verification.md
@@ -60,6 +61,15 @@ Meeting implication: the Smart Health Cabin questionnaire module should first
 classify each official form field into user-facing intake, staff/clinician
 entry, measured data, lab result, counseling, report output, and signature /
 institutional attestation before building CMS or HIS-ready payloads.
+
+The expert MVP note adds a concrete source strategy: do not invent a new
+questionnaire. Use the HPA adult preventive health form as the Taiwan
+public-sector backbone, WHO STEPS as the international public-health backbone,
+and then add standardized modules by age and service context.
+
+MVP scope should stay to HPA red-box fields, WHO STEPS core simplified
+risk-factor questions, PHQ-2, and basic measurement outputs for height,
+weight, waist, blood pressure, vision, and hearing.
 
 ## Verified Regulatory / Interoperability Implications
 
@@ -184,6 +194,11 @@ Use these as discussion objects, not as committed schema:
 
 Recommend a first release that is deliberately narrow:
 
+- HPA adult preventive health red-box fields as the Taiwan backbone;
+- WHO STEPS core simplified public-health risk-factor fields;
+- PHQ-2 as the only MVP mental-health screen;
+- basic height, weight, waist, blood pressure, vision, and hearing measurement
+  outputs;
 - fixed reviewed questionnaire set;
 - choice-only front-end answers;
 - simple branch graph;
@@ -200,3 +215,8 @@ meeting confirms owners, validation path, and acceptance criteria.
 
 This keeps September delivery credible while preserving a clean path to richer
 CMS and hospital integration later.
+
+MVP should not include self-invented questionnaire wording, generic
+AI-generated patient-facing questions, diagnosis language, full generic CMS
+breadth, or live HIS integration before field classification and clinical /
+public-health owner review.
