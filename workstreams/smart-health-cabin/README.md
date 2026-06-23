@@ -7,6 +7,7 @@ type: workstream-index
 status: active
 source:
   - ../../source/2026-06-17-imedtac-smart-health-cabin-requirements/source.md
+  - ../../source/2026-06-23-imedtac-onsite-visit-smart-health-cabin/source.md
   - ../../source/2026-06-16-imedtac-teams-question-option-adjustment/source.md
   - ../../source/2026-06-17-smart-health-cabin-expert-tutorial-note/source.md
   - ./external-authority-verification.md
@@ -23,6 +24,24 @@ Health Cabin requirements raised by 慧誠智醫（imedtac Co., Ltd.）on
 It keeps the new requirements close to the AI Triage repo while the team
 prepares for the `2026-06-23` onsite equipment review and discovery discussion.
 It is not the implementation home for the Smart Health Cabin product.
+
+## Current Post-Meeting Scope
+
+The `2026-06-23 14:59` onsite meeting transcript reframes the Smart Health
+Cabin software scope as four user-facing modules:
+
+1. hearing module;
+2. vision module;
+3. questionnaire module;
+4. Avatar interaction module.
+
+The Avatar module belongs next to the questionnaire flow. The working concept
+is voice interaction with an on-screen Avatar that can ask questionnaire items,
+listen to the person's spoken answer, and help input the answer.
+
+Data integration remains a cross-module layer: integrated report, QR Code,
+HIS/API/JSON, database, and CMS connection. It is important for delivery, but
+it is not counted as a fifth user-facing module in the current meeting record.
 
 ## Boundary
 
@@ -51,6 +70,7 @@ commitment, or implementation, create a separate execution repo such as
 | `email-requirements-brief.md` | One-page source-backed brief of Johnny's email and the requirements PDF. |
 | `module-a-vision-hearing-discovery.md` | Discovery plan for the vision and hearing self-measurement module. |
 | `module-b-questionnaire-triage-discovery.md` | Discovery plan for the questionnaire triage / department guidance module. |
+| `module-c-avatar-interaction-discovery.md` | Discovery note for the Avatar voice interaction module added in the `2026-06-23` onsite meeting. |
 | `meeting-question-bank.md` | Questions to bring to Johnny, Jason Miao, imedtac engineering, and clinical/content owners. |
 | `feasibility-response-outline.md` | Draft structure for the post-visit feasibility, schedule, and budget response. |
 | `reuse-from-ai-triage.md` | Reusable AI Triage assets and boundaries that should remain separate. |
@@ -105,6 +125,8 @@ Key preserved files:
   `extracted/2026-06-17-gmail-smart-health-cabin-software-module-requirements-agent-readable.md`
 - Requirements conversion:
   `extracted/2026-06-15-smart-health-cabin-software-module-requirements-spec-agent-readable.md`
+- Onsite meeting transcript source:
+  `source/2026-06-23-imedtac-onsite-visit-smart-health-cabin/2026-06-23-imedtac-onsite-visit-smart-health-cabin-transcript-corrected-verified-agent-readable.md`
 - Expert tutorial note:
   `source/2026-06-17-smart-health-cabin-expert-tutorial-note/source.md`
 - External authority verification:

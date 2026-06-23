@@ -4,10 +4,11 @@ title: "Smart Health Cabin Post-Meeting Decision Log"
 date: 2026-06-17
 topic: ai-triage
 type: decision-log
-status: template
+status: active
 source:
   - ./2026-06-23-onsite-discovery-plan.md
   - ./README.md
+  - ../../source/2026-06-23-imedtac-onsite-visit-smart-health-cabin/source.md
   - ../../source/2026-06-17-smart-health-cabin-expert-tutorial-note/source.md
   - ./external-authority-verification.md
 ---
@@ -19,10 +20,11 @@ source:
 | Field | Value |
 | --- | --- |
 | Meeting date | `2026-06-23` |
-| Location | TBD |
+| Location | 慧誠智醫 onsite visit |
 | Attendees | TBD |
 | Meeting purpose | AI Triage equipment review and Smart Health Cabin discovery |
-| Source package | `source/2026-06-17-imedtac-smart-health-cabin-requirements/` |
+| Source package | `source/2026-06-23-imedtac-onsite-visit-smart-health-cabin/` |
+| Preserved transcript | `2026-06-23-imedtac-onsite-visit-smart-health-cabin-transcript-corrected-verified-agent-readable.md` |
 
 ## FIRST PRINCIPLE Capture Rule
 
@@ -51,21 +53,25 @@ execution repo.
 
 | Topic | Fact | Source / speaker |
 | --- | --- | --- |
-| Equipment | TBD | TBD |
-| Module A | TBD | TBD |
-| Module B | TBD | TBD |
-| CMS | TBD | TBD |
-| Report / QR Code | TBD | TBD |
-| HIS-ready data | TBD | TBD |
-| Schedule | TBD | TBD |
+| Overall module split | The post-meeting software scope is four user-facing modules: hearing, vision, questionnaire, and Avatar interaction. Data integration remains a cross-module layer. | `2026-06-23` corrected transcript; user-provided meeting note |
+| Hearing module | Hearing remains a self-screening / preliminary support problem because the cabin concept uses speakers rather than headphones, and left/right isolation plus cabin noise need hardware validation. | `2026-06-23` corrected transcript |
+| Vision module | Vision should stay in self-screening / reference language; the meeting favored simpler first scope such as visual acuity and color vision before stronger measurement claims. | `2026-06-23` corrected transcript |
+| Questionnaire module | The questionnaire module needs frontend and backend support, with backend form publishing / management. A first feasible path is fixed or limited screening forms such as dementia or depression questionnaires, mostly choice-based. | `2026-06-23` corrected transcript |
+| Avatar interaction module | Avatar interaction is a fourth user-facing module. It can sit on top of the questionnaire flow, ask fixed questionnaire items, listen to spoken answers, and help input the answer. | `2026-06-23` corrected transcript; user-provided meeting note |
+| CMS / backend | Generic self-service questionnaire CMS remains a larger scope. The near-term path should clarify whether forms are fixed, limited, or truly user-configurable before committing to CMS breadth. | `2026-06-23` corrected transcript |
+| Report / QR Code | Integrated report and QR Code remain cross-module presentation needs so users can view or carry results after the session. | `2026-06-23` corrected transcript |
+| HIS-ready data | HIS/API/JSON and report integration remain cross-module data questions. The transcript contains tension between self-screening report needs and whether any values enter HIS fields. | `2026-06-23` corrected transcript |
+| Schedule | The meeting discussed a tight first-release path: July architecture / MVP direction, August adjustment and completion, and late-August or early-September readiness before September presentation / trial operation. | `2026-06-23` corrected transcript |
 
 ## Decisions
 
 | Decision | Owner | Date | Follow-up |
 | --- | --- | --- | --- |
 | Repository strategy: remain bridge workstream or create `imedtac-smart-health-cabin-v0` | TBD | TBD | TBD |
-| Module A positioning: screening support, reference self-test, or stronger measurement | TBD | TBD | TBD |
-| Module B engine: reviewed fixed questionnaire, CMS-driven rules, or AI-assisted workflow | TBD | TBD | TBD |
+| Module split: four user-facing modules are hearing, vision, questionnaire, and Avatar interaction | NYCU / imedtac | `2026-06-23` | Keep data integration as cross-module layer, not a fifth user-facing module. |
+| Hearing and vision positioning: first-release wording should stay in self-screening / preliminary support language | NYCU / imedtac / hospital clinical owner | `2026-06-23` | Confirm exact wording with imedtac and hospital owners before external material. |
+| Questionnaire first path: favor fixed or limited reviewed forms before generic CMS breadth | NYCU / imedtac | `2026-06-23` | Identify the first forms and their owner, scoring, export, and report behavior. |
+| Avatar first path: pair Avatar with questionnaire interaction rather than autonomous open clinical conversation | NYCU / imedtac | `2026-06-23` | Decide fixed-script, fixed-question voice I/O, or real-time ASR/TTS scope. |
 | Report / QR privacy model | TBD | TBD | TBD |
 | HIS-ready level: custom JSON, FHIR/TW Core mapping draft, or live integration | TBD | TBD | TBD |
 | Standards / regulatory validation path | TBD | TBD | TBD |
@@ -80,6 +86,9 @@ execution repo.
 | Who owns CMS build, hosting, review workflow, and maintenance? | TBD | TBD | Determines implementation scope, budget, and source-code boundary. |
 | Can the cabin support credible fixed-speaker hearing screening? | TBD | TBD | Determines whether Module A can use hearing output beyond guided interaction. |
 | What exact equipment/browser/network constraints apply onsite? | TBD | TBD | Determines feasible frontend, API, and deployment architecture. |
+| Which questionnaire forms are first-release scope? | imedtac / hospital clinical owner | immediate | The transcript suggests dementia and depression scales as better questionnaire-shaped candidates, but the actual hospital requirement needs confirmation. |
+| Is Avatar required for the September show path, the durable product path, or both? | imedtac / NYCU | immediate | Avatar scope drives ASR/TTS/GPU/microphone/design schedule and whether fixed-script interaction is enough. |
+| Is voice input/output real-time or fixed-script for first release? | NYCU / imedtac engineering | immediate | Real-time ASR/TTS and lip-sync carry GPU, latency, microphone, and noise risks; fixed-script voice is a smaller first-release path. |
 | What should the post-meeting response become? | TBD | TBD | Determines whether to write feasibility memo, proposal, quotation input, or design spec. |
 | Which verified standards should appear in external material? | TBD | TBD | Determines whether FDA/IMDRF/ISO/FHIR/TW Core references remain internal background or become proposal commitments. |
 
@@ -103,4 +112,6 @@ TBD: remain as bridge workstream / create separate repo.
 
 | Action | Owner | Due |
 | --- | --- | --- |
-| Prepare feasibility response or meeting recap | TBD | TBD |
+| Prepare a four-module feasibility recap: hearing, vision, questionnaire, Avatar, plus cross-module report / QR / HIS/API/CMS layer | NYCU | TBD |
+| Confirm first-release questionnaire forms and scoring/report ownership | imedtac / hospital owner | TBD |
+| Confirm whether Avatar uses fixed-script voice interaction or real-time ASR/TTS in first release | NYCU / imedtac | TBD |

@@ -7,6 +7,7 @@ type: meeting-prep
 status: active
 source:
   - ../../source/2026-06-17-imedtac-smart-health-cabin-requirements/source.md
+  - ../../source/2026-06-23-imedtac-onsite-visit-smart-health-cabin/source.md
   - ../../source/2026-06-17-smart-health-cabin-expert-tutorial-note/source.md
   - ./external-authority-verification.md
 ---
@@ -18,6 +19,10 @@ source:
 Module A is a self-guided vision and hearing measurement workflow inside the
 Smart Health Cabin. It is a device/software workflow problem, not only a UI
 problem.
+
+After the `2026-06-23` onsite meeting, hearing and vision should be tracked as
+two distinct user-facing modules even though this discovery note keeps their
+shared device and screening constraints together.
 
 The strongest first-release framing is:
 

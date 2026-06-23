@@ -7,6 +7,7 @@ type: meeting-prep
 status: active
 source:
   - ../../source/2026-06-17-imedtac-smart-health-cabin-requirements/source.md
+  - ../../source/2026-06-23-imedtac-onsite-visit-smart-health-cabin/source.md
   - ../../source/2026-06-17-smart-health-cabin-expert-tutorial-note/source.md
   - ../../decisions/2026-05-22-api-contract-freeze-and-change-control.md
   - ./external-authority-verification.md
@@ -20,6 +21,12 @@ Module B is a standardized questionnaire-guided triage and guidance workflow
 for the Smart Health Cabin. It is the module most related to the current AI
 Triage work, but its scope is broader because it includes CMS, department
 guidance, health education, integrated reporting, and future HIS-ready data.
+
+After the `2026-06-23` onsite meeting, questionnaire remains its own module.
+Avatar interaction is a separate user-facing module layered on top of the
+questionnaire flow for voice prompt, answer capture, and guided interaction.
+The questionnaire module still owns reviewed content, answer structure,
+scoring, branching, export, and report semantics.
 
 The strongest first-release framing is:
 
