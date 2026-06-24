@@ -12,10 +12,14 @@ status: active
 Cabin workspace：
 
 ```text
+../imedtac-smart-health-cabin-v0/docs/specs/MVP-SYSTEM-SPEC.md
 ../imedtac-smart-health-cabin-v0/workstreams/smart-health-cabin/2026-06-24-mvp-monorepo-redpanda-architecture-note.md
 ```
 
-該 note 的核心建議是：MVP 階段採用一個 monorepo，內部用 modular
+Smart Health Cabin repo 是完整 spec、architecture note、module research
+packet、meeting question bank、onsite discovery material 的 canonical home。
+
+該 spec 的核心建議是：MVP 階段採用一個 monorepo，內部用 modular
 monolith backend、清楚的模組資料夾、穩定 event contract、PostgreSQL
 保存 report/query state、Redpanda 作為 infra、一個 report worker，以及
 Docker Compose 部署。
@@ -32,3 +36,7 @@ Docker Compose 部署。
 
 這份 routing note 不改動 AI Triage demo API、六月 two-endpoint contract、
 Render/FastAPI runtime，或 tachycardia demo implementation。
+
+本 repo 只保留 connection/update content。不要在這裡新增 Smart Health
+Cabin 的完整 spec、module workstream、research packet、delivery plan 或
+implementation artifact。
